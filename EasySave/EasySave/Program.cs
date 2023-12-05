@@ -5,10 +5,15 @@ namespace EasySaveConsoleApp
 {
     class Program
     {
-        private const string StateFilePath = "logs\\state.json";
+        private const string StateFilePath = "..\\..\\..\\logs\\state.json";
 
         static void Main(string[] args)
         {
+            if (!File.Exists(StateFilePath))
+            {
+                
+            }
+
             List<Profile> profiles = Profile.LoadProfiles(StateFilePath);
 
             if (profiles.Count == 0)
