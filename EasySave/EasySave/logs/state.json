@@ -1,14 +1,14 @@
 [
   {
     "Name": "Save1",
-    "SourceFilePath": "",
-    "TargetFilePath": "",
-    "State": "END",
-    "TotalFilesToCopy": 0,
+    "SourceFilePath": "C:\\Users\\antoi\\Downloads\\test\\source_comp",
+    "TargetFilePath": "C:\\Users\\antoi\\Downloads\\test\\destination_comp",
+    "State": "READY",
+    "TotalFilesToCopy": 2,
     "TotalFilesSize": 0,
     "NbFilesLeftToDo": 0,
     "Progression": 0,
-    "TypeOfSave": ""
+    "TypeOfSave": "full"
   },
   {
     "Name": "Save2",

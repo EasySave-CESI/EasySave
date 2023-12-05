@@ -162,7 +162,7 @@ namespace EasySaveConsoleApp
         // Méthode pour exporter les logs au format JSON dans un fichier
         public void ExportToJson()
         {
-            string filePath = "logs\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";  // Chemin du fichier de logs
+            string filePath = "..\\..\\..\\logs\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";  // Chemin du fichier de logs
             string jsonContent = JsonConvert.SerializeObject(logEntries, Formatting.Indented);  // Sérialisation de la liste en format JSON
             if (File.Exists(filePath))  // Si le fichier existe déjà ajoutes les logs à la fin
             {

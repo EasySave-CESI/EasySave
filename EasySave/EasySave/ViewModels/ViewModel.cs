@@ -69,7 +69,7 @@ namespace EasySaveConsoleApp
 
                 _profiles[index].State = "READY";
                 /* Then save the profiles to the state file */
-                Profile.SaveProfiles("logs\\state.json", _profiles);
+                Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
             }
             else
             {
@@ -144,17 +144,17 @@ namespace EasySaveConsoleApp
                         _profiles[index[i]].Progression = (int)((_profiles[index[i]].TotalFilesToCopy - _profiles[index[i]].NbFilesLeftToDo) * 100 / _profiles[index[i]].TotalFilesToCopy);
                         _profiles[index[i]].State = "RUNNING";
 
-                        Profile.SaveProfiles("logs\\state.json", _profiles);
+                        Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
                     }
 
                     _profiles[index[i]].State = "COMPLETED";
-                    Profile.SaveProfiles("logs\\state.json", _profiles);
+                    Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error backing up profile {_profiles[index[i]].Name}: {ex.Message}");
                     _profiles[index[i]].State = "FAILED";
-                    Profile.SaveProfiles("logs\\state.json", _profiles);
+                    Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
                 }
             }
         }
