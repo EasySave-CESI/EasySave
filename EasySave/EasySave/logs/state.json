@@ -1,0 +1,57 @@
+[
+  {
+    "Name": "Save1",
+    "SourceFilePath": "C:\\Users\\antoi\\Downloads\\test\\source_comp",
+    "TargetFilePath": "C:\\Users\\antoi\\Downloads\\test\\destination_comp",
+    "State": "COMPLETED",
+    "TotalFilesToCopy": 2,
+    "TotalFilesSize": 0,
+    "NbFilesLeftToDo": 0,
+    "Progression": 100,
+    "TypeOfSave": "full"
+  },
+  {
+    "Name": "Save2",
+    "SourceFilePath": "C:\\Users\\antoi\\Downloads\\test\\source_diff",
+    "TargetFilePath": "C:\\Users\\antoi\\Downloads\\test\\destination_diff",
+    "State": "COMPLETED",
+    "TotalFilesToCopy": 2,
+    "TotalFilesSize": 24,
+    "NbFilesLeftToDo": 0,
+    "Progression": 100,
+    "TypeOfSave": "diff"
+  },
+  {
+    "Name": "Save3",
+    "SourceFilePath": "C:\\Users\\antoi\\Downloads\\test\\source_5",
+    "TargetFilePath": "C:\\Users\\antoi\\Downloads\\test\\destination_5",
+    "State": "COMPLETED",
+    "TotalFilesToCopy": 2,
+    "TotalFilesSize": 570,
+    "NbFilesLeftToDo": -24,
+    "Progression": 1300,
+    "TypeOfSave": "full"
+  },
+  {
+    "Name": "Save4",
+    "SourceFilePath": "C:\\Users\\antoi\\[01]_CESI\\[03]_A3",
+    "TargetFilePath": "C:\\Users\\antoi\\[01]_CESI\\temp",
+    "State": "FAILED",
+    "TotalFilesToCopy": 25714,
+    "TotalFilesSize": 1150512569,
+    "NbFilesLeftToDo": 0,
+    "Progression": 0,
+    "TypeOfSave": "full"
+  },
+  {
+    "Name": "Save5",
+    "SourceFilePath": "",
+    "TargetFilePath": "",
+    "State": "END",
+    "TotalFilesToCopy": 0,
+    "TotalFilesSize": 0,
+    "NbFilesLeftToDo": 0,
+    "Progression": 0,
+    "TypeOfSave": null
+  }
+]
