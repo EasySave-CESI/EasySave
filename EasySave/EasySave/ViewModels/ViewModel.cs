@@ -56,6 +56,9 @@ namespace EasySaveConsoleApp
                 case "help":
                     Help();
                     break;
+                case "configuration":
+                    Configuration();
+                    break;
                 default:
                     consoleView.printError("Error: No function found");
                     break;
