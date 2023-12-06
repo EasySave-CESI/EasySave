@@ -4,45 +4,48 @@ namespace EasySaveConsoleApp
 {
     public class ConsoleView
     {
-        private readonly MainViewModel _viewModel;
-
-        public ConsoleView(MainViewModel viewModel)
+        public ConsoleView() { }
+        public void print(string text)
         {
-            _viewModel = viewModel;
+            Console.WriteLine(text);
         }
 
-        public void Run()
+        public string read()
         {
-            while (true)
-            {
-                Console.WriteLine("\nMenu:");
-                Console.WriteLine("1. Display backup profiles");
-                Console.WriteLine("2. Modify a backup profile");
-                Console.WriteLine("3. Execute a backup");
-                Console.WriteLine("4. Quit");
+            return Console.ReadLine();
+        }
 
-                Console.Write("Choose an option (1-4): ");
-                string choice = Console.ReadLine();
+        public void clear()
+        {
+            Console.Clear();
+        }
 
-                switch (choice)
-                {
-                    case "1":
-                        _viewModel.DisplayProfiles();
-                        break;
-                    case "2":
-                        _viewModel.ModifyProfile();
-                        break;
-                    case "3":
-                        _viewModel.ExecuteProfile();
-                        break;
-                    case "4":
-                        Environment.Exit(0);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
-                }
-            }
+        public void printError(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+        public void printSuccess(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+        public void printWarning(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+        public void printInfo(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(text);
+            Console.ResetColor();
         }
     }
 }
