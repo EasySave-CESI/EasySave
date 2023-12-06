@@ -209,12 +209,13 @@ namespace EasySaveConsoleApp
         public void Help() 
         {
             consoleView.printInfo("menu: Display the menu");
-            consoleView.printInfo("printSaveProfiles: Display the save profiles");
-            consoleView.printInfo("createSaveProfile: Create a save profile");
-            consoleView.printInfo("modifySaveProfile: Modify a save profile");
-            consoleView.printInfo("executeSaveProfile: Execute a save profile");
-            consoleView.printInfo("printLogs: Display the logs");
+            consoleView.printInfo("PSP: Display the save profiles");
+            consoleView.printInfo("CSP: Create a save profile");
+            consoleView.printInfo("MSP: Modify a save profile");
+            consoleView.printInfo("ESP: Execute a save profile");
+            consoleView.printInfo("PL: Display the logs");
             consoleView.printInfo("help: Display the help");
+            consoleView.printInfo("config: Display the configuration");
         }
 
         public void Configuration()
