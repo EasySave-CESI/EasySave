@@ -16,6 +16,7 @@ namespace EasySaveConsoleApp
         {
             consoleView = new ConsoleView();
             saveProfiles = SaveProfile.LoadProfiles("..\\..\\..\\logs\\state.json");
+            Function = "menu";
 
             consoleView.print("Welcome to EasySave");
             Menu();
@@ -33,31 +34,36 @@ namespace EasySaveConsoleApp
 
         public void Main()
         {
+            // transform the function to lowercase
+            Function = Function.ToLower();
             switch (Function)
             {
                 case "menu":
                     Menu();
                     break;
-                case "printSaveProfiles":
-                    PrintSaveProfiles();
+                case "dsp":
+                    DisplaySaveProfiles();
                     break;
-                case "createSaveProfile":
+                case "csp":
                     CreateSaveProfile();
                     break;
-                case "modifySaveProfile":
+                case "msp":
                     ModifySaveProfile();
                     break;
-                case "executeSaveProfile":
+                case "esp":
                     ExecuteSaveProfile();
                     break;
-                case "printLogs":
-                    PrintLogs();
+                case "dl":
+                    DisplayLogs();
                     break;
                 case "help":
                     Help();
                     break;
-                case "configuration":
+                case "config":
                     Configuration();
+                    break;
+                case "exit":
+                    Exit();
                     break;
                 default:
                     consoleView.printError("Error: No function found");
@@ -67,49 +73,53 @@ namespace EasySaveConsoleApp
 
         public void Menu()
         {
-            consoleView.print("Please choose an option:");
-            consoleView.print("1. Display the save profiles");
-            consoleView.print("2. Create a save profile");
-            consoleView.print("3. Modify a save profile");
-            consoleView.print("4. Execute a save profile");
-            consoleView.print("5. Display the logs");
-            consoleView.print("6. Help");
-            consoleView.print("7. Configuration");
-            consoleView.print("8. Exit");
-            string choice = consoleView.read();
-            switch (choice)
+            while (Function != "exit")
             {
-                case "1":
-                    PrintSaveProfiles();
-                    break;
-                case "2":
-                    CreateSaveProfile();
-                    break;
-                case "3":
-                    ModifySaveProfile();
-                    break;
-                case "4":
-                    ExecuteSaveProfile();
-                    break;
-                case "5":
-                    PrintLogs();
-                    break;
-                case "6":
-                    Help();
-                    break;
-                case "7":
-                    Configuration();
-                    break;
-                case "8":
-                    Exit();
-                    break;
-                default:
-                    consoleView.printError("Error: No function found");
-                    break;
+                consoleView.print("Please choose an option:");
+                consoleView.print("1. Display the save profiles");
+                consoleView.print("2. Create a save profile");
+                consoleView.print("3. Modify a save profile");
+                consoleView.print("4. Execute a save profile");
+                consoleView.print("5. Display the logs");
+                consoleView.print("6. Help");
+                consoleView.print("7. Configuration");
+                consoleView.print("8. Exit");
+                string choice = consoleView.read();
+                consoleView.printSeparator();
+                switch (choice)
+                {
+                    case "1":
+                        DisplaySaveProfiles();
+                        break;
+                    case "2":
+                        CreateSaveProfile();
+                        break;
+                    case "3":
+                        ModifySaveProfile();
+                        break;
+                    case "4":
+                        ExecuteSaveProfile();
+                        break;
+                    case "5":
+                        DisplayLogs();
+                        break;
+                    case "6":
+                        Help();
+                        break;
+                    case "7":
+                        Configuration();
+                        break;
+                    case "8":
+                        Exit();
+                        break;
+                    default:
+                        consoleView.printError("Error: No function found");
+                        break;
+                }
             }
         }
 
-        public void PrintSaveProfiles() 
+        public void DisplaySaveProfiles() 
         {
             if (saveProfiles == null)
             {
@@ -130,6 +140,7 @@ namespace EasySaveConsoleApp
                         consoleView.print("Progression: " + profile.Progression);
                         consoleView.print("TypeOfSave: " + profile.TypeOfSave);
                         consoleView.print("");
+                        consoleView.printSeparator();
                     }
                 }
             }
@@ -141,30 +152,13 @@ namespace EasySaveConsoleApp
         }
         public void ModifySaveProfile() 
         {
-            consoleView.print("Select the save profile you want to modify by entering its index");
-            // print all the profiles name
-            for (int i = 0; i < saveProfiles.Count; i++)
-            {
-                consoleView.print((i) + ". " + saveProfiles[i].Name);
-            }
 
             try
             {
-                string choice = consoleView.read();
-                int choiceInt = int.Parse(choice);
                 string profileName = string.Empty;
                 int profileIndex = -1;
 
-
-                for (int i = 0; i < saveProfiles.Count; i++)
-                {
-                    string tempProfileName = saveProfiles[i].Name;
-                    if (choice == tempProfileName || choiceInt == i)
-                    {
-                        profileName = tempProfileName;
-                        profileIndex = i;
-                    }
-                }
+                profileIndex = GetProfileIndex();
 
                 consoleView.print("The profile you selected is " + profileName);
 
@@ -200,22 +194,56 @@ namespace EasySaveConsoleApp
         }
         public void ExecuteSaveProfile()
         {
-            consoleView.print("This function is not available yet");
+            try
+            {
+                int profileIndex = GetProfileIndex();
+                consoleView.print("The profile you selected is " + saveProfiles[profileIndex].Name);
+
+                if (saveProfiles[profileIndex].State == "READY")
+                {
+                    saveProfiles[profileIndex].State = "IN PROGRESS";
+                    SaveProfile.SaveProfiles("..\\..\\..\\logs\\state.json", saveProfiles);
+
+                    if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
+                    {
+                        consoleView.print($"Backing up profile {saveProfiles[profileIndex].Name}...");  
+                        SaveProfile.ExecuteSaveProfile(saveProfiles, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave);
+                    }
+                    else
+                    {
+                        consoleView.printError("Error: The type of save is not valid");
+                    }
+
+                    saveProfiles[profileIndex].State = "COMPLETED";
+                    SaveProfile.SaveProfiles("..\\..\\..\\logs\\state.json", saveProfiles);
+                    consoleView.printSuccess("The profile has been executed");
+                }
+                else
+                {
+                    consoleView.printError("Error: The profile is not ready");
+                }
+            }
+            catch (Exception ex)
+            {
+                consoleView.printError("Error: " + ex.Message);
+            }
         }
-        public void PrintLogs()
+        public void DisplayLogs()
         {
             consoleView.print("This function is not available yet");
         }
         public void Help() 
         {
             consoleView.printInfo("menu: Display the menu");
-            consoleView.printInfo("PSP: Display the save profiles");
-            consoleView.printInfo("CSP: Create a save profile");
-            consoleView.printInfo("MSP: Modify a save profile");
-            consoleView.printInfo("ESP: Execute a save profile");
-            consoleView.printInfo("PL: Display the logs");
+            consoleView.printInfo("dsp: Display the save profiles");
+            consoleView.printInfo("csp: Create a save profile");
+            consoleView.printInfo("msp: Modify a save profile");
+            consoleView.printInfo("esp: Execute a save profile");
+            consoleView.printInfo("dl: Display the logs");
             consoleView.printInfo("help: Display the help");
             consoleView.printInfo("config: Display the configuration");
+            consoleView.printInfo("exit: Exit the program");
+            consoleView.printSeparator();
         }
 
         public void Configuration()
@@ -225,7 +253,31 @@ namespace EasySaveConsoleApp
         public void Exit() 
         {
             consoleView.print("Thank you for using EasySave");
+            Function = "exit";
             Environment.Exit(0);
+        }
+
+        public int GetProfileIndex()
+        {
+            consoleView.print("Select the save profile you want to modify by entering its index");
+
+            // print all the profiles name
+            for (int i = 0; i < saveProfiles.Count; i++)
+            {
+                consoleView.print((i) + ". " + saveProfiles[i].Name);
+            }
+
+            string choice = consoleView.read();
+            int profileIndex = -1;
+
+            for (int i = 0; i < saveProfiles.Count; i++)
+            {
+                if (int.Parse(choice) == i)
+                {
+                    profileIndex = i;
+                }
+            }
+            return profileIndex;
         }
     }
 }

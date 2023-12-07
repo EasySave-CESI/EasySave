@@ -70,6 +70,55 @@ namespace EasySaveConsoleApp
             }
         }
 
+        public static void ExecuteSaveProfile(List<SaveProfile> profiles, SaveProfile saveProfile, string mode)
+        {
+            try
+            {
+                if (Directory.Exists(saveProfile.TargetFilePath))
+                {
+                    Directory.Delete(saveProfile.TargetFilePath, true);
+                }
+
+                Directory.CreateDirectory(saveProfile.TargetFilePath);
+
+                string[] files = Directory.GetFiles(saveProfile.SourceFilePath, "*", SearchOption.AllDirectories);
+
+                foreach (string file in files)
+                {
+                    string relativePath = file.Substring(saveProfile.SourceFilePath.Length + 1);
+                    string targetFilePath = Path.Combine(saveProfile.TargetFilePath, relativePath);
+
+                    string targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
+
+                    if (!Directory.Exists(targetDirectoryPath))
+                    {
+                        Directory.CreateDirectory(targetDirectoryPath);
+                    }
+
+                    if (mode == "diff")
+                    {
+                        if (!File.Exists(targetFilePath) || File.GetLastWriteTime(file) > File.GetLastWriteTime(targetFilePath))
+                        {
+                            File.Copy(file, targetFilePath, true);
+                        }
+                    }
+                    else
+                    {
+                        File.Copy(file, targetFilePath, true);
+                    }
+
+                    saveProfile.NbFilesLeftToDo--;
+                    saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
+                    SaveProfiles("..\\..\\..\\logs\\state.json", profiles);
+                }
+            }
+            catch (Exception ex)
+            {
+                saveProfile.State = "ERROR";
+                SaveProfiles("profiles.json", profiles);
+            }
+        }
+
         public static List<long> sourceDirectoryInfos(string sourceDirectory)
         {
             List<long> sourcedirectoryInfos = new List<long>();

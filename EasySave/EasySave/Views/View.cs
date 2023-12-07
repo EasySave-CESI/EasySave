@@ -47,5 +47,10 @@ namespace EasySaveConsoleApp
             Console.WriteLine(text);
             Console.ResetColor();
         }
+
+        public void printSeparator()
+        {
+            Console.WriteLine("--------------------------------------------------");
+        }
     }
 }
