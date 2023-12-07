@@ -1,25 +1,25 @@
 [
   {
     "Name": "Save1",
-    "SourceFilePath": "C:\\Users\\antoi\\Downloads\\test\\source_comp",
-    "TargetFilePath": "C:\\Users\\antoi\\Downloads\\test\\destination_comp",
-    "State": "COMPLETED",
-    "TotalFilesToCopy": 2,
+    "SourceFilePath": "",
+    "TargetFilePath": "",
+    "State": "END",
+    "TotalFilesToCopy": 0,
     "TotalFilesSize": 0,
     "NbFilesLeftToDo": 0,
-    "Progression": 100,
-    "TypeOfSave": "full"
+    "Progression": 0,
+    "TypeOfSave": ""
   },
   {
     "Name": "Save2",
-    "SourceFilePath": "C:\\Users\\antoi\\Downloads\\test\\source_diff",
-    "TargetFilePath": "C:\\Users\\antoi\\Downloads\\test\\destination_diff",
-    "State": "COMPLETED",
-    "TotalFilesToCopy": 2,
-    "TotalFilesSize": 12,
+    "SourceFilePath": "",
+    "TargetFilePath": "",
+    "State": "END",
+    "TotalFilesToCopy": 0,
+    "TotalFilesSize": 0,
     "NbFilesLeftToDo": 0,
-    "Progression": 100,
-    "TypeOfSave": "diff"
+    "Progression": 0,
+    "TypeOfSave": ""
   },
   {
     "Name": "Save3",
@@ -45,13 +45,13 @@
   },
   {
     "Name": "Test",
-    "SourceFilePath": "C:\\Users\\antoi\\[01]_CESI\\temp_source",
-    "TargetFilePath": "C:\\Users\\antoi\\[01]_CESI\\temp_dest",
-    "State": "READY",
-    "TotalFilesToCopy": 6,
-    "TotalFilesSize": 5185057,
-    "NbFilesLeftToDo": 6,
+    "SourceFilePath": "",
+    "TargetFilePath": "",
+    "State": "END",
+    "TotalFilesToCopy": 0,
+    "TotalFilesSize": 0,
+    "NbFilesLeftToDo": 0,
     "Progression": 0,
-    "TypeOfSave": "diff"
+    "TypeOfSave": ""
   }
 ]
