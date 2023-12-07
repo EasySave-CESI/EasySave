@@ -10,12 +10,14 @@ namespace EasySaveConsoleApp
         public ConsoleView consoleView { get; init; }
         public List<SaveProfile> saveProfiles { get; set; }
         public string argument { get; set; }
+        public DailyLogs Logger { get; set; } = new DailyLogs();
 
 
         public MainViewModel()
         {
             consoleView = new ConsoleView();
             saveProfiles = SaveProfile.LoadProfiles("..\\..\\..\\logs\\state.json");
+            Logger = LoadDailyLogs();
             argument = "menu";
 
             consoleView.WelcomeMessage();
@@ -26,6 +28,7 @@ namespace EasySaveConsoleApp
         {
             consoleView = new ConsoleView();
             saveProfiles = SaveProfile.LoadProfiles("..\\..\\..\\logs\\state.json");
+            Logger = LoadDailyLogs();
             argument = userargument;
 
             consoleView.WelcomeMessage();
@@ -100,6 +103,7 @@ namespace EasySaveConsoleApp
                         break;
                     case "7":
                         Configuration();
+                        SaveDailyLogs();
                         break;
                     case "8":
                         consoleView.Clear();
@@ -203,7 +207,18 @@ namespace EasySaveConsoleApp
                     if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
                         consoleView.DisplayBackupInProgress(saveProfiles[profileIndex].Name);
+                        DateTime startTime = DateTime.Now;
                         SaveProfile.ExecuteSaveProfile(saveProfiles, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave);
+                        TimeSpan elapsedTime = DateTime.Now - startTime;
+
+                        Logger.CreateLog(
+                        saveProfiles[profileIndex].Name,
+                        saveProfiles[profileIndex].SourceFilePath,
+                        saveProfiles[profileIndex].TargetFilePath,
+                        saveProfiles[profileIndex].TotalFilesSize,
+                        elapsedTime.TotalMilliseconds
+                        );
+
                     }
                     else
                     {
@@ -226,13 +241,70 @@ namespace EasySaveConsoleApp
         }
         public void DisplayLogs()
         {
-            consoleView.NotImplementedYet();
+            consoleView.DisplayLogsHeader();
+
+            foreach (var log in Logger.GetLogs())
+            {
+                consoleView.DisplayLog(log);
+                consoleView.printSeparator();
+            }
         }
 
         public void Configuration()
         {
-            consoleView.NotImplementedYet();
+            consoleView.DisplayConfigurationMenu();
+            string configChoice = consoleView.Read();
+
+            switch (configChoice)
+            {
+                case "1":
+                    consoleView.NotImplementedYet();
+                    break;
+                case "2":
+                    ChooseLogFileFormat();
+                    SaveDailyLogs();
+                    break;
+                case "3":
+                    Exit();
+                    break;
+                default:
+                    consoleView.DisplayMenuError();
+                    break;
+            }
         }
+
+        private DailyLogs LoadDailyLogs()
+        {
+            DailyLogs loadedLogs = new DailyLogs();
+            return loadedLogs;
+        }
+
+        private void SaveDailyLogs()
+        {
+            Logger.SaveLogs();
+        }
+
+        private void ChooseLogFileFormat()
+        {
+            consoleView.DisplayLogFileFormatMenu();
+            string logFormatChoice = consoleView.Read();
+
+            switch (logFormatChoice)
+            {
+                case "1":
+                    Logger.SetLogFileFormat(LogFileFormat.Json);
+                    consoleView.DisplayLogFileFormatSuccess("JSON");
+                    break;
+                case "2":
+                    Logger.SetLogFileFormat(LogFileFormat.Xml);
+                    consoleView.DisplayLogFileFormatSuccess("XML");
+                    break;
+                default:
+                    consoleView.DisplayLogFileFormatError();
+                    break;
+            }
+        }
+
         public void Exit() 
         {
             consoleView.Exit();

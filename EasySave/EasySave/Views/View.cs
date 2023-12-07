@@ -119,6 +119,8 @@ namespace EasySaveConsoleApp
             Print("");
         }
 
+        
+
         public void DisplayMenuError()
         {
             PrintError("Please enter a valid option.");
@@ -195,6 +197,23 @@ namespace EasySaveConsoleApp
             PrintError("Error: The type of save is not valid");
         }
 
+        /* Display Logs */
+
+        public void DisplayLogsHeader()
+        {
+            PrintInfo("--------------- LOGS ---------------");
+        }
+
+        public void DisplayLog(DailyLog log)
+        {
+            Console.WriteLine($"Name:             {log.Name}");
+            Console.WriteLine($"FileSource:       {log.FileSource}");
+            Console.WriteLine($"FileTarget:       {log.FileTarget}");
+            Console.WriteLine($"FileSize:         {log.FileSize}");
+            Console.WriteLine($"FileTransferTime: {log.FileTransferTime}");
+            Console.WriteLine($"Time:             {log.Time}");
+        }
+
         /* Help */
 
         public void Help()
@@ -211,7 +230,32 @@ namespace EasySaveConsoleApp
             PrintInfo("exit:     Exit the program");
             printSeparator();
         }
+        public void DisplayConfigurationMenu()
+        {
+            PrintInfo("Please choose an option:");
+            Print("1. Change language");
+            Print("2. Change logs file format");
+            Print("3. Exit");
+            Print("");
+        }
 
+        public void DisplayLogFileFormatMenu()
+        {
+            PrintInfo("Please choose the log file format:");
+            Print("1. JSON");
+            Print("2. XML");
+            Print("");
+        }
+
+        public void DisplayLogFileFormatSuccess(string format)
+        {
+            PrintSuccess($"Log file format set to {format}");
+        }
+
+        public void DisplayLogFileFormatError()
+        {
+            PrintError("Please enter a valid option for log file format.");
+        }               
         public void Exit()
         {
             PrintInfo("Thank you for using EasySave");
