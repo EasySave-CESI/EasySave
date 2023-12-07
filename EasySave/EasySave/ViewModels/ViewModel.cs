@@ -9,34 +9,34 @@ namespace EasySaveConsoleApp
     {
         public ConsoleView consoleView { get; init; }
         public List<SaveProfile> saveProfiles { get; set; }
-        public string Function { get; set; }
+        public string argument { get; set; }
 
 
         public MainViewModel()
         {
             consoleView = new ConsoleView();
             saveProfiles = SaveProfile.LoadProfiles("..\\..\\..\\logs\\state.json");
-            Function = "menu";
+            argument = "menu";
 
-            consoleView.print("Welcome to EasySave");
+            consoleView.WelcomeMessage();
             Menu();
         }
 
-        public MainViewModel(string function)
+        public MainViewModel(string userargument)
         {
             consoleView = new ConsoleView();
             saveProfiles = SaveProfile.LoadProfiles("..\\..\\..\\logs\\state.json");
-            Function = function;
+            argument = userargument;
 
-            consoleView.print("Welcome to EasySave");
+            consoleView.WelcomeMessage();
             Main();
         }
 
         public void Main()
         {
             // transform the function to lowercase
-            Function = Function.ToLower();
-            switch (Function)
+            argument = argument.ToLower();
+            switch (argument)
             {
                 case "menu":
                     Menu();
@@ -57,7 +57,7 @@ namespace EasySaveConsoleApp
                     DisplayLogs();
                     break;
                 case "help":
-                    Help();
+                    consoleView.Help();
                     break;
                 case "config":
                     Configuration();
@@ -66,25 +66,17 @@ namespace EasySaveConsoleApp
                     Exit();
                     break;
                 default:
-                    consoleView.printError("Error: No function found");
+                    consoleView.ArgumentError();
                     break;
             }   
         }
 
         public void Menu()
         {
-            while (Function != "exit")
+            while (argument != "exit")
             {
-                consoleView.print("Please choose an option:");
-                consoleView.print("1. Display the save profiles");
-                consoleView.print("2. Create a save profile");
-                consoleView.print("3. Modify a save profile");
-                consoleView.print("4. Execute a save profile");
-                consoleView.print("5. Display the logs");
-                consoleView.print("6. Help");
-                consoleView.print("7. Configuration");
-                consoleView.print("8. Exit");
-                string choice = consoleView.read();
+                consoleView.DisplayMenu();
+                string choice = consoleView.Read();
                 consoleView.printSeparator();
                 switch (choice)
                 {
@@ -104,16 +96,19 @@ namespace EasySaveConsoleApp
                         DisplayLogs();
                         break;
                     case "6":
-                        Help();
+                        consoleView.Help();
                         break;
                     case "7":
                         Configuration();
                         break;
                     case "8":
+                        consoleView.Clear();
+                        break;
+                    case "9":
                         Exit();
                         break;
                     default:
-                        consoleView.printError("Error: No function found");
+                        consoleView.DisplayMenuError();
                         break;
                 }
             }
@@ -123,23 +118,24 @@ namespace EasySaveConsoleApp
         {
             if (saveProfiles == null)
             {
-                consoleView.print("There is no save profile");
+                consoleView.DisplaySaveProfilesError();
             }
             else
             {
                 {
                     foreach (SaveProfile profile in saveProfiles)
                     {
-                        consoleView.print("Name: " + profile.Name);
-                        consoleView.print("SourceFilePath: " + profile.SourceFilePath);
-                        consoleView.print("TargetFilePath: " + profile.TargetFilePath);
-                        consoleView.print("State: " + profile.State);
-                        consoleView.print("TotalFilesToCopy: " + profile.TotalFilesToCopy);
-                        consoleView.print("TotalFilesSize: " + profile.TotalFilesSize);
-                        consoleView.print("NbFilesLeftToDo: " + profile.NbFilesLeftToDo);
-                        consoleView.print("Progression: " + profile.Progression);
-                        consoleView.print("TypeOfSave: " + profile.TypeOfSave);
-                        consoleView.print("");
+                        List<string> list = new List<string>();
+                        list.Add(profile.Name);
+                        list.Add(profile.SourceFilePath);
+                        list.Add(profile.TargetFilePath);
+                        list.Add(profile.State);
+                        list.Add(profile.TotalFilesToCopy.ToString());
+                        list.Add(profile.TotalFilesSize.ToString());
+                        list.Add(profile.NbFilesLeftToDo.ToString());
+                        list.Add(profile.Progression.ToString());
+                        list.Add(profile.TypeOfSave);
+                        consoleView.DisplaySaveProfiles(list.ToArray());
                         consoleView.printSeparator();
                     }
                 }
@@ -148,7 +144,7 @@ namespace EasySaveConsoleApp
         }
         public void CreateSaveProfile() 
         {
-            consoleView.print("This function is not available yet");
+            consoleView.NotImplementedYet();
         }
         public void ModifySaveProfile() 
         {
@@ -160,19 +156,19 @@ namespace EasySaveConsoleApp
 
                 profileIndex = GetProfileIndex();
 
-                consoleView.print("The profile you selected is " + profileName);
+                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
 
-                consoleView.print("Please enter the new values for the Name:");
-                saveProfiles[profileIndex].Name = consoleView.read();
+                consoleView.DisplayModifySaveProfileNewName();
+                saveProfiles[profileIndex].Name = consoleView.Read();
 
-                consoleView.print("Please enter the new values for the Source File Path:");
-                saveProfiles[profileIndex].SourceFilePath = consoleView.read();
+                consoleView.DisplayModifySaveProfileNewSourceFilePath();
+                saveProfiles[profileIndex].SourceFilePath = consoleView.Read();
 
-                consoleView.print("Please enter the new values for the Target File Path:");
-                saveProfiles[profileIndex].TargetFilePath = consoleView.read();
+                consoleView.DisplayModifySaveProfileNewTargetFilePath();
+                saveProfiles[profileIndex].TargetFilePath = consoleView.Read();
 
-                consoleView.print("Please enter the new values for the Type Of Save (full or diff)");
-                saveProfiles[profileIndex].TypeOfSave = consoleView.read();
+                consoleView.DisplayModifySaveProfileNewTypeOfSave();
+                saveProfiles[profileIndex].TypeOfSave = consoleView.Read();
 
                 List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(saveProfiles[profileIndex].SourceFilePath);
                 saveProfiles[profileIndex].TotalFilesToCopy = (int)sourcedirectoryinfo[0];
@@ -183,12 +179,12 @@ namespace EasySaveConsoleApp
                 saveProfiles[profileIndex].State = "READY";
 
                 SaveProfile.SaveProfiles("..\\..\\..\\logs\\state.json", saveProfiles);
-                consoleView.printSuccess("The profile has been modified");
+                consoleView.DisplayModifySaveProfileSuccess();
 
             }
             catch (Exception ex)
             {
-                consoleView.printError("Error: " + ex.Message);
+                consoleView.Error(ex.Message);
             }
             
         }
@@ -197,7 +193,7 @@ namespace EasySaveConsoleApp
             try
             {
                 int profileIndex = GetProfileIndex();
-                consoleView.print("The profile you selected is " + saveProfiles[profileIndex].Name);
+                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
 
                 if (saveProfiles[profileIndex].State == "READY")
                 {
@@ -206,68 +202,55 @@ namespace EasySaveConsoleApp
 
                     if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
-                        consoleView.print($"Backing up profile {saveProfiles[profileIndex].Name}...");  
+                        consoleView.DisplayBackupInProgress(saveProfiles[profileIndex].Name);
                         SaveProfile.ExecuteSaveProfile(saveProfiles, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave);
                     }
                     else
                     {
-                        consoleView.printError("Error: The type of save is not valid");
+                        consoleView.DisplayExecuteSaveProfileTypeOfSaveError();
                     }
 
                     saveProfiles[profileIndex].State = "COMPLETED";
                     SaveProfile.SaveProfiles("..\\..\\..\\logs\\state.json", saveProfiles);
-                    consoleView.printSuccess("The profile has been executed");
+                    consoleView.DisplayExecuteSaveProfileSuccess();
                 }
                 else
                 {
-                    consoleView.printError("Error: The profile is not ready");
+                    consoleView.DisplayExecuteSaveProfileStateError();
                 }
             }
             catch (Exception ex)
             {
-                consoleView.printError("Error: " + ex.Message);
+                consoleView.Error(ex.Message);
             }
         }
         public void DisplayLogs()
         {
-            consoleView.print("This function is not available yet");
-        }
-        public void Help() 
-        {
-            consoleView.printInfo("menu: Display the menu");
-            consoleView.printInfo("dsp: Display the save profiles");
-            consoleView.printInfo("csp: Create a save profile");
-            consoleView.printInfo("msp: Modify a save profile");
-            consoleView.printInfo("esp: Execute a save profile");
-            consoleView.printInfo("dl: Display the logs");
-            consoleView.printInfo("help: Display the help");
-            consoleView.printInfo("config: Display the configuration");
-            consoleView.printInfo("exit: Exit the program");
-            consoleView.printSeparator();
+            consoleView.NotImplementedYet();
         }
 
         public void Configuration()
         {
-            consoleView.print("This function is not available yet");
+            consoleView.NotImplementedYet();
         }
         public void Exit() 
         {
-            consoleView.print("Thank you for using EasySave");
-            Function = "exit";
+            consoleView.Exit();
+            argument = "exit";
             Environment.Exit(0);
         }
 
         public int GetProfileIndex()
         {
-            consoleView.print("Select the save profile you want to modify by entering its index");
+            consoleView.DisplayChooseSelectedProfile();
 
             // print all the profiles name
             for (int i = 0; i < saveProfiles.Count; i++)
             {
-                consoleView.print((i) + ". " + saveProfiles[i].Name);
+                consoleView.DisplayProfileIndexName(i, saveProfiles[i].Name);
             }
 
-            string choice = consoleView.read();
+            string choice = consoleView.Read();
             int profileIndex = -1;
 
             for (int i = 0; i < saveProfiles.Count; i++)
