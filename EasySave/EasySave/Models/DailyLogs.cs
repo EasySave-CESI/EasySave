@@ -9,31 +9,44 @@ using System.IO;
 
 namespace EasySaveConsoleApp
 {
-    public class DailyLog
-    {
-        public string Name { get; set; }
-        public string FileSource { get; set; }
-        public string FileTarget { get; set; }
-        public long FileSize { get; set; }
-        public double FileTransferTime { get; set; }
-        public string Time { get; set; }
-        
-    }
-
     public enum LogFileFormat
     {
         Json,
         Xml
     }
 
+    public class DailyLog
+    {
+        public string Name { get; set; }
+        public string SourceFilePath { get; set; }
+        public string TargetFilePath { get; set; }
+        public long FileSize { get; set; }
+        public double FileTransferTime { get; set; }
+        public string Time { get; set; }
+        
+    }
+
     public class DailyLogs
     {
         private List<DailyLog> logs;
-        private LogFileFormat logFileFormat = LogFileFormat.Json;
-        private string logsDirectory = "..\\..\\..\\logs";
+        private LogFileFormat logFileFormat;
+        private string logsDirectory;
 
-        public DailyLogs()
+        public DailyLogs(string logsDirectory, string format)
         {
+            switch (format)
+            {
+                case "json":
+                    logFileFormat = LogFileFormat.Json;
+                    break;
+                case "xml":
+                    logFileFormat = LogFileFormat.Xml;
+                    break;
+                default:
+                    throw new NotSupportedException("Unsupported log file format.");
+            }
+
+            this.logsDirectory = logsDirectory;
             logs = LoadLogs();
         }
 
@@ -42,13 +55,13 @@ namespace EasySaveConsoleApp
             logFileFormat = format;
         }
 
-        public void CreateLog(string name, string fileSource, string fileTarget, long fileSize, double fileTransferTime)
+        public void CreateLog(string name, string sourcefilepath, string targetfilepath, long fileSize, double fileTransferTime)
         {
             var log = new DailyLog
             {
                 Name = name,
-                FileSource = fileSource,
-                FileTarget = fileTarget,
+                SourceFilePath = sourcefilepath,
+                TargetFilePath = targetfilepath,
                 FileSize = fileSize,
                 FileTransferTime = fileTransferTime,
                 Time = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")

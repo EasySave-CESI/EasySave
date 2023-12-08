@@ -5,11 +5,16 @@ namespace EasySaveConsoleApp
 {
     public class ConsoleView
     {
-        private readonly Dictionary<string, string> printStringDictionary;
+        private Dictionary<string, string> printStringDictionary;
 
         /* Constructor */
 
         public ConsoleView(Dictionary<string, string> printStringDictionary)
+        {
+            this.printStringDictionary = printStringDictionary;
+        }
+
+        public void SetprintStringDictionary(Dictionary<string, string> printStringDictionary)
         {
             this.printStringDictionary = printStringDictionary;
         }
@@ -26,13 +31,16 @@ namespace EasySaveConsoleApp
             Console.ForegroundColor = ConsoleColor.Red;
             Print(text);
             Console.ResetColor();
+            PrintSeparator();
         }
 
         public void PrintSuccess(string text)
         {
+            PrintSeparator();
             Console.ForegroundColor = ConsoleColor.Green;
             Print(text);
             Console.ResetColor();
+            PrintSeparator();
         }
 
         public void PrintWarning(string text)
@@ -63,7 +71,7 @@ namespace EasySaveConsoleApp
             Console.Clear();
         }
 
-        public void printSeparator()
+        public void PrintSeparator()
         {
             Print("");
             Print(printStringDictionary["Separator"]);
@@ -77,7 +85,7 @@ namespace EasySaveConsoleApp
         public void WelcomeMessage()
         {
             PrintInfo(printStringDictionary["WelcomeMessage"]);
-            printSeparator();
+            PrintSeparator();
         }
 
         public void ArgumentError()
@@ -89,6 +97,7 @@ namespace EasySaveConsoleApp
 
         public void DisplaySelectedProfileName(string saveProfileName)
         {
+            Print("");
             PrintInfo(printStringDictionary["DisplaySelectedProfileName"] + saveProfileName);
         }
 
@@ -104,6 +113,7 @@ namespace EasySaveConsoleApp
 
         public void Error(string error)
         {
+            Print("");
             PrintError(printStringDictionary["Error"] + error);
         }
 
@@ -111,16 +121,17 @@ namespace EasySaveConsoleApp
 
         public void DisplayMenu()
         {
-            PrintInfo(printStringDictionary["DisplayMenu_0"]);
-            Print(printStringDictionary["DisplayMenu_1"]);
-            Print(printStringDictionary["DisplayMenu_2"]);
-            Print(printStringDictionary["DisplayMenu_3"]);
-            Print(printStringDictionary["DisplayMenu_4"]);
-            Print(printStringDictionary["DisplayMenu_5"]);
-            Print(printStringDictionary["DisplayMenu_6"]);
-            Print(printStringDictionary["DisplayMenu_7"]);
-            Print(printStringDictionary["DisplayMenu_8"]);
-            Print(printStringDictionary["DisplayMenu_9"]);
+            PrintInfo(printStringDictionary["DisplayMenu_Header"]);
+            Print(printStringDictionary["DisplayMenu_DislaySaveProfiles"]);
+            Print(printStringDictionary["DisplayMenu_CreateSaveProfile"]);
+            Print(printStringDictionary["DisplayMenu_ModifySaveProfile"]);
+            Print(printStringDictionary["DisplayMenu_ExecuteSaveProfile"]);
+            Print(printStringDictionary["DisplayMenu_DisplayLogs"]);
+            Print(printStringDictionary["DisplayMenu_Help"]);
+            Print(printStringDictionary["DisplayMenu_Configuration"]);
+            Print(printStringDictionary["DisplayMenu_Clear"]);
+            Print(printStringDictionary["DisplayMenu_Exit"]);
+            Print("");
         }
 
         public void DisplayMenuError()
@@ -132,15 +143,17 @@ namespace EasySaveConsoleApp
 
         public void DisplaySaveProfiles(string[] saveProfiles)
         {
-            Console.WriteLine($"Name:             {saveProfiles[0]}");
-            Console.WriteLine($"SourceFilePath:   {saveProfiles[1]}");
-            Console.WriteLine($"TargetFilePath:   {saveProfiles[2]}");
-            Console.WriteLine($"State:            {saveProfiles[3]}");
-            Console.WriteLine($"TotalFilesToCopy: {saveProfiles[4]}");
-            Console.WriteLine($"TotalFilesSize:   {saveProfiles[5]}");
-            Console.WriteLine($"NbFilesLeftToDo:  {saveProfiles[6]}");
-            Console.WriteLine($"Progression:      {saveProfiles[7]}");
-            Console.WriteLine($"TypeOfSave:       {saveProfiles[8]}");
+            Print("");
+            Print(printStringDictionary["DisplaySaveProfiles_Name"] + saveProfiles[0]);
+            Print(printStringDictionary["DisplaySaveProfiles_SourceFilePath"] + saveProfiles[1]);
+            Print(printStringDictionary["DisplaySaveProfiles_TargetFilePath"] + saveProfiles[2]);
+            Print(printStringDictionary["DisplaySaveProfiles_State"] + saveProfiles[3]);
+            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesToCopy"] + saveProfiles[4]);
+            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesSize"] + saveProfiles[5]);
+            Print(printStringDictionary["DisplaySaveProfiles_NbFilesLeftToDo"] + saveProfiles[6]);
+            Print(printStringDictionary["DisplaySaveProfiles_Progression"] + saveProfiles[7]);
+            Print(printStringDictionary["DisplaySaveProfiles_TypeOfSave"] + saveProfiles[8]);
+            PrintSeparator();
         }
 
 
@@ -153,21 +166,25 @@ namespace EasySaveConsoleApp
 
         public void DisplayModifySaveProfileNewName()
         {
+            Print("");
             PrintInfo(printStringDictionary["DisplayModifySaveProfileNewName"]);
         }
 
         public void DisplayModifySaveProfileNewSourceFilePath()
         {
+            Print("");
             PrintInfo(printStringDictionary["DisplayModifySaveProfileNewSourceFilePath"]);
         }
 
         public void DisplayModifySaveProfileNewTargetFilePath()
         {
+            Print("");
             PrintInfo(printStringDictionary["DisplayModifySaveProfileNewTargetFilePath"]);
         }
 
         public void DisplayModifySaveProfileNewTypeOfSave()
         {
+            Print("");
             PrintInfo(printStringDictionary["DisplayModifySaveProfileNewTypeOfSave"]);
         }
 
@@ -181,7 +198,7 @@ namespace EasySaveConsoleApp
 
         public void DisplayBackupInProgress(string name)
         {
-            PrintInfo($"Backing up profile {name}...");
+            PrintInfo(printStringDictionary["DisplayBackupInProgress"] + name + printStringDictionary["dots"]);
         }
 
         public void DisplayExecuteSaveProfileSuccess()
@@ -203,61 +220,89 @@ namespace EasySaveConsoleApp
 
         public void DisplayLogsHeader()
         {
-            PrintInfo("--------------- LOGS ---------------");
+            PrintInfo(printStringDictionary["DisplayLogsHeader"]);
         }
 
         public void DisplayLog(DailyLog log)
         {
-            Console.WriteLine($"Name:             {log.Name}");
-            Console.WriteLine($"FileSource:       {log.FileSource}");
-            Console.WriteLine($"FileTarget:       {log.FileTarget}");
-            Console.WriteLine($"FileSize:         {log.FileSize}");
-            Console.WriteLine($"FileTransferTime: {log.FileTransferTime}");
-            Console.WriteLine($"Time:             {log.Time}");
+            Print("");
+            Print(printStringDictionary["DisplayLog_Name"] + log.Name);
+            Print(printStringDictionary["DisplayLog_SourceFilePath"] + log.SourceFilePath);
+            Print(printStringDictionary["DisplayLog_TargetFilePath"] + log.TargetFilePath);
+            Print(printStringDictionary["DisplayLog_FileSize"] + log.FileSize);
+            Print(printStringDictionary["DisplayLog_FileTransferTime"] + log.FileTransferTime);
+            Print(printStringDictionary["DisplayLog_Time"] + log.Time);
+            PrintSeparator();
         }
 
         /* Help */
 
         public void Help()
         {
-            PrintInfo(printStringDictionary["Help_0"]);
-            PrintInfo(printStringDictionary["Help_1"]);
-            PrintInfo(printStringDictionary["Help_2"]);
-            PrintInfo(printStringDictionary["Help_3"]);
-            PrintInfo(printStringDictionary["Help_4"]);
-            PrintInfo(printStringDictionary["Help_5"]);
-            PrintInfo(printStringDictionary["Help_6"]);
-            PrintInfo(printStringDictionary["Help_7"]);
-            PrintInfo(printStringDictionary["Help_8"]);
-            PrintInfo(printStringDictionary["Help_9"]);
-            printSeparator();
+            PrintInfo(printStringDictionary["Help_Header"]);
+            Print("");
+            PrintInfo(printStringDictionary["Help_Menu"]);
+            PrintInfo(printStringDictionary["Help_DislaySaveProfiles"]);
+            PrintInfo(printStringDictionary["Help_CreateSaveProfile"]);
+            PrintInfo(printStringDictionary["Help_ModifySaveProfile"]);
+            PrintInfo(printStringDictionary["Help_ExecuteSaveProfile"]);
+            PrintInfo(printStringDictionary["Help_DisplayLogs"]);
+            PrintInfo(printStringDictionary["Help_Help"]);
+            PrintInfo(printStringDictionary["Help_Configuration"]);
+            PrintInfo(printStringDictionary["Help_Exit"]);
+            PrintSeparator();
         }
 
-        public void DisplayConfigurationMenu()
+        public void DisplayConfigurationMenu(string language, string logformat)
         {
-            PrintInfo("Please choose an option:");
-            Print("1. Change language");
-            Print("2. Change logs file format");
-            Print("3. Exit");
+            Print(printStringDictionary["DisplayConfigurationMenu_DisplayLanguage"] + language);
+            Print(printStringDictionary["DisplayConfigurationMenu_DisplayLogFormat"] + logformat);
             Print("");
+            PrintInfo(printStringDictionary["DisplayConfigurationMenu_Header"]);
+            Print(printStringDictionary["DisplayConfigurationMenu_ChangeLanguage"]);
+            Print(printStringDictionary["DisplayConfigurationMenu_ChangeLogFormat"]);
+            Print(printStringDictionary["DisplayConfigurationMenu_Back"]);
+            Print("");
+        }
+
+        public void DisplayLanguageMenu()
+        {
+            PrintSeparator();
+            PrintInfo(printStringDictionary["DisplayLanguageMenu_Header"]);
+            Print("");
+            Print(printStringDictionary["DisplayLanguageMenu_French"]);
+            Print(printStringDictionary["DisplayLanguageMenu_English"]);
+            PrintSeparator();
+        }
+
+        public void DisplayLanguageSuccess(string language)
+        {
+            PrintSuccess(printStringDictionary["DisplayLanguageSuccess"] + language);
+        }
+
+        public void DisplayLanguageError()
+        {
+            PrintError(printStringDictionary["DisplayLanguageError"]);
         }
 
         public void DisplayLogFileFormatMenu()
         {
-            PrintInfo("Please choose the log file format:");
-            Print("1. JSON");
-            Print("2. XML");
+            PrintSeparator();
+            PrintInfo(printStringDictionary["DisplayLogFileFormatMenu_Header"]);
             Print("");
+            Print(printStringDictionary["DisplayLogFileFormatMenu_Json"]);
+            Print(printStringDictionary["DisplayLogFileFormatMenu_Xml"]);
+            PrintSeparator();
         }
 
         public void DisplayLogFileFormatSuccess(string format)
         {
-            PrintSuccess($"Log file format set to {format}");
+            PrintSuccess(printStringDictionary["DisplayLogFileFormatSuccess"] + format);
         }
 
         public void DisplayLogFileFormatError()
         {
-            PrintError("Please enter a valid option for log file format.");
+            PrintError(printStringDictionary["DisplayLogFileFormatError"]);
         }
 
         public void Exit()
@@ -270,7 +315,6 @@ namespace EasySaveConsoleApp
         public void NotImplementedYet()
         {
             PrintError(printStringDictionary["NotImplementedYet"]);
-            printSeparator();
         }
     }
 }

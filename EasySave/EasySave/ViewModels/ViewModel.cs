@@ -11,6 +11,7 @@ namespace EasySaveConsoleApp
         public string stringsENFilePath = "..\\..\\..\\Config\\Strings_en.xml";
         public string stringsFRFilePath = "..\\..\\..\\Config\\Strings_fr.xml";
         public string stateFilePath = "..\\..\\..\\Config\\state.json";
+        public string logsDirectory = "..\\..\\..\\logs";
 
         public Configuration configuration { get; set; }
         public ConsoleView consoleView { get; init; }
@@ -18,16 +19,16 @@ namespace EasySaveConsoleApp
 
         public string argument { get; set; }
         public string language { get; set; }
+        public string fulllanguagename { get; set; }
         public string logformat { get; set; }
         public Dictionary<string, string> printStrings { get; set; }
-        public DailyLogs Logger { get; set; } = new DailyLogs();
+        public DailyLogs Logger { get; set; }
 
 
         public MainViewModel()
         {
             configuration = new Configuration(configFilePath);
             saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
-            Logger = LoadDailyLogs();
             argument = "menu";
 
             language = configuration.language;
@@ -35,17 +36,21 @@ namespace EasySaveConsoleApp
 
             if (language == "en")
             {
+                fulllanguagename = "English";
                 printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
             }
             else if (language == "fr")
             {
+                fulllanguagename = "Français";
                 printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
             }
             else
             {
+                fulllanguagename = "English";
                 printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
             }
 
+            Logger = LoadDailyLogs();
             consoleView = new ConsoleView(printStrings);
             consoleView.WelcomeMessage();
             Menu();
@@ -55,7 +60,6 @@ namespace EasySaveConsoleApp
         {
             configuration = new Configuration(configFilePath);
             saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
-            Logger = LoadDailyLogs();
             argument = userargument;
 
             language = configuration.language;
@@ -63,17 +67,21 @@ namespace EasySaveConsoleApp
 
             if (language == "en")
             {
+                fulllanguagename = "English";
                 printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
             }
             else if (language == "fr")
             {
+                fulllanguagename = "Français";
                 printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
             }
             else
             {
+                fulllanguagename = "English";
                 printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
             }
 
+            Logger = LoadDailyLogs();
             consoleView = new ConsoleView(printStrings);
             consoleView.WelcomeMessage();
             Main();
@@ -124,7 +132,7 @@ namespace EasySaveConsoleApp
             {
                 consoleView.DisplayMenu();
                 string choice = consoleView.Read();
-                consoleView.printSeparator();
+                consoleView.PrintSeparator();
                 switch (choice)
                 {
                     case "1":
@@ -184,7 +192,6 @@ namespace EasySaveConsoleApp
                         list.Add(profile.Progression.ToString());
                         list.Add(profile.TypeOfSave);
                         consoleView.DisplaySaveProfiles(list.ToArray());
-                        consoleView.printSeparator();
                     }
                 }
             }
@@ -293,26 +300,25 @@ namespace EasySaveConsoleApp
             foreach (var log in Logger.GetLogs())
             {
                 consoleView.DisplayLog(log);
-                consoleView.printSeparator();
             }
         }
 
         public void Config()
         {
-            consoleView.DisplayConfigurationMenu();
+            consoleView.DisplayConfigurationMenu(fulllanguagename, logformat);
             string configChoice = consoleView.Read();
 
             switch (configChoice)
             {
                 case "1":
-                    consoleView.NotImplementedYet();
+                    ChooseLanguage();
                     break;
                 case "2":
                     ChooseLogFileFormat();
                     SaveDailyLogs();
                     break;
                 case "3":
-                    Exit();
+                    consoleView.Clear();
                     break;
                 default:
                     consoleView.DisplayMenuError();
@@ -322,13 +328,42 @@ namespace EasySaveConsoleApp
 
         private DailyLogs LoadDailyLogs()
         {
-            DailyLogs loadedLogs = new DailyLogs();
+            DailyLogs loadedLogs = new DailyLogs(logsDirectory, logformat);
             return loadedLogs;
         }
 
         private void SaveDailyLogs()
         {
             Logger.SaveLogs();
+        }
+
+        private void ChooseLanguage()
+        {
+            consoleView.DisplayLanguageMenu();
+            string languageChoice = consoleView.Read();
+
+            switch (languageChoice)
+            {
+                case "1":
+                    language = "fr";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    consoleView.SetprintStringDictionary(Configuration.GetDictPrintStrings(stringsFRFilePath));
+                    fulllanguagename = "Français";
+                    consoleView.Clear();
+                    consoleView.DisplayLanguageSuccess(fulllanguagename);
+                    break;
+                case "2":
+                    language = "en";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    consoleView.SetprintStringDictionary(Configuration.GetDictPrintStrings(stringsENFilePath));
+                    fulllanguagename = "English";
+                    consoleView.Clear();
+                    consoleView.DisplayLanguageSuccess(fulllanguagename);
+                    break;
+                default:
+                    consoleView.DisplayLanguageError();
+                    break;
+            }
         }
 
         private void ChooseLogFileFormat()
@@ -339,12 +374,18 @@ namespace EasySaveConsoleApp
             switch (logFormatChoice)
             {
                 case "1":
+                    logformat = "json";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
                     Logger.SetLogFileFormat(LogFileFormat.Json);
-                    consoleView.DisplayLogFileFormatSuccess("JSON");
+                    consoleView.Clear();
+                    consoleView.DisplayLogFileFormatSuccess(logformat);
                     break;
                 case "2":
+                    logformat = "xml";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
                     Logger.SetLogFileFormat(LogFileFormat.Xml);
-                    consoleView.DisplayLogFileFormatSuccess("XML");
+                    consoleView.Clear();
+                    consoleView.DisplayLogFileFormatSuccess(logformat);
                     break;
                 default:
                     consoleView.DisplayLogFileFormatError();
@@ -366,15 +407,16 @@ namespace EasySaveConsoleApp
             // print all the profiles name
             for (int i = 0; i < saveProfiles.Count; i++)
             {
-                consoleView.DisplayProfileIndexName(i, saveProfiles[i].Name);
+                consoleView.DisplayProfileIndexName(i+1, saveProfiles[i].Name);
             }
 
             string choice = consoleView.Read();
+
             int profileIndex = -1;
 
             for (int i = 0; i < saveProfiles.Count; i++)
             {
-                if (int.Parse(choice) == i)
+                if (int.Parse(choice) == i+1)
                 {
                     profileIndex = i;
                 }

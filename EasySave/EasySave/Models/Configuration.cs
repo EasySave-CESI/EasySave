@@ -46,6 +46,38 @@ namespace EasySaveConsoleApp
             }
         }
 
+        public static void SetConfiguration(string filePath, string language, string logFormat)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(filePath);
+
+                XmlNodeList appSettingsNodes = doc.SelectNodes("/configuration/appSettings/add");
+
+                foreach (XmlNode node in appSettingsNodes)
+                {
+                    string key = node.Attributes["key"].Value;
+                    string value = node.Attributes["value"].Value;
+
+                    if (key == "language")
+                    {
+                        node.Attributes["value"].Value = language;
+                    }
+                    else if (key == "logformat")
+                    {
+                        node.Attributes["value"].Value = logFormat;
+                    }
+                }
+
+                doc.Save(filePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
         public static Dictionary<string, string> GetDictPrintStrings(string filePath)
         {
             try
