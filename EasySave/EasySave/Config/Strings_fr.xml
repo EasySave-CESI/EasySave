@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<printStrings>
+	<add key="Separator" value="--------------------------------------------------" />
+	<add key="dots" value="..." />
+	<add key="WelcomeMessage" value="Bienvenue dans EasySave !" />
+	<add key="ArgumentError" value="Erreur : Argument non reconnu" />
+	<add key="DisplaySelectedProfileName" value="Vous avez sélectionné le profil de sauvegarde : " />
+	<add key="DisplayChooseSelectedProfile" value="Sélectionnez le profil de sauvegarde que vous souhaitez modifier en entrant son indice" />
+	<add key="Error" value="Erreur : " />
+	<add key="DisplayMenu_Header" value="Veuillez choisir une option :" />
+	<add key="DisplayMenu_DislaySaveProfiles" value="1. Afficher les profils de sauvegarde" />
+	<add key="DisplayMenu_CreateSaveProfile" value="2. Créer un profil de sauvegarde" />
+	<add key="DisplayMenu_ModifySaveProfile" value="3. Modifier un profil de sauvegarde" />
+	<add key="DisplayMenu_ExecuteSaveProfile" value="4. Exécuter un profil de sauvegarde" />
+	<add key="DisplayMenu_DisplayLogs" value="5. Afficher les registres" />
+	<add key="DisplayMenu_Help" value="6. Aide" />
+	<add key="DisplayMenu_Configuration" value="7. Configuration" />
+	<add key="DisplayMenu_Clear" value="8. Effacer la console" />
+	<add key="DisplayMenu_Exit" value="9. Quitter" />
+	<add key="DisplayMenuError" value="Veuillez entrer une option valide." />
+	<add key="DisplaySaveProfiles_Name" value="Nom :               " />
+	<add key="DisplaySaveProfiles_SourceFilePath" value="CheminSource :      " />
+	<add key="DisplaySaveProfiles_TargetFilePath" value="CheminCible :       " />
+	<add key="DisplaySaveProfiles_State" value="État :              " />
+	<add key="DisplaySaveProfiles_TotalFilesToCopy" value="TotalFichiers :     " />
+	<add key="DisplaySaveProfiles_TotalFilesSize" value="TailleTotale :      " />
+	<add key="DisplaySaveProfiles_NbFilesLeftToDo" value="NbFichiersRestants: " />
+	<add key="DisplaySaveProfiles_Progression" value="Progression :       " />
+	<add key="DisplaySaveProfiles_TypeOfSave" value="TypeDeSauvegarde :  " />
+	<add key="DisplaySaveProfilesError" value="Il n'y a aucun profil de sauvegarde." />
+	<add key="DisplayModifySaveProfileNewName" value="Veuillez entrer le nouveau nom du profil de sauvegarde :" />
+	<add key="DisplayModifySaveProfileNewSourceFilePath" value="Veuillez entrer le nouveau chemin source du profil de sauvegarde :" />
+	<add key="DisplayModifySaveProfileNewTargetFilePath" value="Veuillez entrer le nouveau chemin cible du profil de sauvegarde :" />
+	<add key="DisplayModifySaveProfileNewTypeOfSave" value="Veuillez entrer le nouveau type de sauvegarde du profil (full ou diff) :" />
+	<add key="DisplayModifySaveProfileSuccess" value="Le profil de sauvegarde a été modifié avec succès." />
+	<add key="DisplayBackupInProgress" value="Sauvegarde en cours pour le profil : " />
+	<add key="DisplayExecuteSaveProfileSuccess" value="Le profil de sauvegarde a été exécuté avec succès." />
+	<add key="DisplayExecuteSaveProfileStateError" value="Erreur : Le profil n'est pas prêt" />
+	<add key="DisplayExecuteSaveProfileTypeOfSaveError" value="Erreur : Le type de sauvegarde n'est pas valide" />
+	<add key="DisplayLogsHeader" value="--------------- REGISTRES ---------------" />
+	<add key="DisplayLog_Name" value="Nom :             " />
+	<add key="DisplayLog_SourceFilePath" value="CheminSource :    " />
+	<add key="DisplayLog_TargetFilePath" value="CheminCible :     " />
+	<add key="DisplayLog_FileSize" value="TailleFichier :    " />
+	<add key="DisplayLog_FileTransferTime" value="TempsTransfertFichier : " />
+	<add key="DisplayLog_Time" value="Temps :            " />
+	<add key="Help_Header" value="--------------- AIDE ---------------" />
+	<add key="Help_Menu" value="menu :    Afficher le menu" />
+	<add key="Help_DislaySaveProfiles" value="dsp :     Afficher les profils de sauvegarde" />
+	<add key="Help_CreateSaveProfile" value="csp :     Créer un profil de sauvegarde" />
+	<add key="Help_ModifySaveProfile" value="msp :     Modifier un profil de sauvegarde" />
+	<add key="Help_ExecuteSaveProfile" value="esp :     Exécuter un profil de sauvegarde" />
+	<add key="Help_DisplayLogs" value="dl :      Afficher les registres" />
+	<add key="Help_Help" value="help :    Afficher l'aide" />
+	<add key="Help_Configuration" value="config :  Afficher la configuration" />
+	<add key="Help_Exit" value="exit :    Quitter le programme" />
+	<add key="DisplayConfigurationMenu_Header" value="Veuillez choisir une option :" />
+	<add key="DisplayConfigurationMenu_DisplayLanguage" value="La langue actuelle est : " />
+	<add key="DisplayConfigurationMenu_DisplayLogFormat" value="Le format actuel du journal est : " />
+	<add key="DisplayConfigurationMenu_ChangeLanguage" value="1. Changer la langue" />
+	<add key="DisplayConfigurationMenu_ChangeLogFormat" value="2. Changer le format du journal" />
+	<add key="DisplayLanguageMenu_Header" value="Veuillez choisir une langue :" />
+	<add key="DisplayLanguageMenu_French" value="1. Français" />
+	<add key="DisplayLanguageMenu_English" value="2. Anglais" />
+	<add key="DisplayLanguageSuccess" value="Langue définie sur " />
+	<add key="DisplayLanguageError" value="Veuillez entrer une option valide pour la langue." />
+	<add key="DisplayLogFileFormatMenu_Header" value="Veuillez choisir un format pour le journal :" />
+	<add key="DisplayLogFileFormatMenu_Json" value="1. Json" />
+	<add key="DisplayLogFileFormatMenu_Xml" value="2. Xml" />
+	<add key="DisplayLogFileFormatSuccess" value="Format du journal défini sur " />
+	<add key="DisplayLogFileFormatError" value="Veuillez entrer une option valide pour le format du journal." />
+	<add key="DisplayConfigurationMenu_Back" value="3. Retour" />
+	<add key="Exit" value="Merci d'utiliser EasySave" />
+	<add key="NotImplementedYet" value="Pas encore implémenté." />
+</printStrings>

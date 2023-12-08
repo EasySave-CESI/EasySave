@@ -7,156 +7,421 @@ namespace EasySaveConsoleApp
 {
     public class MainViewModel
     {
-        private readonly List<Profile> _profiles;
+        public string configFilePath = "..\\..\\..\\Config\\config.xml";
+        public string stringsENFilePath = "..\\..\\..\\Config\\Strings_en.xml";
+        public string stringsFRFilePath = "..\\..\\..\\Config\\Strings_fr.xml";
+        public string stateFilePath = "..\\..\\..\\Config\\state.json";
+        public string logsDirectory = "..\\..\\..\\logs";
 
-        public MainViewModel(List<Profile> profiles)
+        public Configuration configuration { get; set; }
+        public ConsoleView consoleView { get; init; }
+        public List<SaveProfile> saveProfiles { get; set; }
+
+        public string argument { get; set; }
+        public string language { get; set; }
+        public string fulllanguagename { get; set; }
+        public string logformat { get; set; }
+        public Dictionary<string, string> printStrings { get; set; }
+        public DailyLogs Logger { get; set; }
+
+
+        public MainViewModel()
         {
-            _profiles = profiles;
-        }
+            configuration = new Configuration(configFilePath);
+            saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
+            argument = "menu";
 
-        public void DisplayProfiles()
-        {
-            Console.WriteLine("\nList of backup profiles:");
+            language = configuration.language;
+            logformat = configuration.logFormat;
 
-            Console.WriteLine("Name - State - Source path - Target path");
-
-            foreach (var profile in _profiles)
+            if (language == "en")
             {
-                Console.WriteLine((int.Parse(profile.Name.Substring(profile.Name.Length - 1))) + ". " + profile.Name + " - " + profile.State + " - " + profile.SourceFilePath + " - " + profile.TargetFilePath + " - " + profile.TypeOfSave);
+                fulllanguagename = "English";
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
             }
-        }
-
-        public void ModifyProfile()
-        {
-            Console.WriteLine("\nModifying a backup profile:");
-
-            Console.Write("Enter the profile number to modify (1-5): ");
-            int profileNumber;
-            if (int.TryParse(Console.ReadLine(), out profileNumber) && profileNumber >= 1 && profileNumber <= 5)
+            else if (language == "fr")
             {
-                int index = profileNumber -1;
-
-                Console.Write("New source path: ");
-
-                _profiles[index].SourceFilePath = Console.ReadLine();
-                Console.WriteLine("New source path: " + _profiles[index].SourceFilePath);
-     
-
-                Console.Write("New target path: ");
-                _profiles[index].TargetFilePath = Console.ReadLine();
-                Console.WriteLine("New target path: " + _profiles[index].TargetFilePath);
-
-                Console.Write("New type of save (full of diff): ");
-                if (Console.ReadLine() == "full")
-                {
-                    _profiles[index].TypeOfSave = "full";
-                }
-                else
-                {
-                    _profiles[index].TypeOfSave = "diff";
-                }
-
-                string[] files = Directory.GetFiles(_profiles[index].SourceFilePath, "*", SearchOption.AllDirectories);
-
-                _profiles[index].TotalFilesToCopy = files.Length;
-
-                foreach (string file in files)
-                {
-                    /* Add the size of the file to the total size of the profile in long */
-                    _profiles[index].TotalFilesSize += new FileInfo(file).Length;
-                    Console.WriteLine("Total size of the profile: " + _profiles[index].TotalFilesSize);
-                }
-
-                _profiles[index].State = "READY";
-                /* Then save the profiles to the state file */
-                Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
+                fulllanguagename = "Français";
+                printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
             }
             else
             {
-                Console.WriteLine("Invalid profile number. Please enter a number between 1 and 5.");
+                fulllanguagename = "English";
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
+            }
+
+            Logger = LoadDailyLogs();
+            consoleView = new ConsoleView(printStrings);
+            consoleView.WelcomeMessage();
+            Menu();
+        }
+
+        public MainViewModel(string userargument)
+        {
+            configuration = new Configuration(configFilePath);
+            saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
+            argument = userargument;
+
+            language = configuration.language;
+            logformat = configuration.logFormat;
+
+            if (language == "en")
+            {
+                fulllanguagename = "English";
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
+            }
+            else if (language == "fr")
+            {
+                fulllanguagename = "Français";
+                printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
+            }
+            else
+            {
+                fulllanguagename = "English";
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
+            }
+
+            Logger = LoadDailyLogs();
+            consoleView = new ConsoleView(printStrings);
+            consoleView.WelcomeMessage();
+            Main();
+        }
+
+        public void Main()
+        {
+            // transform the function to lowercase
+            argument = argument.ToLower();
+            switch (argument)
+            {
+                case "menu":
+                    Menu();
+                    break;
+                case "dsp":
+                    DisplaySaveProfiles();
+                    break;
+                case "csp":
+                    CreateSaveProfile();
+                    break;
+                case "msp":
+                    ModifySaveProfile();
+                    break;
+                case "esp":
+                    ExecuteSaveProfile();
+                    break;
+                case "dl":
+                    DisplayLogs();
+                    break;
+                case "help":
+                    consoleView.Help();
+                    break;
+                case "config":
+                    Config();
+                    break;
+                case "exit":
+                    Exit();
+                    break;
+                default:
+                    consoleView.ArgumentError();
+                    break;
             }
         }
 
-        public void ExecuteProfile()
+        public void Menu()
         {
-            List<int> index = new List<int>();
-
-            string pattern_1 = @"^[0-9]+$";
-            string pattern_2 = @"^[0-9]+[;][0-9]+$";
-            string pattern_3 = @"^[0-9]+[-][0-9]+$";
-
-            Console.WriteLine("Choose the profile(s) to execute: ");
-
-            string answer = Console.ReadLine();
-
-            if (Regex.IsMatch(answer, pattern_1))
+            while (argument != "exit")
             {
-                index.Add(int.Parse(answer) - 1);
-            }
-
-            if (Regex.IsMatch(answer, pattern_2))
-            {
-                string[] split = answer.Split(';');
-
-                index.Add(int.Parse(split[0]) - 1);
-                index.Add(int.Parse(split[1]) - 1);
-            }
-
-            if (Regex.IsMatch(answer, pattern_3))
-            {
-                int start = int.Parse(answer.Split('-')[0]);
-                int end = int.Parse(answer.Split('-')[1]);
-
-                for (int i = start; i <= end; i++)
+                consoleView.DisplayMenu();
+                string choice = consoleView.Read();
+                consoleView.PrintSeparator();
+                switch (choice)
                 {
-                    index.Add(i - 1);
+                    case "1":
+                        DisplaySaveProfiles();
+                        break;
+                    case "2":
+                        CreateSaveProfile();
+                        break;
+                    case "3":
+                        ModifySaveProfile();
+                        break;
+                    case "4":
+                        ExecuteSaveProfile();
+                        break;
+                    case "5":
+                        DisplayLogs();
+                        break;
+                    case "6":
+                        consoleView.Help();
+                        break;
+                    case "7":
+                        Config();
+                        SaveDailyLogs();
+                        break;
+                    case "8":
+                        consoleView.Clear();
+                        break;
+                    case "9":
+                        Exit();
+                        break;
+                    default:
+                        consoleView.DisplayMenuError();
+                        break;
+                }
+            }
+        }
+
+        public void DisplaySaveProfiles()
+        {
+            if (saveProfiles == null)
+            {
+                consoleView.DisplaySaveProfilesError();
+            }
+            else
+            {
+                {
+                    foreach (SaveProfile profile in saveProfiles)
+                    {
+                        List<string> list = new List<string>();
+                        list.Add(profile.Name);
+                        list.Add(profile.SourceFilePath);
+                        list.Add(profile.TargetFilePath);
+                        list.Add(profile.State);
+                        list.Add(profile.TotalFilesToCopy.ToString());
+                        list.Add(profile.TotalFilesSize.ToString());
+                        list.Add(profile.NbFilesLeftToDo.ToString());
+                        list.Add(profile.Progression.ToString());
+                        list.Add(profile.TypeOfSave);
+                        consoleView.DisplaySaveProfiles(list.ToArray());
+                    }
                 }
             }
 
-            for (int i = 0; i < index.Count; i++)
-            {
-                Console.WriteLine("Backing up profile " + _profiles[index[i]].Name + " in progress...");
+        }
 
-                try
+        public void CreateSaveProfile() 
+        {
+            consoleView.NotImplementedYet();
+        }
+
+        public void ModifySaveProfile()
+        {
+
+            try
+            {
+                string profileName = string.Empty;
+                int profileIndex = -1;
+
+                profileIndex = GetProfileIndex();
+
+                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
+
+                consoleView.DisplayModifySaveProfileNewName();
+                saveProfiles[profileIndex].Name = consoleView.Read();
+
+                consoleView.DisplayModifySaveProfileNewSourceFilePath();
+                saveProfiles[profileIndex].SourceFilePath = consoleView.Read();
+
+                consoleView.DisplayModifySaveProfileNewTargetFilePath();
+                saveProfiles[profileIndex].TargetFilePath = consoleView.Read();
+
+                consoleView.DisplayModifySaveProfileNewTypeOfSave();
+                saveProfiles[profileIndex].TypeOfSave = consoleView.Read();
+
+                List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(saveProfiles[profileIndex].SourceFilePath);
+                saveProfiles[profileIndex].TotalFilesToCopy = (int)sourcedirectoryinfo[0];
+                saveProfiles[profileIndex].TotalFilesSize = sourcedirectoryinfo[1];
+                saveProfiles[profileIndex].NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
+                saveProfiles[profileIndex].Progression = 0;
+
+                saveProfiles[profileIndex].State = "READY";
+
+                SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
+                consoleView.DisplayModifySaveProfileSuccess();
+
+            }
+            catch (Exception ex)
+            {
+                consoleView.Error(ex.Message);
+            }
+
+        }
+
+        public void ExecuteSaveProfile()
+        {
+            try
+            {
+                int profileIndex = GetProfileIndex();
+                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
+
+                if (saveProfiles[profileIndex].State == "READY")
                 {
-                    if (Directory.Exists(_profiles[index[i]].TargetFilePath))
+                    saveProfiles[profileIndex].State = "IN PROGRESS";
+                    SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
+
+                    if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
-                        Directory.Delete(_profiles[index[i]].TargetFilePath, true);
+                        consoleView.DisplayBackupInProgress(saveProfiles[profileIndex].Name);
+                        SaveProfile.ExecuteSaveProfile(saveProfiles, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave);
+
+                        DateTime startTime = DateTime.Now;
+                        TimeSpan elapsedTime = DateTime.Now - startTime;
+
+                        Logger.CreateLog(
+                        saveProfiles[profileIndex].Name,
+                        saveProfiles[profileIndex].SourceFilePath,
+                        saveProfiles[profileIndex].TargetFilePath,
+                        saveProfiles[profileIndex].TotalFilesSize,
+                        elapsedTime.TotalMilliseconds
+                        );
+                    }
+                    else
+                    {
+                        consoleView.DisplayExecuteSaveProfileTypeOfSaveError();
                     }
 
-                    Directory.CreateDirectory(_profiles[index[i]].TargetFilePath);
-
-                    string[] files = Directory.GetFiles(_profiles[index[i]].SourceFilePath, "*", SearchOption.AllDirectories);
-
-                    _profiles[index[i]].NbFilesLeftToDo = _profiles[index[i]].TotalFilesToCopy;
-
-                    foreach (string file in files)
-                    {
-                        string relativePath = file.Substring(_profiles[index[i]].SourceFilePath.Length + 1);
-
-                        string targetFilePath = Path.Combine(_profiles[index[i]].TargetFilePath, relativePath);
-
-                        Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath));
-
-                        File.Copy(file, targetFilePath, true);
-
-                        _profiles[index[i]].NbFilesLeftToDo--;
-                        _profiles[index[i]].Progression = (int)((_profiles[index[i]].TotalFilesToCopy - _profiles[index[i]].NbFilesLeftToDo) * 100 / _profiles[index[i]].TotalFilesToCopy);
-                        _profiles[index[i]].State = "RUNNING";
-
-                        Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
-                    }
-
-                    _profiles[index[i]].State = "COMPLETED";
-                    Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
+                    saveProfiles[profileIndex].State = "COMPLETED";
+                    SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
+                    consoleView.DisplayExecuteSaveProfileSuccess();
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Error backing up profile {_profiles[index[i]].Name}: {ex.Message}");
-                    _profiles[index[i]].State = "FAILED";
-                    Profile.SaveProfiles("..\\..\\..\\logs\\state.json", _profiles);
+                    consoleView.DisplayExecuteSaveProfileStateError();
                 }
             }
+            catch (Exception ex)
+            {
+                consoleView.Error(ex.Message);
+            }
+        }
+        public void DisplayLogs()
+        {
+            consoleView.DisplayLogsHeader();
+
+            foreach (var log in Logger.GetLogs())
+            {
+                consoleView.DisplayLog(log);
+            }
+        }
+
+        public void Config()
+        {
+            consoleView.DisplayConfigurationMenu(fulllanguagename, logformat);
+            string configChoice = consoleView.Read();
+
+            switch (configChoice)
+            {
+                case "1":
+                    ChooseLanguage();
+                    break;
+                case "2":
+                    ChooseLogFileFormat();
+                    SaveDailyLogs();
+                    break;
+                case "3":
+                    consoleView.Clear();
+                    break;
+                default:
+                    consoleView.DisplayMenuError();
+                    break;
+            }
+        }
+
+        private DailyLogs LoadDailyLogs()
+        {
+            DailyLogs loadedLogs = new DailyLogs(logsDirectory, logformat);
+            return loadedLogs;
+        }
+
+        private void SaveDailyLogs()
+        {
+            Logger.SaveLogs();
+        }
+
+        private void ChooseLanguage()
+        {
+            consoleView.DisplayLanguageMenu();
+            string languageChoice = consoleView.Read();
+
+            switch (languageChoice)
+            {
+                case "1":
+                    language = "fr";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    consoleView.SetprintStringDictionary(Configuration.GetDictPrintStrings(stringsFRFilePath));
+                    fulllanguagename = "Français";
+                    consoleView.Clear();
+                    consoleView.DisplayLanguageSuccess(fulllanguagename);
+                    break;
+                case "2":
+                    language = "en";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    consoleView.SetprintStringDictionary(Configuration.GetDictPrintStrings(stringsENFilePath));
+                    fulllanguagename = "English";
+                    consoleView.Clear();
+                    consoleView.DisplayLanguageSuccess(fulllanguagename);
+                    break;
+                default:
+                    consoleView.DisplayLanguageError();
+                    break;
+            }
+        }
+
+        private void ChooseLogFileFormat()
+        {
+            consoleView.DisplayLogFileFormatMenu();
+            string logFormatChoice = consoleView.Read();
+
+            switch (logFormatChoice)
+            {
+                case "1":
+                    logformat = "json";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    Logger.SetLogFileFormat(LogFileFormat.Json);
+                    consoleView.Clear();
+                    consoleView.DisplayLogFileFormatSuccess(logformat);
+                    break;
+                case "2":
+                    logformat = "xml";
+                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    Logger.SetLogFileFormat(LogFileFormat.Xml);
+                    consoleView.Clear();
+                    consoleView.DisplayLogFileFormatSuccess(logformat);
+                    break;
+                default:
+                    consoleView.DisplayLogFileFormatError();
+                    break;
+            }
+        }
+
+        public void Exit() 
+        {
+            consoleView.Exit();
+            argument = "exit";
+            Environment.Exit(0);
+        }
+
+        public int GetProfileIndex()
+        {
+            consoleView.DisplayChooseSelectedProfile();
+
+            // print all the profiles name
+            for (int i = 0; i < saveProfiles.Count; i++)
+            {
+                consoleView.DisplayProfileIndexName(i+1, saveProfiles[i].Name);
+            }
+
+            string choice = consoleView.Read();
+
+            int profileIndex = -1;
+
+            for (int i = 0; i < saveProfiles.Count; i++)
+            {
+                if (int.Parse(choice) == i+1)
+                {
+                    profileIndex = i;
+                }
+            }
+            return profileIndex;
         }
     }
 }
