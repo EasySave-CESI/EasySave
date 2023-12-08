@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<printStrings>
+	<add key="Separator" value="--------------------------------------------------" />
+	<add key="WelcomeMessage" value="Bienvenue dans EasySave !" />
+	<add key="ArgumentError" value="Erreur : Argument non reconnu" />
+	<add key="DisplaySelectedProfileName" value="Vous avez sélectionné le profil de sauvegarde : " />
+	<add key="DisplayChooseSelectedProfile" value="Sélectionnez le profil de sauvegarde que vous souhaitez modifier en entrant son indice" />
+	<add key="Error" value="Erreur : " />
+	<add key="DisplayMenu_0" value="Veuillez choisir une option :" />
+	<add key="DisplayMenu_1" value="1. Afficher les profils de sauvegarde" />
+	<add key="DisplayMenu_2" value="2. Créer un profil de sauvegarde" />
+	<add key="DisplayMenu_3" value="3. Modifier un profil de sauvegarde" />
+	<add key="DisplayMenu_4" value="4. Exécuter un profil de sauvegarde" />
+	<add key="DisplayMenu_5" value="5. Afficher les journaux" />
+	<add key="DisplayMenu_6" value="6. Aide" />
+	<add key="DisplayMenu_7" value="7. Configuration" />
+	<add key="DisplayMenu_8" value="8. Effacer la console" />
+	<add key="DisplayMenu_9" value="9. Quitter" />
+	<add key="DisplayMenuError" value="Veuillez entrer une option valide." />
+	<add key="DisplaySaveProfiles_0" value="Nom :             {saveProfiles[0]}" />
+	<add key="DisplaySaveProfiles_1" value="CheminSource :    {saveProfiles[1]}" />
+	<add key="DisplaySaveProfiles_2" value="CheminCible :     {saveProfiles[2]}" />
+	<add key="DisplaySaveProfiles_3" value="État :            {saveProfiles[3]}" />
+	<add key="DisplaySaveProfiles_4" value="TotalFichiersÀCopier : {saveProfiles[4]}" />
+	<add key="DisplaySaveProfiles_5" value="TailleTotaleFichiers : {saveProfiles[5]}" />
+	<add key="DisplaySaveProfiles_6" value="NbFichiersRestantsÀFaire : {saveProfiles[6]}" />
+	<add key="DisplaySaveProfiles_7" value="Progression :      {saveProfiles[7]}" />
+	<add key="DisplaySaveProfiles_8" value="TypeDeSauvegarde : {saveProfiles[8]}" />
+	<add key="DisplaySaveProfilesError" value="Il n'y a pas de profil de sauvegarde." />
+	<add key="DisplayModifySaveProfileNewName" value="Veuillez entrer le nouveau nom du profil de sauvegarde :" />
+	<add key="DisplayModifySaveProfileNewSourceFilePath" value="Veuillez entrer le nouveau chemin source du profil de sauvegarde :" />
+	<add key="DisplayModifySaveProfileNewTargetFilePath" value="Veuillez entrer le nouveau chemin cible du profil de sauvegarde :" />
+	<add key="DisplayModifySaveProfileNewTypeOfSave" value="Veuillez entrer le nouveau type de sauvegarde du profil de sauvegarde (complète ou différencielle) :" />
+	<add key="DisplayModifySaveProfileSuccess" value="Le profil de sauvegarde a été modifié avec succès." />
+	<add key="DisplayBackupInProgress" value="$Sauvegarde en cours du profil {name}..." />
+	<add key="DisplayExecuteSaveProfileSuccess" value="Le profil de sauvegarde a été exécuté avec succès." />
+	<add key="DisplayExecuteSaveProfileStateError" value="Erreur : Le profil n'est pas prêt" />
+	<add key="DisplayExecuteSaveProfileTypeOfSaveError" value="Erreur : Le type de sauvegarde n'est pas valide" />
+	<add key="Help_0" value="--------------- AIDE ---------------" />
+	<add key="Help_1" value="menu :    Afficher le menu" />
+	<add key="Help_2" value="dsp :     Afficher les profils de sauvegarde" />
+	<add key="Help_3" value="csp :     Créer un profil de sauvegarde" />
+	<add key="Help_4" value="msp :     Modifier un profil de sauvegarde" />
+	<add key="Help_5" value="esp :     Exécuter un profil de sauvegarde" />
+	<add key="Help_6" value="dl :      Afficher les journaux" />
+	<add key="Help_7" value="help :    Afficher l'aide" />
+	<add key="Help_8" value="config :  Afficher la configuration" />
+	<add key="Help_9" value="exit :    Quitter le programme" />
+	<add key="Exit" value="Merci d'utiliser EasySave" />
+	<add key="NotImplementedYet" value="Pas encore implémenté." />
+</printStrings>

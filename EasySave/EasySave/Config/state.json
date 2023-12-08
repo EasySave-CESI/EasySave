@@ -3,7 +3,7 @@
     "Name": "Save1",
     "SourceFilePath": "",
     "TargetFilePath": "",
-    "State": "END",
+    "State": "",
     "TotalFilesToCopy": 0,
     "TotalFilesSize": 0,
     "NbFilesLeftToDo": 0,
@@ -14,7 +14,7 @@
     "Name": "Save2",
     "SourceFilePath": "",
     "TargetFilePath": "",
-    "State": "END",
+    "State": "",
     "TotalFilesToCopy": 0,
     "TotalFilesSize": 0,
     "NbFilesLeftToDo": 0,
@@ -25,7 +25,7 @@
     "Name": "Save3",
     "SourceFilePath": "",
     "TargetFilePath": "",
-    "State": "END",
+    "State": "",
     "TotalFilesToCopy": 0,
     "TotalFilesSize": 0,
     "NbFilesLeftToDo": 0,
@@ -33,10 +33,10 @@
     "TypeOfSave": ""
   },
   {
-    "Name": "Save4",
+    "Name": "Test2",
     "SourceFilePath": "",
     "TargetFilePath": "",
-    "State": "END",
+    "State": "",
     "TotalFilesToCopy": 0,
     "TotalFilesSize": 0,
     "NbFilesLeftToDo": 0,
@@ -44,14 +44,14 @@
     "TypeOfSave": ""
   },
   {
-    "Name": "Test",
-    "SourceFilePath": "",
-    "TargetFilePath": "",
-    "State": "END",
-    "TotalFilesToCopy": 0,
-    "TotalFilesSize": 0,
+    "Name": "Nouveau",
+    "SourceFilePath": "C:\\Users\\antoi\\[01]_CESI\\temp_src",
+    "TargetFilePath": "C:\\Users\\antoi\\[01]_CESI\\temp",
+    "State": "COMPLETED",
+    "TotalFilesToCopy": 6,
+    "TotalFilesSize": 5185057,
     "NbFilesLeftToDo": 0,
-    "Progression": 0,
-    "TypeOfSave": ""
+    "Progression": 100,
+    "TypeOfSave": "full"
   }
 ]

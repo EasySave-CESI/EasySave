@@ -1,13 +1,18 @@
+using System.Xml;
 using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EasySaveConsoleApp
 {
     public class ConsoleView
     {
+        private readonly Dictionary<string, string> printStringDictionary;
+
         /* Constructor */
 
-        public ConsoleView() { }
+        public ConsoleView(Dictionary<string, string> printStringDictionary)
+        {
+            this.printStringDictionary = printStringDictionary;
+        }
 
         /* Print Methods */
 
@@ -19,28 +24,28 @@ namespace EasySaveConsoleApp
         public void PrintError(string text)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(text);
+            Print(text);
             Console.ResetColor();
         }
 
         public void PrintSuccess(string text)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(text);
+            Print(text);
             Console.ResetColor();
         }
 
         public void PrintWarning(string text)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(text);
+            Print(text);
             Console.ResetColor();
         }
 
         public void PrintInfo(string text)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(text);
+            Print(text);
             Console.ResetColor();
         }
 
@@ -60,9 +65,9 @@ namespace EasySaveConsoleApp
 
         public void printSeparator()
         {
-            Console.WriteLine();
-            Console.WriteLine("--------------------------------------------------");
-            Console.WriteLine();
+            Print("");
+            Print(printStringDictionary["Separator"]);
+            Print("");
         }
 
         /* All the methods below are used to display all the differents strings using the methods above */
@@ -71,25 +76,25 @@ namespace EasySaveConsoleApp
 
         public void WelcomeMessage()
         {
-            PrintInfo("Welcome to EasySave!");
+            PrintInfo(printStringDictionary["WelcomeMessage"]);
             printSeparator();
         }
 
         public void ArgumentError()
         {
-            PrintError("Error: Argument not recognized");
+            PrintError(printStringDictionary["ArgumentError"]);
         }
 
         /* Common */
 
         public void DisplaySelectedProfileName(string saveProfileName)
         {
-            PrintInfo("You have selected the save profile: " + saveProfileName);
+            PrintInfo(printStringDictionary["DisplaySelectedProfileName"] + saveProfileName);
         }
 
         public void DisplayChooseSelectedProfile()
         {
-            Print("Select the save profile you want to modify by entering its index");
+            Print(printStringDictionary["DisplayChooseSelectedProfile"]);
         }
 
         public void DisplayProfileIndexName(int index, string saveProfileName)
@@ -99,31 +104,28 @@ namespace EasySaveConsoleApp
 
         public void Error(string error)
         {
-            PrintError("Error: " + error);
+            PrintError(printStringDictionary["Error"] + error);
         }
 
         /* Menu */
 
         public void DisplayMenu()
         {
-            PrintInfo("Please choose an option:");
-            Print("1. Display the save profiles");
-            Print("2. Create a save profile");
-            Print("3. Modify a save profile");
-            Print("4. Execute a save profile");
-            Print("5. Display the logs");
-            Print("6. Help");
-            Print("7. Configuration");
-            Print("8. Clear the console");
-            Print("9. Exit");
-            Print("");
+            PrintInfo(printStringDictionary["DisplayMenu_0"]);
+            Print(printStringDictionary["DisplayMenu_1"]);
+            Print(printStringDictionary["DisplayMenu_2"]);
+            Print(printStringDictionary["DisplayMenu_3"]);
+            Print(printStringDictionary["DisplayMenu_4"]);
+            Print(printStringDictionary["DisplayMenu_5"]);
+            Print(printStringDictionary["DisplayMenu_6"]);
+            Print(printStringDictionary["DisplayMenu_7"]);
+            Print(printStringDictionary["DisplayMenu_8"]);
+            Print(printStringDictionary["DisplayMenu_9"]);
         }
-
-        
 
         public void DisplayMenuError()
         {
-            PrintError("Please enter a valid option.");
+            PrintError(printStringDictionary["DisplayMenuError"]);
         }
 
         /* Display Save Profiles */
@@ -144,35 +146,35 @@ namespace EasySaveConsoleApp
 
         public void DisplaySaveProfilesError()
         {
-            PrintError("There is no save profile.");
+            PrintError(printStringDictionary["DisplaySaveProfilesError"]);
         }
 
         /* Modify Save Profile */
 
         public void DisplayModifySaveProfileNewName()
         {
-            PrintInfo("Please enter the new name of the save profile:");
+            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewName"]);
         }
 
         public void DisplayModifySaveProfileNewSourceFilePath()
         {
-            PrintInfo("Please enter the new source file path of the save profile:");
+            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewSourceFilePath"]);
         }
 
         public void DisplayModifySaveProfileNewTargetFilePath()
         {
-            PrintInfo("Please enter the new target file path of the save profile:");
+            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewTargetFilePath"]);
         }
 
         public void DisplayModifySaveProfileNewTypeOfSave()
         {
-            PrintInfo("Please enter the new type of save of the save profile (full or diff):");
+            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewTypeOfSave"]);
         }
 
 
         public void DisplayModifySaveProfileSuccess()
         {
-            PrintSuccess("The save profile has been modified successfully.");
+            PrintSuccess(printStringDictionary["DisplayModifySaveProfileSuccess"]);
         }
 
         /* Execute Save Profile */
@@ -184,17 +186,17 @@ namespace EasySaveConsoleApp
 
         public void DisplayExecuteSaveProfileSuccess()
         {
-            PrintSuccess("The save profile has been executed successfully.");
+            PrintSuccess(printStringDictionary["DisplayExecuteSaveProfileSuccess"]);
         }
 
         public void DisplayExecuteSaveProfileStateError()
         {
-            PrintError("Error: The profile is not ready");
+            PrintError(printStringDictionary["DisplayExecuteSaveProfileStateError"]);
         }
 
         public void DisplayExecuteSaveProfileTypeOfSaveError()
         {
-            PrintError("Error: The type of save is not valid");
+            PrintError(printStringDictionary["DisplayExecuteSaveProfileTypeOfSaveError"]);
         }
 
         /* Display Logs */
@@ -218,18 +220,19 @@ namespace EasySaveConsoleApp
 
         public void Help()
         {
-            PrintInfo("--------------- HELP ---------------");
-            PrintInfo("menu:     Display the menu");
-            PrintInfo("dsp:      Display the save profiles");
-            PrintInfo("csp:      Create a save profile");
-            PrintInfo("msp:      Modify a save profile");
-            PrintInfo("esp:      Execute a save profile");
-            PrintInfo("dl:       Display the logs");
-            PrintInfo("help:     Display the help");
-            PrintInfo("config:   Display the configuration");
-            PrintInfo("exit:     Exit the program");
+            PrintInfo(printStringDictionary["Help_0"]);
+            PrintInfo(printStringDictionary["Help_1"]);
+            PrintInfo(printStringDictionary["Help_2"]);
+            PrintInfo(printStringDictionary["Help_3"]);
+            PrintInfo(printStringDictionary["Help_4"]);
+            PrintInfo(printStringDictionary["Help_5"]);
+            PrintInfo(printStringDictionary["Help_6"]);
+            PrintInfo(printStringDictionary["Help_7"]);
+            PrintInfo(printStringDictionary["Help_8"]);
+            PrintInfo(printStringDictionary["Help_9"]);
             printSeparator();
         }
+
         public void DisplayConfigurationMenu()
         {
             PrintInfo("Please choose an option:");
@@ -255,17 +258,18 @@ namespace EasySaveConsoleApp
         public void DisplayLogFileFormatError()
         {
             PrintError("Please enter a valid option for log file format.");
-        }               
+        }
+
         public void Exit()
         {
-            PrintInfo("Thank you for using EasySave");
+            PrintInfo(printStringDictionary["Exit"]);
         }
 
         /* Not implemented yet */
 
         public void NotImplementedYet()
         {
-            PrintError("Not implemented yet.");
+            PrintError(printStringDictionary["NotImplementedYet"]);
             printSeparator();
         }
     }

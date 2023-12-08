@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<printStrings>
+	<add key="Separator" value="--------------------------------------------------" />
+	<add key="WelcomeMessage" value="Welcome to EasySave!" />
+	<add key="ArgumentError" value="Error: Argument not recognized" />
+	<add key="DisplaySelectedProfileName" value="You have selected the save profile: " />
+	<add key="DisplayChooseSelectedProfile" value="Select the save profile you want to modify by entering its index" />
+	<add key="Error" value="Error: " />
+	<add key="DisplayMenu_0" value="Please choose an option:" />
+	<add key="DisplayMenu_1" value="1. Display the save profiles" />
+	<add key="DisplayMenu_2" value="2. Create a save profile" />
+	<add key="DisplayMenu_3" value="3. Modify a save profile" />
+	<add key="DisplayMenu_4" value="4. Execute a save profile" />
+	<add key="DisplayMenu_5" value="5. Display the logs" />
+	<add key="DisplayMenu_6" value="6. Help" />
+	<add key="DisplayMenu_7" value="7. Configuration" />
+	<add key="DisplayMenu_8" value="8. Clear the console" />
+	<add key="DisplayMenu_9" value="9. Exit" />
+	<add key="DisplayMenuError" value="Please enter a valid option." />
+	<add key="DisplaySaveProfiles_0" value="Name:             {saveProfiles[0]}" />
+	<add key="DisplaySaveProfiles_1" value="SourceFilePath:   {saveProfiles[1]}" />
+	<add key="DisplaySaveProfiles_2" value="TargetFilePath:   {saveProfiles[2]}" />
+	<add key="DisplaySaveProfiles_3" value="State:            {saveProfiles[3]}" />
+	<add key="DisplaySaveProfiles_4" value="TotalFilesToCopy: {saveProfiles[4]}" />
+	<add key="DisplaySaveProfiles_5" value="TotalFilesSize:   {saveProfiles[5]}" />
+	<add key="DisplaySaveProfiles_6" value="NbFilesLeftToDo:  {saveProfiles[6]}" />
+	<add key="DisplaySaveProfiles_7" value="Progression:      {saveProfiles[7]}" />
+	<add key="DisplaySaveProfiles_8" value="TypeOfSave:       {saveProfiles[8]}" />
+	<add key="DisplaySaveProfilesError" value="There is no save profile." />
+	<add key="DisplayModifySaveProfileNewName" value="Please enter the new name of the save profile:" />
+	<add key="DisplayModifySaveProfileNewSourceFilePath" value="Please enter the new source file path of the save profile:" />
+	<add key="DisplayModifySaveProfileNewTargetFilePath" value="Please enter the new target file path of the save profile:" />
+	<add key="DisplayModifySaveProfileNewTypeOfSave" value="Please enter the new type of save of the save profile (full or diff):" />
+	<add key="DisplayModifySaveProfileSuccess" value="The save profile has been modified successfully." />
+	<add key="DisplayBackupInProgress" value="$Backing up profile {name}..." />
+	<add key="DisplayExecuteSaveProfileSuccess" value="The save profile has been executed successfully." />
+	<add key="DisplayExecuteSaveProfileStateError" value="Error: The profile is not ready" />
+	<add key="DisplayExecuteSaveProfileTypeOfSaveError" value="Error: The type of save is not valid" />
+	<add key="Help_0" value="--------------- HELP ---------------" />
+	<add key="Help_1" value="menu:     Display the menu" />
+	<add key="Help_2" value="dsp:      Display the save profiles" />
+	<add key="Help_3" value="csp:      Create a save profile" />
+	<add key="Help_4" value="msp:      Modify a save profile" />
+	<add key="Help_5" value="esp:      Execute a save profile" />
+	<add key="Help_6" value="dl:       Display the logs" />
+	<add key="Help_7" value="help:     Display the help" />
+	<add key="Help_8" value="config:   Display the configuration" />
+	<add key="Help_9" value="exit:     Exit the program" />
+	<add key="Exit" value="Thank you for using EasySave" />
+	<add key="NotImplementedYet" value="Not implemented yet." />
+</printStrings>

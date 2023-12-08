@@ -109,7 +109,7 @@ namespace EasySaveConsoleApp
 
                     saveProfile.NbFilesLeftToDo--;
                     saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
-                    SaveProfiles("..\\..\\..\\logs\\state.json", profiles);
+                    SaveProfiles("..\\..\\..\\Config\\state.json", profiles);
                 }
             }
             catch (Exception ex)

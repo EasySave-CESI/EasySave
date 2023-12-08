@@ -7,30 +7,74 @@ namespace EasySaveConsoleApp
 {
     public class MainViewModel
     {
+        public string configFilePath = "..\\..\\..\\Config\\config.xml";
+        public string stringsENFilePath = "..\\..\\..\\Config\\Strings_en.xml";
+        public string stringsFRFilePath = "..\\..\\..\\Config\\Strings_fr.xml";
+        public string stateFilePath = "..\\..\\..\\Config\\state.json";
+
+        public Configuration configuration { get; set; }
         public ConsoleView consoleView { get; init; }
         public List<SaveProfile> saveProfiles { get; set; }
+
         public string argument { get; set; }
+        public string language { get; set; }
+        public string logformat { get; set; }
+        public Dictionary<string, string> printStrings { get; set; }
         public DailyLogs Logger { get; set; } = new DailyLogs();
 
 
         public MainViewModel()
         {
-            consoleView = new ConsoleView();
-            saveProfiles = SaveProfile.LoadProfiles("..\\..\\..\\logs\\state.json");
+            configuration = new Configuration(configFilePath);
+            saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
             Logger = LoadDailyLogs();
             argument = "menu";
 
+            language = configuration.language;
+            logformat = configuration.logFormat;
+
+            if (language == "en")
+            {
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
+            }
+            else if (language == "fr")
+            {
+                printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
+            }
+            else
+            {
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
+            }
+
+            consoleView = new ConsoleView(printStrings);
             consoleView.WelcomeMessage();
             Menu();
         }
 
         public MainViewModel(string userargument)
         {
-            consoleView = new ConsoleView();
-            saveProfiles = SaveProfile.LoadProfiles("..\\..\\..\\logs\\state.json");
+            configuration = new Configuration(configFilePath);
+            saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
             Logger = LoadDailyLogs();
             argument = userargument;
 
+            language = configuration.language;
+            logformat = configuration.logFormat;
+
+            if (language == "en")
+            {
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
+            }
+            else if (language == "fr")
+            {
+                printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
+            }
+            else
+            {
+                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
+            }
+
+            consoleView = new ConsoleView(printStrings);
             consoleView.WelcomeMessage();
             Main();
         }
@@ -63,7 +107,7 @@ namespace EasySaveConsoleApp
                     consoleView.Help();
                     break;
                 case "config":
-                    Configuration();
+                    Config();
                     break;
                 case "exit":
                     Exit();
@@ -71,7 +115,7 @@ namespace EasySaveConsoleApp
                 default:
                     consoleView.ArgumentError();
                     break;
-            }   
+            }
         }
 
         public void Menu()
@@ -102,7 +146,7 @@ namespace EasySaveConsoleApp
                         consoleView.Help();
                         break;
                     case "7":
-                        Configuration();
+                        Config();
                         SaveDailyLogs();
                         break;
                     case "8":
@@ -118,7 +162,7 @@ namespace EasySaveConsoleApp
             }
         }
 
-        public void DisplaySaveProfiles() 
+        public void DisplaySaveProfiles()
         {
             if (saveProfiles == null)
             {
@@ -146,11 +190,13 @@ namespace EasySaveConsoleApp
             }
 
         }
+
         public void CreateSaveProfile() 
         {
             consoleView.NotImplementedYet();
         }
-        public void ModifySaveProfile() 
+
+        public void ModifySaveProfile()
         {
 
             try
@@ -182,7 +228,7 @@ namespace EasySaveConsoleApp
 
                 saveProfiles[profileIndex].State = "READY";
 
-                SaveProfile.SaveProfiles("..\\..\\..\\logs\\state.json", saveProfiles);
+                SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
                 consoleView.DisplayModifySaveProfileSuccess();
 
             }
@@ -190,8 +236,9 @@ namespace EasySaveConsoleApp
             {
                 consoleView.Error(ex.Message);
             }
-            
+
         }
+
         public void ExecuteSaveProfile()
         {
             try
@@ -202,13 +249,14 @@ namespace EasySaveConsoleApp
                 if (saveProfiles[profileIndex].State == "READY")
                 {
                     saveProfiles[profileIndex].State = "IN PROGRESS";
-                    SaveProfile.SaveProfiles("..\\..\\..\\logs\\state.json", saveProfiles);
+                    SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
 
                     if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
                         consoleView.DisplayBackupInProgress(saveProfiles[profileIndex].Name);
-                        DateTime startTime = DateTime.Now;
                         SaveProfile.ExecuteSaveProfile(saveProfiles, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave);
+
+                        DateTime startTime = DateTime.Now;
                         TimeSpan elapsedTime = DateTime.Now - startTime;
 
                         Logger.CreateLog(
@@ -218,7 +266,6 @@ namespace EasySaveConsoleApp
                         saveProfiles[profileIndex].TotalFilesSize,
                         elapsedTime.TotalMilliseconds
                         );
-
                     }
                     else
                     {
@@ -226,7 +273,7 @@ namespace EasySaveConsoleApp
                     }
 
                     saveProfiles[profileIndex].State = "COMPLETED";
-                    SaveProfile.SaveProfiles("..\\..\\..\\logs\\state.json", saveProfiles);
+                    SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
                     consoleView.DisplayExecuteSaveProfileSuccess();
                 }
                 else
@@ -250,7 +297,7 @@ namespace EasySaveConsoleApp
             }
         }
 
-        public void Configuration()
+        public void Config()
         {
             consoleView.DisplayConfigurationMenu();
             string configChoice = consoleView.Read();
