@@ -7,11 +7,11 @@ namespace EasySaveConsoleApp
 {
     public class MainViewModel
     {
-        public string configFilePath = "..\\..\\..\\Config\\config.xml";
-        public string stringsENFilePath = "..\\..\\..\\Config\\Strings_en.xml";
-        public string stringsFRFilePath = "..\\..\\..\\Config\\Strings_fr.xml";
-        public string stateFilePath = "..\\..\\..\\Config\\state.json";
-        public string logsDirectory = "..\\..\\..\\logs";
+        public string configFilePath = "..\\..\\..\\..\\Config\\config.xml";
+        public string stringsENFilePath = "..\\..\\..\\..\\Config\\Strings_en.xml";
+        public string stringsFRFilePath = "..\\..\\..\\..\\Config\\Strings_fr.xml";
+        public string stateFilePath = "..\\..\\..\\..\\Config\\state.json";
+        public string logsDirectory = "..\\..\\..\\..\\logs";
 
         public Configuration configuration { get; set; }
         public ConsoleView consoleView { get; init; }

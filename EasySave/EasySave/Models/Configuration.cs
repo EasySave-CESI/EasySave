@@ -23,21 +23,54 @@ namespace EasySaveConsoleApp
         {
             try
             {
-                List<string> param = new List<string>();
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filePath);
-
-                XmlNodeList appSettingsNodes = doc.SelectNodes("/configuration/appSettings/add");
-
-                foreach (XmlNode node in appSettingsNodes)
+                if (!System.IO.File.Exists(filePath))
                 {
-                    string key = node.Attributes["key"].Value;
-                    string value = node.Attributes["value"].Value;
+                    Console.WriteLine("Configuration file not found, creating a new one...");
+                    // Create a new file
+                    XmlDocument document = new XmlDocument();
 
-                    param.Add($"{value}");
+                    // Create the root element
+                    XmlElement root = document.CreateElement("configuration");
+                    document.AppendChild(root);
+
+                    // Create the appSettings element
+                    XmlElement appSettings = document.CreateElement("appSettings");
+                    root.AppendChild(appSettings);
+
+                    // Create the language element
+                    XmlElement language = document.CreateElement("add");
+                    language.SetAttribute("key", "language");
+                    language.SetAttribute("value", "en");
+                    appSettings.AppendChild(language);
+
+                    // Create the logFormat element
+                    XmlElement logFormat = document.CreateElement("add");
+                    logFormat.SetAttribute("key", "logformat");
+                    logFormat.SetAttribute("value", "json");
+                    appSettings.AppendChild(logFormat);
+
+                    // Save the document to the specified path
+                    document.Save(filePath);
+                    return new List<string> { "en", "json" };
                 }
+                else
+                {
+                    List<string> param = new List<string>();
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(filePath);
 
-                return param;
+                    XmlNodeList appSettingsNodes = doc.SelectNodes("/configuration/appSettings/add");
+
+                    foreach (XmlNode node in appSettingsNodes)
+                    {
+                        string key = node.Attributes["key"].Value;
+                        string value = node.Attributes["value"].Value;
+
+                        param.Add($"{value}");
+                    }
+
+                    return param;
+                }
             }
             catch (Exception ex)
             {
