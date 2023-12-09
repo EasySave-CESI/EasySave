@@ -7,12 +7,13 @@ namespace EasySave.ViewModels
     public class MainViewModel
     {
         // All the fills will be in a file called EasySave in AppData
-        public string EasySaveFileDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave";
-        public string EasySaveFileConfigDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config";
-        public string EasySaveFileLogsDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Logs";
+        public string EasySaveFileDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave"; // Get the path of the AppData folder and add the EasySave folder
+        public string EasySaveFileConfigDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config"; // Get the path of the AppData folder and add the EasySave Config folder
+        public string EasySaveFileProfilesDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Profiles"; // Get the path of the AppData folder and add the EasySave Profiles folder
+        public string EasySaveFileLogsDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Logs"; // Get the path of the AppData folder and add the EasySave Logs folder
 
-        public string configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config\\config.";
-        public string stateFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config\\state.json";
+        public string configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config\\config.xml"; // Get the path of the AppData folder and add the config 
+        public string stateFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Profiles\\state.json"; // Get the path of the AppData folder and add the profiles
 
         public Configuration configuration { get; set; }
         public ConsoleView consoleView { get; set; }
@@ -29,24 +30,16 @@ namespace EasySave.ViewModels
 
         public MainViewModel() // Constructor by default, will lead to the menu
         {
-            Initialization();
-
-            // Set the argument to menu by default
-            argument = "menu";
-
-            // Start the menu
-            Menu();
+            Initialization(); // Initialize thec configuration, language, save profiles, logs and console view
+            argument = "menu"; // Set the argument to menu
+            Menu(); // Load the menu
         }
 
         public MainViewModel(string userargument) // Constructor with an argument, will lead to the function called
         {
-            Initialization();
-
-            // Set the argument to the user argument
-            argument = userargument;
-
-            // Start the function
-            LoadFunction();
+            Initialization(); // Initialize thec configuration, language, save profiles, logs and console view
+            argument = userargument; // Set the argument to the user argument
+            LoadFunction(); // Load the function called
         }
 
         public void Initialization()
@@ -58,23 +51,17 @@ namespace EasySave.ViewModels
 
             // Load the configuration parameters
             try
-            {
-                configuration = new Configuration(configFilePath);
+               {configuration = new Configuration(configFilePath);
                 language = configuration.language;
-                logformat = configuration.logFormat;
-            }
-            catch (Exception ex)
-            {
-                // If an error occurs, the configuration parameters are set to default
-                language = "en";
-                logformat = "json";
-            }
+                logformat = configuration.logFormat;}
+            catch (Exception ex) // If an error occurs, the configuration parameters are set to default
+               {language = "en";
+                logformat = "json";}
 
             // Load the language strings
             languageConfiguration = new LanguageConfiguration();
             switch (language)
-            {
-                case "en":
+               {case "en":
                     fulllanguagename = "English";
                     printStrings = languageConfiguration.printStrings_en;
                     break;
@@ -87,14 +74,13 @@ namespace EasySave.ViewModels
                 default:
                     fulllanguagename = "English";
                     printStrings = languageConfiguration.printStrings_en;
-                    break;
-            }
+                    break;}
 
             // If the file doesn't exist create it
             if (!File.Exists(stateFilePath) || new FileInfo(stateFilePath).Length == 0)
-            {
-                SaveProfile.CreateProfilesFile(stateFilePath);
-            }
+               {SaveProfile.CreateProfilesFile(stateFilePath);}
+
+            // Load the save profiles
             SaveProfiles = SaveProfile.LoadProfiles(stateFilePath);
 
             // Load the logs and the console view

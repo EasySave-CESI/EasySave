@@ -30,7 +30,7 @@ namespace EasySave.Models
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filePath);
 
-                XmlNodeList appSettingsNodes = doc.SelectNodes("/configuration/appSettings/add");
+                XmlNodeList? appSettingsNodes = doc.SelectNodes("/configuration/appSettings/add");
 
                 List<string> param = new List<string>();
 
@@ -48,6 +48,7 @@ namespace EasySave.Models
                         param.Add(value);
                     }
                 }
+                doc.Save(filePath);
 
                 return param;
             }

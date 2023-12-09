@@ -29,16 +29,9 @@ namespace EasySave.Models
 
         public static List<SaveProfile> LoadProfiles(string filePath)
         {
-            try
-            {
-                string json = File.ReadAllText(filePath);
-                List<SaveProfile> profilesList = JsonConvert.DeserializeObject<List<SaveProfile>>(json);
-                return profilesList;
-            }
-            catch (Exception ex)
-            {
-                return new List<SaveProfile>();
-            }
+            string json = File.ReadAllText(filePath);
+            List<SaveProfile> profiles = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SaveProfile>>(json);
+            return profiles;
         }
 
         public static void CreateProfilesFile(string filePath)
@@ -70,7 +63,7 @@ namespace EasySave.Models
         {
             try
             {
-                string json = JsonConvert.SerializeObject(profiles, Formatting.Indented);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(profiles, Newtonsoft.Json.Formatting.Indented);
                 File.WriteAllText(filePath, json);
                 return "OK";
             }
@@ -134,13 +127,13 @@ namespace EasySave.Models
 
                     saveProfile.NbFilesLeftToDo--;
                     saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
-                    SaveProfiles("..\\..\\..\\Config\\state.json", profiles);
+                    SaveProfiles("..\\..\\..\\Profiles\\state.json", profiles);
                 }
             }
             catch (Exception ex)
             {
                 saveProfile.State = "ERROR";
-                SaveProfiles("profiles.json", profiles);
+                SaveProfiles("state.json", profiles);
             }
         }
 
