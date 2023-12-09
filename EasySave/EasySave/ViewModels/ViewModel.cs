@@ -47,6 +47,7 @@ namespace EasySave.ViewModels
             // Create the EasySave directories if it doesn't exist
             if (!System.IO.Directory.Exists(EasySaveFileDirectoryPath)) { System.IO.Directory.CreateDirectory(EasySaveFileDirectoryPath); }
             if (!System.IO.Directory.Exists(EasySaveFileConfigDirectoryPath)) { System.IO.Directory.CreateDirectory(EasySaveFileConfigDirectoryPath); }
+            if (!System.IO.Directory.Exists(EasySaveFileProfilesDirectoryPath)) { System.IO.Directory.CreateDirectory(EasySaveFileProfilesDirectoryPath); }
             if (!System.IO.Directory.Exists(EasySaveFileLogsDirectoryPath)) { System.IO.Directory.CreateDirectory(EasySaveFileLogsDirectoryPath); }
 
             // Load the configuration parameters
