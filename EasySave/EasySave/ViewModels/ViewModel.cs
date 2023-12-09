@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Resources;
+using EasySave.Models;
+using EasySave.Views;
 
-namespace EasySaveConsoleApp
+namespace EasySave.ViewModels
 {
     public class MainViewModel
     {
-        public string configFilePath = "..\\..\\..\\Config\\config.xml";
-        public string stringsENFilePath = "..\\..\\..\\Config\\Strings_en.xml";
-        public string stringsFRFilePath = "..\\..\\..\\Config\\Strings_fr.xml";
-        public string stateFilePath = "..\\..\\..\\Config\\state.json";
-        public string logsDirectory = "..\\..\\..\\logs";
+        // All the fills will be in a file called EasySave in AppData
+        public string EasySaveFileDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave";
+        public string EasySaveFileConfigDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config";
+        public string EasySaveFileLogsDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Logs";
+
+        public string configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config\\config.";
+        public string stateFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasySave\\Config\\state.json";
 
         public Configuration configuration { get; set; }
-        public ConsoleView consoleView { get; init; }
-        public List<SaveProfile> saveProfiles { get; set; }
+        public ConsoleView consoleView { get; set; }
+        public List<SaveProfile> SaveProfiles { get; set; }
+        public LanguageConfiguration languageConfiguration { get; set; }
 
         public string argument { get; set; }
         public string language { get; set; }
@@ -25,69 +27,82 @@ namespace EasySaveConsoleApp
         public DailyLogs Logger { get; set; }
 
 
-        public MainViewModel()
+        public MainViewModel() // Constructor by default, will lead to the menu
         {
-            configuration = new Configuration(configFilePath);
-            saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
+            Initialization();
+
+            // Set the argument to menu by default
             argument = "menu";
 
-            language = configuration.language;
-            logformat = configuration.logFormat;
-
-            if (language == "en")
-            {
-                fulllanguagename = "English";
-                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
-            }
-            else if (language == "fr")
-            {
-                fulllanguagename = "Français";
-                printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
-            }
-            else
-            {
-                fulllanguagename = "English";
-                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
-            }
-
-            Logger = LoadDailyLogs();
-            consoleView = new ConsoleView(printStrings);
-            consoleView.WelcomeMessage();
+            // Start the menu
             Menu();
         }
 
-        public MainViewModel(string userargument)
+        public MainViewModel(string userargument) // Constructor with an argument, will lead to the function called
         {
-            configuration = new Configuration(configFilePath);
-            saveProfiles = SaveProfile.LoadProfiles(stateFilePath);
+            Initialization();
+
+            // Set the argument to the user argument
             argument = userargument;
 
-            language = configuration.language;
-            logformat = configuration.logFormat;
-
-            if (language == "en")
-            {
-                fulllanguagename = "English";
-                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
-            }
-            else if (language == "fr")
-            {
-                fulllanguagename = "Français";
-                printStrings = Configuration.GetDictPrintStrings(stringsFRFilePath);
-            }
-            else
-            {
-                fulllanguagename = "English";
-                printStrings = Configuration.GetDictPrintStrings(stringsENFilePath);
-            }
-
-            Logger = LoadDailyLogs();
-            consoleView = new ConsoleView(printStrings);
-            consoleView.WelcomeMessage();
-            Main();
+            // Start the function
+            LoadFunction();
         }
 
-        public void Main()
+        public void Initialization()
+        {
+            // Create the EasySave directories if it doesn't exist
+            if (!System.IO.Directory.Exists(EasySaveFileDirectoryPath)) { System.IO.Directory.CreateDirectory(EasySaveFileDirectoryPath); }
+            if (!System.IO.Directory.Exists(EasySaveFileConfigDirectoryPath)) { System.IO.Directory.CreateDirectory(EasySaveFileConfigDirectoryPath); }
+            if (!System.IO.Directory.Exists(EasySaveFileLogsDirectoryPath)) { System.IO.Directory.CreateDirectory(EasySaveFileLogsDirectoryPath); }
+
+            // Load the configuration parameters
+            try
+            {
+                configuration = new Configuration(configFilePath);
+                language = configuration.language;
+                logformat = configuration.logFormat;
+            }
+            catch (Exception ex)
+            {
+                // If an error occurs, the configuration parameters are set to default
+                language = "en";
+                logformat = "json";
+            }
+
+            // Load the language strings
+            languageConfiguration = new LanguageConfiguration();
+            switch (language)
+            {
+                case "en":
+                    fulllanguagename = "English";
+                    printStrings = languageConfiguration.printStrings_en;
+                    break;
+
+                case "fr":
+                    fulllanguagename = "Français";
+                    printStrings = languageConfiguration.printStrings_fr;
+                    break;
+
+                default:
+                    fulllanguagename = "English";
+                    printStrings = languageConfiguration.printStrings_en;
+                    break;
+            }
+
+            // If the file doesn't exist create it
+            if (!File.Exists(stateFilePath) || new FileInfo(stateFilePath).Length == 0)
+            {
+                SaveProfile.CreateProfilesFile(stateFilePath);
+            }
+            SaveProfiles = SaveProfile.LoadProfiles(stateFilePath);
+
+            // Load the logs and the console view
+            Logger = LoadDailyLogs();
+            consoleView = new ConsoleView(printStrings);
+        }
+
+        public void LoadFunction()
         {
             // transform the function to lowercase
             argument = argument.ToLower();
@@ -172,14 +187,14 @@ namespace EasySaveConsoleApp
 
         public void DisplaySaveProfiles()
         {
-            if (saveProfiles == null)
+            if (SaveProfiles == null)
             {
                 consoleView.DisplaySaveProfilesError();
             }
             else
             {
                 {
-                    foreach (SaveProfile profile in saveProfiles)
+                    foreach (SaveProfile profile in SaveProfiles)
                     {
                         List<string> list = new List<string>();
                         list.Add(profile.Name);
@@ -213,29 +228,29 @@ namespace EasySaveConsoleApp
 
                 profileIndex = GetProfileIndex();
 
-                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
+                consoleView.DisplaySelectedProfileName(SaveProfiles[profileIndex].Name);
 
                 consoleView.DisplayModifySaveProfileNewName();
-                saveProfiles[profileIndex].Name = consoleView.Read();
+                SaveProfiles[profileIndex].Name = consoleView.Read();
 
                 consoleView.DisplayModifySaveProfileNewSourceFilePath();
-                saveProfiles[profileIndex].SourceFilePath = consoleView.Read();
+                SaveProfiles[profileIndex].SourceFilePath = consoleView.Read();
 
                 consoleView.DisplayModifySaveProfileNewTargetFilePath();
-                saveProfiles[profileIndex].TargetFilePath = consoleView.Read();
+                SaveProfiles[profileIndex].TargetFilePath = consoleView.Read();
 
                 consoleView.DisplayModifySaveProfileNewTypeOfSave();
-                saveProfiles[profileIndex].TypeOfSave = consoleView.Read();
+                SaveProfiles[profileIndex].TypeOfSave = consoleView.Read();
 
-                List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(saveProfiles[profileIndex].SourceFilePath);
-                saveProfiles[profileIndex].TotalFilesToCopy = (int)sourcedirectoryinfo[0];
-                saveProfiles[profileIndex].TotalFilesSize = sourcedirectoryinfo[1];
-                saveProfiles[profileIndex].NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
-                saveProfiles[profileIndex].Progression = 0;
+                List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(SaveProfiles[profileIndex].SourceFilePath);
+                SaveProfiles[profileIndex].TotalFilesToCopy = (int)sourcedirectoryinfo[0];
+                SaveProfiles[profileIndex].TotalFilesSize = sourcedirectoryinfo[1];
+                SaveProfiles[profileIndex].NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
+                SaveProfiles[profileIndex].Progression = 0;
 
-                saveProfiles[profileIndex].State = "READY";
+                SaveProfiles[profileIndex].State = "READY";
 
-                SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
+                SaveProfile.SaveProfiles(stateFilePath, SaveProfiles);
                 consoleView.DisplayModifySaveProfileSuccess();
 
             }
@@ -251,26 +266,26 @@ namespace EasySaveConsoleApp
             try
             {
                 int profileIndex = GetProfileIndex();
-                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
+                consoleView.DisplaySelectedProfileName(SaveProfiles[profileIndex].Name);
 
-                if (saveProfiles[profileIndex].State == "READY")
+                if (SaveProfiles[profileIndex].State == "READY")
                 {
-                    saveProfiles[profileIndex].State = "IN PROGRESS";
-                    SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
+                    SaveProfiles[profileIndex].State = "IN PROGRESS";
+                    SaveProfile.SaveProfiles(stateFilePath, SaveProfiles);
 
-                    if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
+                    if (SaveProfiles[profileIndex].TypeOfSave == "full" || SaveProfiles[profileIndex].TypeOfSave == "diff")
                     {
-                        consoleView.DisplayBackupInProgress(saveProfiles[profileIndex].Name);
-                        SaveProfile.ExecuteSaveProfile(saveProfiles, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave);
+                        consoleView.DisplayBackupInProgress(SaveProfiles[profileIndex].Name);
+                        SaveProfile.ExecuteSaveProfile(SaveProfiles, SaveProfiles[profileIndex], SaveProfiles[profileIndex].TypeOfSave);
 
                         DateTime startTime = DateTime.Now;
                         TimeSpan elapsedTime = DateTime.Now - startTime;
 
                         Logger.CreateLog(
-                        saveProfiles[profileIndex].Name,
-                        saveProfiles[profileIndex].SourceFilePath,
-                        saveProfiles[profileIndex].TargetFilePath,
-                        saveProfiles[profileIndex].TotalFilesSize,
+                        SaveProfiles[profileIndex].Name,
+                        SaveProfiles[profileIndex].SourceFilePath,
+                        SaveProfiles[profileIndex].TargetFilePath,
+                        SaveProfiles[profileIndex].TotalFilesSize,
                         elapsedTime.TotalMilliseconds
                         );
                     }
@@ -279,8 +294,8 @@ namespace EasySaveConsoleApp
                         consoleView.DisplayExecuteSaveProfileTypeOfSaveError();
                     }
 
-                    saveProfiles[profileIndex].State = "COMPLETED";
-                    SaveProfile.SaveProfiles(stateFilePath, saveProfiles);
+                    SaveProfiles[profileIndex].State = "COMPLETED";
+                    SaveProfile.SaveProfiles(stateFilePath, SaveProfiles);
                     consoleView.DisplayExecuteSaveProfileSuccess();
                 }
                 else
@@ -328,7 +343,7 @@ namespace EasySaveConsoleApp
 
         private DailyLogs LoadDailyLogs()
         {
-            DailyLogs loadedLogs = new DailyLogs(logsDirectory, logformat);
+            DailyLogs loadedLogs = new DailyLogs(EasySaveFileLogsDirectoryPath, logformat);
             return loadedLogs;
         }
 
@@ -346,16 +361,16 @@ namespace EasySaveConsoleApp
             {
                 case "1":
                     language = "fr";
-                    Configuration.SetConfiguration(configFilePath, language, logformat);
-                    consoleView.SetprintStringDictionary(Configuration.GetDictPrintStrings(stringsFRFilePath));
+                    Configuration.WriteConfig(configFilePath, language, logformat);
+                    consoleView.SetprintStringDictionary(languageConfiguration.printStrings_fr);
                     fulllanguagename = "Français";
                     consoleView.Clear();
                     consoleView.DisplayLanguageSuccess(fulllanguagename);
                     break;
                 case "2":
                     language = "en";
-                    Configuration.SetConfiguration(configFilePath, language, logformat);
-                    consoleView.SetprintStringDictionary(Configuration.GetDictPrintStrings(stringsENFilePath));
+                    Configuration.WriteConfig(configFilePath, language, logformat);
+                    consoleView.SetprintStringDictionary(languageConfiguration.printStrings_en);
                     fulllanguagename = "English";
                     consoleView.Clear();
                     consoleView.DisplayLanguageSuccess(fulllanguagename);
@@ -375,14 +390,14 @@ namespace EasySaveConsoleApp
             {
                 case "1":
                     logformat = "json";
-                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    Configuration.WriteConfig(configFilePath, language, logformat);
                     Logger.SetLogFileFormat(LogFileFormat.Json);
                     consoleView.Clear();
                     consoleView.DisplayLogFileFormatSuccess(logformat);
                     break;
                 case "2":
                     logformat = "xml";
-                    Configuration.SetConfiguration(configFilePath, language, logformat);
+                    Configuration.WriteConfig(configFilePath, language, logformat);
                     Logger.SetLogFileFormat(LogFileFormat.Xml);
                     consoleView.Clear();
                     consoleView.DisplayLogFileFormatSuccess(logformat);
@@ -405,16 +420,16 @@ namespace EasySaveConsoleApp
             consoleView.DisplayChooseSelectedProfile();
 
             // print all the profiles name
-            for (int i = 0; i < saveProfiles.Count; i++)
+            for (int i = 0; i < SaveProfiles.Count; i++)
             {
-                consoleView.DisplayProfileIndexName(i+1, saveProfiles[i].Name);
+                consoleView.DisplayProfileIndexName(i+1, SaveProfiles[i].Name);
             }
 
             string choice = consoleView.Read();
 
             int profileIndex = -1;
 
-            for (int i = 0; i < saveProfiles.Count; i++)
+            for (int i = 0; i < SaveProfiles.Count; i++)
             {
                 if (int.Parse(choice) == i+1)
                 {

@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
+using EasySave.ViewModels;
 
-namespace EasySaveConsoleApp
+namespace EasySave
 {
     class Program
     {

@@ -1,12 +1,11 @@
-using System.Xml;
-using System;
+using EasySave.Models;
+using EasySave.ViewModels;
 
-namespace EasySaveConsoleApp
+namespace EasySave.Views
 {
     public class ConsoleView
     {
         private Dictionary<string, string> printStringDictionary;
-
         /* Constructor */
 
         public ConsoleView(Dictionary<string, string> printStringDictionary)

@@ -1,13 +1,7 @@
 ﻿using Newtonsoft.Json;
-using static EasySaveConsoleApp.DailyLogs;
-using System.IO;
 using System.Xml.Serialization;
-using EasySaveConsoleApp;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
-namespace EasySaveConsoleApp
+namespace EasySave.Models
 {
     public enum LogFileFormat
     {
