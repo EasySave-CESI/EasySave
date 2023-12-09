@@ -1,6 +1,0 @@
-<configuration>
-  <appSettings>
-    <add key="language" value="en" />
-    <add key="logformat" value="json" />
-  </appSettings>
-</configuration>
