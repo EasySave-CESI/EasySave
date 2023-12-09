@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace EasySaveConsoleApp
+namespace EasySave.Models
 {
     public class SaveProfile
     {
@@ -32,12 +32,37 @@ namespace EasySaveConsoleApp
             try
             {
                 string json = File.ReadAllText(filePath);
-                List<SaveProfile> profiles = JsonConvert.DeserializeObject<List<SaveProfile>>(json);
-                return profiles;
+                List<SaveProfile> profilesList = JsonConvert.DeserializeObject<List<SaveProfile>>(json);
+                return profilesList;
             }
             catch (Exception ex)
             {
-                return null;
+                return new List<SaveProfile>();
+            }
+        }
+
+        public static void CreateProfilesFile(string filePath)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                File.Create(filePath).Close();
+
+                List<SaveProfile> profiles = new List<SaveProfile>();
+                for (int i = 0; i < 5; i++)
+                {
+                    profiles.Add(new SaveProfile("Save" + (i + 1), "", "", "", 0, 0, 0, 0, ""));
+                }
+                SaveProfiles(filePath, profiles);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 

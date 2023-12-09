@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
+using System;
 
-namespace EasySaveConsoleApp
+namespace EasySave.Models
 {
     public class Configuration
     {
@@ -14,72 +13,94 @@ namespace EasySaveConsoleApp
         {
             this.configFilePath = path;
 
-            List<string> param = LoadConfiguration(path);
+            List<string> param = LoadConfig(path);
             this.language = param[0];
             this.logFormat = param[1];
         }
 
-        public static List<string> LoadConfiguration(string filePath)
+        public static List<string> LoadConfig(string filePath)
         {
             try
             {
-                if (!System.IO.File.Exists(filePath))
+                if (!File.Exists(filePath))
                 {
-                    Console.WriteLine("Configuration file not found, creating a new one...");
-                    // Create a new file
-                    XmlDocument document = new XmlDocument();
-
-                    // Create the root element
-                    XmlElement root = document.CreateElement("configuration");
-                    document.AppendChild(root);
-
-                    // Create the appSettings element
-                    XmlElement appSettings = document.CreateElement("appSettings");
-                    root.AppendChild(appSettings);
-
-                    // Create the language element
-                    XmlElement language = document.CreateElement("add");
-                    language.SetAttribute("key", "language");
-                    language.SetAttribute("value", "en");
-                    appSettings.AppendChild(language);
-
-                    // Create the logFormat element
-                    XmlElement logFormat = document.CreateElement("add");
-                    logFormat.SetAttribute("key", "logformat");
-                    logFormat.SetAttribute("value", "json");
-                    appSettings.AppendChild(logFormat);
-
-                    // Save the document to the specified path
-                    document.Save(filePath);
-                    return new List<string> { "en", "json" };
+                    CreateConfigFile(filePath);
                 }
-                else
+
+                XmlDocument doc = new XmlDocument();
+                doc.Load(filePath);
+
+                XmlNodeList appSettingsNodes = doc.SelectNodes("/configuration/appSettings/add");
+
+                List<string> param = new List<string>();
+
+                foreach (XmlNode node in appSettingsNodes)
                 {
-                    List<string> param = new List<string>();
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(filePath);
+                    string key = node.Attributes["key"].Value;
+                    string value = node.Attributes["value"].Value;
 
-                    XmlNodeList appSettingsNodes = doc.SelectNodes("/configuration/appSettings/add");
-
-                    foreach (XmlNode node in appSettingsNodes)
+                    if (key == "language")
                     {
-                        string key = node.Attributes["key"].Value;
-                        string value = node.Attributes["value"].Value;
-
-                        param.Add($"{value}");
+                        param.Add(value);
                     }
-
-                    return param;
+                    else if (key == "logformat")
+                    {
+                        param.Add(value);
+                    }
                 }
+
+                return param;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
                 return null;
             }
         }
 
-        public static void SetConfiguration(string filePath, string language, string logFormat)
+        public static void CreateConfigFile(string configFilePath)
+        {
+            try
+            {
+                // Create a new file in the configFilePath
+                XmlDocument doc = new XmlDocument();
+                XmlNode docNode = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+
+                doc.AppendChild(docNode);
+
+                XmlNode configurationNode = doc.CreateElement("configuration");
+                doc.AppendChild(configurationNode);
+
+                XmlNode appSettingsNode = doc.CreateElement("appSettings");
+                configurationNode.AppendChild(appSettingsNode);
+
+                XmlNode addNode = doc.CreateElement("add");
+                XmlAttribute keyAttribute = doc.CreateAttribute("key");
+                keyAttribute.Value = "language";
+                XmlAttribute valueAttribute = doc.CreateAttribute("value");
+                valueAttribute.Value = "en";
+                addNode.Attributes.Append(keyAttribute);
+                addNode.Attributes.Append(valueAttribute);
+                appSettingsNode.AppendChild(addNode);
+
+                addNode = doc.CreateElement("add");
+                keyAttribute = doc.CreateAttribute("key");
+                keyAttribute.Value = "logformat";
+                valueAttribute = doc.CreateAttribute("value");
+                valueAttribute.Value = "json";
+                addNode.Attributes.Append(keyAttribute);
+                addNode.Attributes.Append(valueAttribute);
+                appSettingsNode.AppendChild(addNode);
+
+                doc.Save(configFilePath);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+        public static void WriteConfig(string filePath, string language, string logFormat)
         {
             try
             {
@@ -110,32 +131,5 @@ namespace EasySaveConsoleApp
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
-
-        public static Dictionary<string, string> GetDictPrintStrings(string filePath)
-        {
-            try
-            {
-                Dictionary<string, string> printStrings = new Dictionary<string, string>();
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filePath);
-
-                XmlNodeList stringsNodes = doc.SelectNodes("/printStrings/add");
-
-                foreach (XmlNode node in stringsNodes)
-                {
-                    string key = node.Attributes["key"].Value;
-                    string value = node.Attributes["value"].Value;
-
-                    printStrings.Add($"{key}", $"{value}");
-                }
-                return printStrings;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-                return null;
-            }
-        }
-
     }
 }
