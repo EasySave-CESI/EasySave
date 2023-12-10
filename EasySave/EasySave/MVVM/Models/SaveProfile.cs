@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace EasySave.Models
+namespace EasySave.MVVM.Models
 {
     public class SaveProfile
     {
@@ -13,7 +13,7 @@ namespace EasySave.Models
         public int NbFilesLeftToDo { get; set; }
         public int Progression { get; set; }
         public string TypeOfSave { get; set; }
-        
+
         public SaveProfile(string name, string sourceFilePath, string targetFilePath, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo, int progression, string typeOfSave)
         {
             Name = name;
@@ -27,31 +27,35 @@ namespace EasySave.Models
             TypeOfSave = typeOfSave;
         }
 
-        public static List<SaveProfile> LoadProfiles(string filePath)
+        public static List<SaveProfile> LoadSaveProfiles(string filePath)
         {
             string json = File.ReadAllText(filePath);
-            List<SaveProfile> profiles = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SaveProfile>>(json);
+            List<SaveProfile> profiles = JsonConvert.DeserializeObject<List<SaveProfile>>(json);
             return profiles;
         }
 
-        public static void CreateProfilesFile(string filePath)
+        public static void CreateSaveProfilesFile(string filePath)
         {
             try
             {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
                 File.Create(filePath).Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
+        public static void CreateEmptySaveProfiles(string filePath)
+        {
+            try
+            {
                 List<SaveProfile> profiles = new List<SaveProfile>();
                 for (int i = 0; i < 5; i++)
                 {
                     profiles.Add(new SaveProfile("Save" + (i + 1), "", "", "", 0, 0, 0, 0, ""));
                 }
                 SaveProfiles(filePath, profiles);
-
             }
             catch (Exception ex)
             {
@@ -63,11 +67,11 @@ namespace EasySave.Models
         {
             try
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(profiles, Newtonsoft.Json.Formatting.Indented);
+                string json = JsonConvert.SerializeObject(profiles, Formatting.Indented);
                 File.WriteAllText(filePath, json);
                 return "OK";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "ERROR";
             }
@@ -77,12 +81,12 @@ namespace EasySave.Models
         {
             try
             {
-                List<SaveProfile> profiles = LoadProfiles(filePath);
+                List<SaveProfile> profiles = LoadSaveProfiles(filePath);
                 profiles.Add(profile);
                 SaveProfiles(filePath, profiles);
                 return "OK";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "ERROR";
             }
@@ -141,7 +145,7 @@ namespace EasySave.Models
         {
             List<long> sourcedirectoryInfos = new List<long>();
             sourcedirectoryInfos.Add(Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories).Length);
-            sourcedirectoryInfos.Add(Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories).Sum(t => (new FileInfo(t).Length)));
+            sourcedirectoryInfos.Add(Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories).Sum(t => new FileInfo(t).Length));
             return sourcedirectoryInfos;
         }
     }

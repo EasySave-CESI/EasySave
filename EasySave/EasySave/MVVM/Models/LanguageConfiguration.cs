@@ -1,24 +1,34 @@
-﻿namespace EasySave.Models
+﻿namespace EasySave.MVVM.Models
 {
     public class LanguageConfiguration
     {
-        public Dictionary<string, string> printStrings_en { get; set; }
-        public Dictionary<string, string> printStrings_fr { get; set; }
+        private Dictionary<string, string> printStrings_en;
+        private Dictionary<string, string> printStrings_fr;
 
-        public LanguageConfiguration() 
+        public LanguageConfiguration()
         {
             printStrings_en = new Dictionary<string, string>();
             printStrings_fr = new Dictionary<string, string>();
 
-            printStrings_en = loadprintStrings_en();
-            printStrings_fr = loadprintStrings_fr();
+            LoadPrintStringsEn();
+            LoadPrintStringsFr();
         }
 
-        public Dictionary<string, string> loadprintStrings_en()
+        public Dictionary<string, string> GetPrintStringsEn()
+        {
+            return printStrings_en;
+        }
+
+        public Dictionary<string, string> GetPrintStringsFr()
+        {
+            return printStrings_fr;
+        }
+
+        private void LoadPrintStringsEn()
         {
             printStrings_en.Add("Separator", "--------------------------------------------------");
             printStrings_en.Add("dots", "...");
-            printStrings_en.Add("WelcomeMessage", "Welcome to EasySave!");
+            printStrings_en.Add("WelcomeMessage", "Welcome to EasySave version: ");
             printStrings_en.Add("ArgumentError", "Error: Argument not recognized");
             printStrings_en.Add("DisplaySelectedProfileName", "You have selected the save profile: ");
             printStrings_en.Add("DisplayChooseSelectedProfile", "Select the save profile you want to modify by entering its index");
@@ -88,15 +98,13 @@
             printStrings_en.Add("DisplayConfigurationMenu_Back", "3. Back");
             printStrings_en.Add("Exit", "Thank you for using EasySave");
             printStrings_en.Add("NotImplementedYet", "Not implemented yet.");
-
-            return printStrings_en;
         }
 
-        public Dictionary<string, string> loadprintStrings_fr()
+        private void LoadPrintStringsFr()
         {
             printStrings_fr.Add("Separator", "--------------------------------------------------");
             printStrings_fr.Add("dots", "...");
-            printStrings_fr.Add("WelcomeMessage", "Bienvenue dans EasySave !");
+            printStrings_fr.Add("WelcomeMessage", "Bienvenue dans EasySave version: ");
             printStrings_fr.Add("ArgumentError", "Erreur : Argument non reconnu");
             printStrings_fr.Add("DisplaySelectedProfileName", "Vous avez sélectionné le profil de sauvegarde : ");
             printStrings_fr.Add("DisplayChooseSelectedProfile", "Sélectionnez le profil de sauvegarde que vous souhaitez modifier en entrant son indice");
@@ -166,8 +174,6 @@
             printStrings_fr.Add("DisplayConfigurationMenu_Back", "3. Retour");
             printStrings_fr.Add("Exit", "Merci d'utiliser EasySave");
             printStrings_fr.Add("NotImplementedYet", "Pas encore implémenté.");
-
-            return printStrings_fr;
         }
     }
 }

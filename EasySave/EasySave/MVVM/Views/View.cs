@@ -1,7 +1,7 @@
-using EasySave.Models;
-using EasySave.ViewModels;
+using EasySave.MVVM.Models;
+using EasySave.MVVM.ViewModels;
 
-namespace EasySave.Views
+namespace EasySave.MVVM.Views
 {
     public class ConsoleView
     {
@@ -22,8 +22,9 @@ namespace EasySave.Views
 
         public void Print(string text)
         {
-            Console.WriteLine(text);
+            Console.WriteLine(text ?? string.Empty);
         }
+
 
         public void PrintError(string text)
         {
@@ -60,7 +61,8 @@ namespace EasySave.Views
 
         public string Read()
         {
-            return Console.ReadLine();
+            string input = Console.ReadLine();
+            return input ?? string.Empty; // or handle null in a way that makes sense for your application
         }
 
         /* Clarity Methods */
@@ -81,9 +83,9 @@ namespace EasySave.Views
 
         /* Initialisation */
 
-        public void WelcomeMessage()
+        public void WelcomeMessage(string version)
         {
-            PrintInfo(printStringDictionary["WelcomeMessage"]);
+            PrintInfo(printStringDictionary["WelcomeMessage"] + version);
             PrintSeparator();
         }
 
