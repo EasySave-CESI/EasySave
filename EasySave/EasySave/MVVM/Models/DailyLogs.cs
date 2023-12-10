@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
 
-namespace EasySave.Models
+namespace EasySave.MVVM.Models
 {
     public enum LogFileFormat
     {
@@ -17,7 +17,7 @@ namespace EasySave.Models
         public long FileSize { get; set; }
         public double FileTransferTime { get; set; }
         public string Time { get; set; }
-        
+
     }
 
     public class DailyLogs
@@ -94,13 +94,13 @@ namespace EasySave.Models
 
         private string GetLogsFilePath()
         {
-            string extension = (logFileFormat == LogFileFormat.Json) ? "json" : "xml";
+            string extension = logFileFormat == LogFileFormat.Json ? "json" : "xml";
             return Path.Combine(logsDirectory, DateTime.Now.ToString("yyyy-MM-dd") + "." + extension);
         }
 
         private void SaveLogsToJson()
         {
-            string jsonLogs = Newtonsoft.Json.JsonConvert.SerializeObject(logs, Newtonsoft.Json.Formatting.Indented);
+            string jsonLogs = JsonConvert.SerializeObject(logs, Formatting.Indented);
 
             if (!Directory.Exists(logsDirectory))
             {
@@ -108,7 +108,7 @@ namespace EasySave.Models
             }
 
             string filePath = Path.Combine(logsDirectory, DateTime.Now.ToString("yyyy-MM-dd") + ".json");
-            File.WriteAllText(filePath, jsonLogs);  
+            File.WriteAllText(filePath, jsonLogs);
         }
 
         private void SaveLogsToXml()
@@ -127,7 +127,7 @@ namespace EasySave.Models
             }
         }
 
-        private List<DailyLog> LoadLogs()
+        public List<DailyLog> LoadLogs()
         {
             try
             {

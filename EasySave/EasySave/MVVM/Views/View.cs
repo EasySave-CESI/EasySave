@@ -1,7 +1,7 @@
-using EasySave.Models;
-using EasySave.ViewModels;
+using EasySave.MVVM.Models;
+using EasySave.MVVM.ViewModels;
 
-namespace EasySave.Views
+namespace EasySave.MVVM.Views
 {
     public class ConsoleView
     {
@@ -22,8 +22,9 @@ namespace EasySave.Views
 
         public void Print(string text)
         {
-            Console.WriteLine(text);
+            Console.WriteLine(text ?? string.Empty);
         }
+
 
         public void PrintError(string text)
         {
@@ -60,7 +61,8 @@ namespace EasySave.Views
 
         public string Read()
         {
-            return Console.ReadLine();
+            string input = Console.ReadLine();
+            return input ?? string.Empty; // or handle null in a way that makes sense for your application
         }
 
         /* Clarity Methods */
@@ -81,9 +83,9 @@ namespace EasySave.Views
 
         /* Initialisation */
 
-        public void WelcomeMessage()
+        public void WelcomeMessage(string version)
         {
-            PrintInfo(printStringDictionary["WelcomeMessage"]);
+            PrintInfo(printStringDictionary["WelcomeMessage"] + version);
             PrintSeparator();
         }
 
@@ -122,7 +124,7 @@ namespace EasySave.Views
         {
             PrintInfo(printStringDictionary["DisplayMenu_Header"]);
             Print(printStringDictionary["DisplayMenu_DislaySaveProfiles"]);
-            Print(printStringDictionary["DisplayMenu_CreateSaveProfile"]);
+            // Print(printStringDictionary["DisplayMenu_CreateSaveProfile"]);
             Print(printStringDictionary["DisplayMenu_ModifySaveProfile"]);
             Print(printStringDictionary["DisplayMenu_ExecuteSaveProfile"]);
             Print(printStringDictionary["DisplayMenu_DisplayLogs"]);
@@ -140,18 +142,18 @@ namespace EasySave.Views
 
         /* Display Save Profiles */
 
-        public void DisplaySaveProfiles(string[] saveProfiles)
+        public void DisplaySaveProfiles(List<string> saveProfilesInfos)
         {
             Print("");
-            Print(printStringDictionary["DisplaySaveProfiles_Name"] + saveProfiles[0]);
-            Print(printStringDictionary["DisplaySaveProfiles_SourceFilePath"] + saveProfiles[1]);
-            Print(printStringDictionary["DisplaySaveProfiles_TargetFilePath"] + saveProfiles[2]);
-            Print(printStringDictionary["DisplaySaveProfiles_State"] + saveProfiles[3]);
-            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesToCopy"] + saveProfiles[4]);
-            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesSize"] + saveProfiles[5]);
-            Print(printStringDictionary["DisplaySaveProfiles_NbFilesLeftToDo"] + saveProfiles[6]);
-            Print(printStringDictionary["DisplaySaveProfiles_Progression"] + saveProfiles[7]);
-            Print(printStringDictionary["DisplaySaveProfiles_TypeOfSave"] + saveProfiles[8]);
+            Print(printStringDictionary["DisplaySaveProfiles_Name"] + saveProfilesInfos[0]);
+            Print(printStringDictionary["DisplaySaveProfiles_SourceFilePath"] + saveProfilesInfos[1]);
+            Print(printStringDictionary["DisplaySaveProfiles_TargetFilePath"] + saveProfilesInfos[2]);
+            Print(printStringDictionary["DisplaySaveProfiles_State"] + saveProfilesInfos[3]);
+            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesToCopy"] + saveProfilesInfos[4]);
+            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesSize"] + saveProfilesInfos[5]);
+            Print(printStringDictionary["DisplaySaveProfiles_NbFilesLeftToDo"] + saveProfilesInfos[6]);
+            Print(printStringDictionary["DisplaySaveProfiles_Progression"] + saveProfilesInfos[7]);
+            Print(printStringDictionary["DisplaySaveProfiles_TypeOfSave"] + saveProfilesInfos[8]);
             PrintSeparator();
         }
 
@@ -234,6 +236,11 @@ namespace EasySave.Views
             PrintSeparator();
         }
 
+        public void DisplayLogError()
+        {
+            PrintError(printStringDictionary["DisplayLogError"]);
+        }
+
         /* Help */
 
         public void Help()
@@ -242,7 +249,7 @@ namespace EasySave.Views
             Print("");
             PrintInfo(printStringDictionary["Help_Menu"]);
             PrintInfo(printStringDictionary["Help_DislaySaveProfiles"]);
-            PrintInfo(printStringDictionary["Help_CreateSaveProfile"]);
+            // PrintInfo(printStringDictionary["Help_CreateSaveProfile"]);
             PrintInfo(printStringDictionary["Help_ModifySaveProfile"]);
             PrintInfo(printStringDictionary["Help_ExecuteSaveProfile"]);
             PrintInfo(printStringDictionary["Help_DisplayLogs"]);

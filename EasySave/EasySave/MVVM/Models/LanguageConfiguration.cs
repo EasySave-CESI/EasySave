@@ -1,38 +1,48 @@
-﻿namespace EasySave.Models
+﻿namespace EasySave.MVVM.Models
 {
     public class LanguageConfiguration
     {
-        public Dictionary<string, string> printStrings_en { get; set; }
-        public Dictionary<string, string> printStrings_fr { get; set; }
+        private Dictionary<string, string> printStrings_en;
+        private Dictionary<string, string> printStrings_fr;
 
-        public LanguageConfiguration() 
+        public LanguageConfiguration()
         {
             printStrings_en = new Dictionary<string, string>();
             printStrings_fr = new Dictionary<string, string>();
 
-            printStrings_en = loadprintStrings_en();
-            printStrings_fr = loadprintStrings_fr();
+            LoadPrintStringsEn();
+            LoadPrintStringsFr();
         }
 
-        public Dictionary<string, string> loadprintStrings_en()
+        public Dictionary<string, string> GetPrintStringsEn()
+        {
+            return printStrings_en;
+        }
+
+        public Dictionary<string, string> GetPrintStringsFr()
+        {
+            return printStrings_fr;
+        }
+
+        private void LoadPrintStringsEn()
         {
             printStrings_en.Add("Separator", "--------------------------------------------------");
             printStrings_en.Add("dots", "...");
-            printStrings_en.Add("WelcomeMessage", "Welcome to EasySave!");
+            printStrings_en.Add("WelcomeMessage", "Welcome to EasySave version: ");
             printStrings_en.Add("ArgumentError", "Error: Argument not recognized");
             printStrings_en.Add("DisplaySelectedProfileName", "You have selected the save profile: ");
             printStrings_en.Add("DisplayChooseSelectedProfile", "Select the save profile you want to modify by entering its index");
             printStrings_en.Add("Error", "Error: ");
             printStrings_en.Add("DisplayMenu_Header", "Please choose an option:");
             printStrings_en.Add("DisplayMenu_DislaySaveProfiles", "1. Display the save profiles");
-            printStrings_en.Add("DisplayMenu_CreateSaveProfile", "2. Create a save profile");
-            printStrings_en.Add("DisplayMenu_ModifySaveProfile", "3. Modify a save profile");
-            printStrings_en.Add("DisplayMenu_ExecuteSaveProfile", "4. Execute a save profile");
-            printStrings_en.Add("DisplayMenu_DisplayLogs", "5. Display the logs");
-            printStrings_en.Add("DisplayMenu_Help", "6. Help");
-            printStrings_en.Add("DisplayMenu_Configuration", "7. Configuration");
-            printStrings_en.Add("DisplayMenu_Clear", "8. Clear the console");
-            printStrings_en.Add("DisplayMenu_Exit", "9. Exit");
+            printStrings_en.Add("DisplayMenu_CreateSaveProfile", "x. Create a save profile");
+            printStrings_en.Add("DisplayMenu_ModifySaveProfile", "2. Modify a save profile");
+            printStrings_en.Add("DisplayMenu_ExecuteSaveProfile", "3. Execute a save profile");
+            printStrings_en.Add("DisplayMenu_DisplayLogs", "4. Display the logs");
+            printStrings_en.Add("DisplayMenu_Help", "5. Help");
+            printStrings_en.Add("DisplayMenu_Configuration", "6. Configuration");
+            printStrings_en.Add("DisplayMenu_Clear", "7. Clear the console");
+            printStrings_en.Add("DisplayMenu_Exit", "8. Exit");
             printStrings_en.Add("DisplayMenuError", "Please enter a valid option.");
             printStrings_en.Add("DisplaySaveProfiles_Name", "Name:             ");
             printStrings_en.Add("DisplaySaveProfiles_SourceFilePath", "SourceFilePath:   ");
@@ -60,6 +70,7 @@
             printStrings_en.Add("DisplayLog_FileSize", "FileSize:         ");
             printStrings_en.Add("DisplayLog_FileTransferTime", "FileTransferTime: ");
             printStrings_en.Add("DisplayLog_Time", "Time:             ");
+            printStrings_en.Add("DisplayLogError", "There is no log.");
             printStrings_en.Add("Help_Header", "--------------- HELP ---------------");
             printStrings_en.Add("Help_Menu", "menu:     Display the menu");
             printStrings_en.Add("Help_DislaySaveProfiles", "dsp:      Display the save profiles");
@@ -88,29 +99,27 @@
             printStrings_en.Add("DisplayConfigurationMenu_Back", "3. Back");
             printStrings_en.Add("Exit", "Thank you for using EasySave");
             printStrings_en.Add("NotImplementedYet", "Not implemented yet.");
-
-            return printStrings_en;
         }
 
-        public Dictionary<string, string> loadprintStrings_fr()
+        private void LoadPrintStringsFr()
         {
             printStrings_fr.Add("Separator", "--------------------------------------------------");
             printStrings_fr.Add("dots", "...");
-            printStrings_fr.Add("WelcomeMessage", "Bienvenue dans EasySave !");
+            printStrings_fr.Add("WelcomeMessage", "Bienvenue dans EasySave version: ");
             printStrings_fr.Add("ArgumentError", "Erreur : Argument non reconnu");
             printStrings_fr.Add("DisplaySelectedProfileName", "Vous avez sélectionné le profil de sauvegarde : ");
             printStrings_fr.Add("DisplayChooseSelectedProfile", "Sélectionnez le profil de sauvegarde que vous souhaitez modifier en entrant son indice");
             printStrings_fr.Add("Error", "Erreur : ");
             printStrings_fr.Add("DisplayMenu_Header", "Veuillez choisir une option :");
             printStrings_fr.Add("DisplayMenu_DislaySaveProfiles", "1. Afficher les profils de sauvegarde");
-            printStrings_fr.Add("DisplayMenu_CreateSaveProfile", "2. Créer un profil de sauvegarde");
-            printStrings_fr.Add("DisplayMenu_ModifySaveProfile", "3. Modifier un profil de sauvegarde");
-            printStrings_fr.Add("DisplayMenu_ExecuteSaveProfile", "4. Exécuter un profil de sauvegarde");
-            printStrings_fr.Add("DisplayMenu_DisplayLogs", "5. Afficher les registres");
-            printStrings_fr.Add("DisplayMenu_Help", "6. Aide");
-            printStrings_fr.Add("DisplayMenu_Configuration", "7. Configuration");
-            printStrings_fr.Add("DisplayMenu_Clear", "8. Effacer la console");
-            printStrings_fr.Add("DisplayMenu_Exit", "9. Quitter");
+            printStrings_fr.Add("DisplayMenu_CreateSaveProfile", "x. Créer un profil de sauvegarde");
+            printStrings_fr.Add("DisplayMenu_ModifySaveProfile", "2. Modifier un profil de sauvegarde");
+            printStrings_fr.Add("DisplayMenu_ExecuteSaveProfile", "3. Exécuter un profil de sauvegarde");
+            printStrings_fr.Add("DisplayMenu_DisplayLogs", "4. Afficher les registres");
+            printStrings_fr.Add("DisplayMenu_Help", "5. Aide");
+            printStrings_fr.Add("DisplayMenu_Configuration", "6. Configuration");
+            printStrings_fr.Add("DisplayMenu_Clear", "7. Effacer la console");
+            printStrings_fr.Add("DisplayMenu_Exit", "8. Quitter");
             printStrings_fr.Add("DisplayMenuError", "Veuillez entrer une option valide.");
             printStrings_fr.Add("DisplaySaveProfiles_Name", "Nom :               ");
             printStrings_fr.Add("DisplaySaveProfiles_SourceFilePath", "CheminSource :      ");
@@ -138,6 +147,7 @@
             printStrings_fr.Add("DisplayLog_FileSize", "TailleFichier :    ");
             printStrings_fr.Add("DisplayLog_FileTransferTime", "TempsTransfertFichier : ");
             printStrings_fr.Add("DisplayLog_Time", "Temps :            ");
+            printStrings_fr.Add("DisplayLogError", "Il n'y a aucun registre.");
             printStrings_fr.Add("Help_Header", "--------------- AIDE ---------------");
             printStrings_fr.Add("Help_Menu", "menu :    Afficher le menu");
             printStrings_fr.Add("Help_DislaySaveProfiles", "dsp :     Afficher les profils de sauvegarde");
@@ -166,8 +176,6 @@
             printStrings_fr.Add("DisplayConfigurationMenu_Back", "3. Retour");
             printStrings_fr.Add("Exit", "Merci d'utiliser EasySave");
             printStrings_fr.Add("NotImplementedYet", "Pas encore implémenté.");
-
-            return printStrings_fr;
         }
     }
 }
