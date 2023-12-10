@@ -127,7 +127,7 @@ namespace EasySave.MVVM.Models
             }
         }
 
-        private List<DailyLog> LoadLogs()
+        public List<DailyLog> LoadLogs()
         {
             try
             {

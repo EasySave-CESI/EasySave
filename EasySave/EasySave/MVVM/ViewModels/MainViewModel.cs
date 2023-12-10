@@ -11,7 +11,7 @@ namespace EasySave.MVVM.ViewModels
         private readonly PathViewModel _pathViewModel;
         private readonly ConfigurationViewModel _configurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
-        private readonly _consoleViewModel _ConsoleViewModel;
+        private readonly _consoleViewModel _consoleViewModel;
 
 
         public MainViewModel(string userargument, string version)
@@ -33,7 +33,7 @@ namespace EasySave.MVVM.ViewModels
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
 
             // Create a new console view model
-            _ConsoleViewModel = new _consoleViewModel(userargument, version, paths, config, saveProfiles);
+            _consoleViewModel = new _consoleViewModel(userargument, version, paths, config, saveProfiles);
         }
     }
 }

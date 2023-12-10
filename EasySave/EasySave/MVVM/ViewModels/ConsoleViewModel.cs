@@ -10,7 +10,8 @@ namespace EasySave.MVVM.ViewModels
         // All the objects needed to run the _consoleViewModel
         public ConsoleView _consoleView { get; set; }
         public LanguageConfigurationViewModel _languageConfigurationViewModel { get; set; }
-        public DailyLogs _Logger { get; set; }
+        public DailyLogsViewModel _dailyLogsViewModel { get; set; }
+        public SaveProfileViewModel _saveProfileViewModel { get; set; }
 
         // Lists and Dictionaries
         public Dictionary<string, string> paths { get; set; }
@@ -55,8 +56,11 @@ namespace EasySave.MVVM.ViewModels
             // Create a new console view
             _consoleView = new ConsoleView(printStringDictionary);
 
-            // Create a new daily logs
-            _Logger = new DailyLogs(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
+            // Create a new daily logs view model
+            _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
+
+            // Create a new save profile view model
+            _saveProfileViewModel = new SaveProfileViewModel();
 
             // If the user argument is empty, load the menu, else load the function
             if (argument == "")
@@ -80,19 +84,16 @@ namespace EasySave.MVVM.ViewModels
                     Menu();
                     break;
                 case "dsp":
-                    DisplaySaveProfiles();
-                    break;
-                case "csp":
-                    CreateSaveProfile();
+                    _saveProfileViewModel.DisplaySaveProfiles(_consoleView, SaveProfiles);
                     break;
                 case "msp":
-                    ModifySaveProfile();
+                    _saveProfileViewModel.ModifySaveProfile(_consoleView, SaveProfiles, paths);
                     break;
                 case "esp":
-                    ExecuteSaveProfile();
+                    _saveProfileViewModel.ExecuteSaveProfile(_consoleView, _dailyLogsViewModel, SaveProfiles, paths, config);
                     break;
                 case "dl":
-                    DisplayLogs();
+                    _dailyLogsViewModel.DisplayLogs(_consoleView, paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
                     break;
                 case "help":
                     _consoleView.Help();
@@ -119,170 +120,34 @@ namespace EasySave.MVVM.ViewModels
                 switch (choice)
                 {
                     case "1":
-                        DisplaySaveProfiles();
+                        _saveProfileViewModel.DisplaySaveProfiles(_consoleView, SaveProfiles);
                         break;
                     case "2":
-                        CreateSaveProfile();
+                        _saveProfileViewModel.ModifySaveProfile(_consoleView, SaveProfiles, paths);
                         break;
                     case "3":
-                        ModifySaveProfile();
+                        _saveProfileViewModel.ExecuteSaveProfile(_consoleView, _dailyLogsViewModel, SaveProfiles, paths, config);
                         break;
                     case "4":
-                        ExecuteSaveProfile();
+                        _dailyLogsViewModel.DisplayLogs(_consoleView, paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
                         break;
                     case "5":
-                        DisplayLogs();
-                        break;
-                    case "6":
                         _consoleView.Help();
                         break;
-                    case "7":
+                    case "6":
                         Config();
                         SaveDailyLogs();
                         break;
-                    case "8":
+                    case "7":
                         _consoleView.Clear();
                         break;
-                    case "9":
+                    case "8":
                         Exit();
                         break;
                     default:
                         _consoleView.DisplayMenuError();
                         break;
                 }
-            }
-        }
-
-        public void DisplaySaveProfiles()
-        {
-            if (SaveProfiles == null)
-            {
-                _consoleView.DisplaySaveProfilesError();
-            }
-            else
-            {
-                {
-                    foreach (SaveProfile profile in SaveProfiles)
-                    {
-                        List<string> list = new List<string>();
-                        list.Add(profile.Name);
-                        list.Add(profile.SourceFilePath);
-                        list.Add(profile.TargetFilePath);
-                        list.Add(profile.State);
-                        list.Add(profile.TotalFilesToCopy.ToString());
-                        list.Add(profile.TotalFilesSize.ToString());
-                        list.Add(profile.NbFilesLeftToDo.ToString());
-                        list.Add(profile.Progression.ToString());
-                        list.Add(profile.TypeOfSave);
-                        _consoleView.DisplaySaveProfiles(list.ToArray());
-                    }
-                }
-            }
-
-        }
-
-        public void CreateSaveProfile()
-        {
-            _consoleView.NotImplementedYet();
-        }
-
-        public void ModifySaveProfile()
-        {
-
-            try
-            {
-                string profileName = string.Empty;
-                int profileIndex = -1;
-
-                profileIndex = GetProfileIndex();
-
-                _consoleView.DisplaySelectedProfileName(SaveProfiles[profileIndex].Name);
-
-                _consoleView.DisplayModifySaveProfileNewName();
-                SaveProfiles[profileIndex].Name = _consoleView.Read();
-
-                _consoleView.DisplayModifySaveProfileNewSourceFilePath();
-                SaveProfiles[profileIndex].SourceFilePath = _consoleView.Read();
-
-                _consoleView.DisplayModifySaveProfileNewTargetFilePath();
-                SaveProfiles[profileIndex].TargetFilePath = _consoleView.Read();
-
-                _consoleView.DisplayModifySaveProfileNewTypeOfSave();
-                SaveProfiles[profileIndex].TypeOfSave = _consoleView.Read();
-
-                List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(SaveProfiles[profileIndex].SourceFilePath);
-                SaveProfiles[profileIndex].TotalFilesToCopy = (int)sourcedirectoryinfo[0];
-                SaveProfiles[profileIndex].TotalFilesSize = sourcedirectoryinfo[1];
-                SaveProfiles[profileIndex].NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
-                SaveProfiles[profileIndex].Progression = 0;
-
-                SaveProfiles[profileIndex].State = "READY";
-
-                SaveProfile.SaveProfiles(paths["StateFilePath"], SaveProfiles);
-                _consoleView.DisplayModifySaveProfileSuccess();
-
-            }
-            catch (Exception ex)
-            {
-                _consoleView.Error(ex.Message);
-            }
-
-        }
-
-        public void ExecuteSaveProfile()
-        {
-            try
-            {
-                int profileIndex = GetProfileIndex();
-                _consoleView.DisplaySelectedProfileName(SaveProfiles[profileIndex].Name);
-
-                if (SaveProfiles[profileIndex].State == "READY")
-                {
-                    SaveProfiles[profileIndex].State = "IN PROGRESS";
-                    SaveProfile.SaveProfiles(paths["StateFilePath"], SaveProfiles);
-
-                    if (SaveProfiles[profileIndex].TypeOfSave == "full" || SaveProfiles[profileIndex].TypeOfSave == "diff")
-                    {
-                        _consoleView.DisplayBackupInProgress(SaveProfiles[profileIndex].Name);
-                        SaveProfile.ExecuteSaveProfile(SaveProfiles, SaveProfiles[profileIndex], SaveProfiles[profileIndex].TypeOfSave);
-
-                        DateTime startTime = DateTime.Now;
-                        TimeSpan elapsedTime = DateTime.Now - startTime;
-
-                        _Logger.CreateLog(
-                        SaveProfiles[profileIndex].Name,
-                        SaveProfiles[profileIndex].SourceFilePath,
-                        SaveProfiles[profileIndex].TargetFilePath,
-                        SaveProfiles[profileIndex].TotalFilesSize,
-                        elapsedTime.TotalMilliseconds
-                        );
-                    }
-                    else
-                    {
-                        _consoleView.DisplayExecuteSaveProfileTypeOfSaveError();
-                    }
-
-                    SaveProfiles[profileIndex].State = "COMPLETED";
-                    SaveProfile.SaveProfiles(paths["StateFilePath"], SaveProfiles);
-                    _consoleView.DisplayExecuteSaveProfileSuccess();
-                }
-                else
-                {
-                    _consoleView.DisplayExecuteSaveProfileStateError();
-                }
-            }
-            catch (Exception ex)
-            {
-                _consoleView.Error(ex.Message);
-            }
-        }
-        public void DisplayLogs()
-        {
-            _consoleView.DisplayLogsHeader();
-
-            foreach (var log in _Logger.GetLogs())
-            {
-                _consoleView.DisplayLog(log);
             }
         }
 
@@ -311,14 +176,13 @@ namespace EasySave.MVVM.ViewModels
 
         private DailyLogs LoadDailyLogs()
         {
-            //DailyLogs loadedLogs = new DailyLogs(EasySaveFileLogsDirectoryPath, logformat);
-            //return loadedLogs;
-            return null;
+            DailyLogs loadedLogs = new DailyLogs(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
+            return loadedLogs;
         }
 
         private void SaveDailyLogs()
         {
-            _Logger.SaveLogs();
+            _dailyLogsViewModel.SaveLogs(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
         }
 
         private void ChooseLanguage()
@@ -361,14 +225,12 @@ namespace EasySave.MVVM.ViewModels
                 case "1":
                     config["logformat"] = "json";
                     Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"]);
-                    _Logger.SetLogFileFormat(LogFileFormat.Json);
                     _consoleView.Clear();
                     _consoleView.DisplayLogFileFormatSuccess(config["logformat"]);
                     break;
                 case "2":
                     config["logformat"] = "xml";
                     Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"]);
-                    _Logger.SetLogFileFormat(LogFileFormat.Xml);
                     _consoleView.Clear();
                     _consoleView.DisplayLogFileFormatSuccess(config["logformat"]);
                     break;
@@ -382,31 +244,6 @@ namespace EasySave.MVVM.ViewModels
         {
             _consoleView.Exit();
             argument = "exit";
-            Environment.Exit(0);
-        }
-
-        public int GetProfileIndex()
-        {
-            _consoleView.DisplayChooseSelectedProfile();
-
-            // print all the profiles name
-            for (int i = 0; i < SaveProfiles.Count; i++)
-            {
-                _consoleView.DisplayProfileIndexName(i + 1, SaveProfiles[i].Name);
-            }
-
-            string choice = _consoleView.Read();
-
-            int profileIndex = -1;
-
-            for (int i = 0; i < SaveProfiles.Count; i++)
-            {
-                if (int.Parse(choice) == i + 1)
-                {
-                    profileIndex = i;
-                }
-            }
-            return profileIndex;
         }
     }
 }

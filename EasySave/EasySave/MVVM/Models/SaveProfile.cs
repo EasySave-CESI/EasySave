@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EasySave.MVVM.ViewModels;
+using Newtonsoft.Json;
 
 namespace EasySave.MVVM.Models
 {
@@ -92,7 +93,7 @@ namespace EasySave.MVVM.Models
             }
         }
 
-        public static void ExecuteSaveProfile(List<SaveProfile> profiles, SaveProfile saveProfile, string mode)
+        public static void ExecuteSaveProfile(List<SaveProfile> profiles,DailyLogsViewModel dailyLogsViewModel ,SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
         {
             try
             {
@@ -107,6 +108,7 @@ namespace EasySave.MVVM.Models
 
                 foreach (string file in files)
                 {
+                    DateTime startTime = DateTime.Now;
                     string relativePath = file.Substring(saveProfile.SourceFilePath.Length + 1);
                     string targetFilePath = Path.Combine(saveProfile.TargetFilePath, relativePath);
 
@@ -128,16 +130,18 @@ namespace EasySave.MVVM.Models
                     {
                         File.Copy(file, targetFilePath, true);
                     }
+                    TimeSpan elapsedTime = DateTime.Now - startTime;
+                    dailyLogsViewModel.CreateLog(paths["EasySaveFileLogsDirectoryPath"], config["logformat"], saveProfile.Name, file, targetFilePath, file.Length, elapsedTime.TotalSeconds);
 
                     saveProfile.NbFilesLeftToDo--;
                     saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
-                    SaveProfiles("..\\..\\..\\Profiles\\state.json", profiles);
+                    SaveProfiles(paths["StateFilePath"], profiles);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 saveProfile.State = "ERROR";
-                SaveProfiles("state.json", profiles);
+                SaveProfiles(paths["StateFilePath"], profiles);
             }
         }
 
