@@ -1,7 +1,8 @@
-﻿using EasySave.MVVM.Models;
-using EasySave.MVVM.Views;
+﻿using EasySaveWPF.MVVM.Models;
+using EasySaveWPF.MVVM.Views;
+using System.IO;
 
-namespace EasySave.MVVM.ViewModels
+namespace EasySaveWPF.MVVM.ViewModels
 {
     public class SaveProfileViewModel
     {

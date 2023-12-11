@@ -1,4 +1,4 @@
-﻿namespace EasySave.MVVM.Models
+﻿namespace EasySaveWPF.MVVM.Models
 {
     public class LanguageConfiguration
     {

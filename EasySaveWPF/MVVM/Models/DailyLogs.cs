@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System.IO;
 using System.Xml.Serialization;
 
-namespace EasySave.MVVM.Models
+namespace EasySaveWPF.MVVM.Models
 {
     public enum LogFileFormat
     {

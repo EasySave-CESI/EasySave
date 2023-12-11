@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace EasySave.MVVM.Models
+namespace EasySaveWPF.MVVM.Models
 {
     public class PathModel
     {

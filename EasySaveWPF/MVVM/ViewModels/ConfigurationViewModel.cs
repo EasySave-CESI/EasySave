@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using EasySave.MVVM.Models;
-using EasySave.MVVM.Views;
+using EasySaveWPF.MVVM.Models;
+using EasySaveWPF.MVVM.Views;
 
-namespace EasySave.MVVM.ViewModels
+namespace EasySaveWPF.MVVM.ViewModels
 {
     public class ConfigurationViewModel
     {

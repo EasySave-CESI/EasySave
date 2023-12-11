@@ -1,7 +1,7 @@
-﻿using EasySave.MVVM.Models;
+﻿using EasySaveWPF.MVVM.Models;
 using System.Collections.Generic;
 
-namespace EasySave.MVVM.ViewModels
+namespace EasySaveWPF.MVVM.ViewModels
 {
     public class LanguageConfigurationViewModel
     {

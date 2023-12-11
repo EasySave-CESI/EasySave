@@ -1,8 +1,9 @@
-﻿using EasySave.MVVM.ViewModels;
+﻿using EasySaveWPF.MVVM.ViewModels;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.IO;
 
-namespace EasySave.MVVM.Models
+namespace EasySaveWPF.MVVM.Models
 {
     public class SaveProfile
     {

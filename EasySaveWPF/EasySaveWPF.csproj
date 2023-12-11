@@ -10,18 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Views\EasysaveBanniere.png" />
-    <None Remove="Views\Easysaveico.png" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="ViewModels\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="Models\**" />
+    <None Remove="ViewModels\**" />
+    <Page Remove="Models\**" />
+    <Page Remove="ViewModels\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Views\EasysaveBanniere.png" />
-    <Resource Include="Views\Easysaveico.png" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>
