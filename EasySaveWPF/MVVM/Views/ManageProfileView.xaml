@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySaveWPF.Views"
         mc:Ignorable="d"
-        Title="ManageProfileView" MaxHeight="475" MaxWidth="800"
-        Icon="/Views/Easysaveico.png">
+        Title="ManageProfileView" MaxHeight="475" MaxWidth="1400" MinWidth="1400"
+        >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="434.04"/>
@@ -33,13 +33,13 @@
             HorizontalContentAlignment="Center" 
             Click="Button_Click_1"/>
 
-        <ListView d:ItemsSource="{d:SampleData ItemCount=5}" Margin="38,87,49,125">
+        <ListView x:Name="List_Profil" Margin="40,83,-305,130" RenderTransformOrigin="0.5,0.5">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Profil" Width="100"/>
-                    <GridViewColumn Header="Source" Width="250"/>
-                    <GridViewColumn Header="Destination" Width="250"/>
-                    <GridViewColumn Header="Type" Width="100" />
+                    <GridViewColumn Header="Profil" Width="100" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Source" Width="300" DisplayMemberBinding="{Binding SourceFilePath}"/>
+                    <GridViewColumn Header="Destination" Width="300" DisplayMemberBinding="{Binding TargetFilePath}"/>
+                    <GridViewColumn Header="Type" Width="100" DisplayMemberBinding="{Binding TypeOfSave}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -87,9 +87,6 @@
             VerticalAlignment="Top" 
             Width="348" Height="76" 
             BorderThickness="1,1,1,1">
-            <Label.Background>
-                <ImageBrush ImageSource="/Views/EasysaveBanniere.png"/>
-            </Label.Background>
         </Label>
 
         <Button x:Name="Source_Folder_Button" 

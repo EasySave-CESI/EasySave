@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySaveWPF"
         mc:Ignorable="d"
-        Title="EasySave" MaxHeight="475" MaxWidth="820"
-        Icon="/MVVM/Views/Easysaveico.png"
+        Title="EasySave" MaxHeight="475" MaxWidth="1400" MinHeight="475" MinWidth="1400"
         >
 
     <Grid>
@@ -16,14 +15,13 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="800"/>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="List_Profil" d:ItemsSource="{d:SampleData ItemCount=6}" Margin="400,50,10,85" SelectionChanged="ListView_SelectionChanged_1" RenderTransformOrigin="0.5,0.5">
+        <ListView x:Name="List_Profil" Margin="400,50,-422,85" RenderTransformOrigin="0.5,0.5">
             <ListView.View>
                 <GridView>
-
-                    <GridViewColumn Header="Profil" Width="100"/>
-                    <GridViewColumn Header="Source" Width="100"/>
-                    <GridViewColumn Header="Destination" Width="100"/>
-                    <GridViewColumn Header="Type" Width="100" />
+                    <GridViewColumn Header="Profil" Width="100" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Source" Width="300" DisplayMemberBinding="{Binding SourceFilePath}"/>
+                    <GridViewColumn Header="Destination" Width="300" DisplayMemberBinding="{Binding TargetFilePath}"/>
+                    <GridViewColumn Header="Type" Width="100" DisplayMemberBinding="{Binding TypeOfSave}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -73,9 +71,6 @@
             VerticalAlignment="Top" 
             Width="347" Height="76" 
             BorderThickness="1,1,1,1" OpacityMask="#FFAC6B6B">
-            <Label.Background>
-                <ImageBrush ImageSource="/MVVM/Views/EasysaveBanniere.png"/>
-            </Label.Background>
         </Label>
         <Label Content="List of profiles" HorizontalAlignment="Left" Margin="400,11,0,0" VerticalAlignment="Top" Width="390" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri Light" FontSize="14"/>
         <Button 

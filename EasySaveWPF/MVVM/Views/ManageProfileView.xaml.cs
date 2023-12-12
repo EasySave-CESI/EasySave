@@ -12,17 +12,55 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using EasySaveWPF.MVVM.Views;
+using EasySaveWPF.MVVM.Models;
+using EasySaveWPF.MVVM.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace EasySaveWPF.Views
 {
-    /// <summary>
-    /// Logique d'interaction pour ManageProfileView.xaml
-    /// </summary>
+   
     public partial class ManageProfileView : Window
     {
+        private readonly PathViewModel _pathViewModel;
+        private readonly ConfigurationViewModel _configurationViewModel;
+        private readonly SaveProfileViewModel _saveProfileViewModel;
+
+        private ObservableCollection<SaveProfile> profiles;
+        private Dictionary<string, string> paths;
+        private Dictionary<string, string> config;
+        private List<SaveProfile> saveProfiles;
+
         public ManageProfileView()
         {
             InitializeComponent();
+
+            _pathViewModel = new PathViewModel();
+            _configurationViewModel = new ConfigurationViewModel();
+            _saveProfileViewModel = new SaveProfileViewModel();
+
+            // Create a new dictionary to store the paths
+            paths = _pathViewModel.LoadPaths();
+
+            // Create a new dictionary to store the config
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+
+            // Create a new list to store the save profiles
+            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+
+            DisplayProfiles();
+        }
+
+        private void DisplayProfiles()
+        {
+            profiles = new ObservableCollection<SaveProfile> { };
+
+            foreach (SaveProfile profile in saveProfiles)
+            {
+                profiles.Add(profile);
+            }
+
+            List_Profil.ItemsSource = profiles;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
