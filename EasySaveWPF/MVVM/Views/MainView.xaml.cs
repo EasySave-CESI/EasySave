@@ -76,6 +76,10 @@ namespace EasySaveWPF
 
         }
 
+        private void ManageProfileWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         private void ExecuteSave_Click(object sender, RoutedEventArgs e)
         {

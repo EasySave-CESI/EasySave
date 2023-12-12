@@ -30,10 +30,10 @@
             Height="55" Width="55" 
             FontSize="30" 
             VerticalContentAlignment="Stretch" 
-            HorizontalContentAlignment="Center" 
-            Click="Button_Click_1"/>
+            HorizontalContentAlignment="Center" Click="DeleteProfile_Button_Click" 
+            />
 
-        <ListView x:Name="List_Profil" Margin="40,83,-305,130" RenderTransformOrigin="0.5,0.5">
+        <ListView x:Name="List_Profil" Margin="40,83,-305,130" RenderTransformOrigin="0.5,0.5" SelectionChanged="List_Profil_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Profil" Width="100" DisplayMemberBinding="{Binding Name}"/>
@@ -76,7 +76,7 @@
         <TextBox 
             x:Name="Source_Textbox" 
             TextWrapping="Wrap" 
-            Text="" 
+             
             Margin="125,332,378,77" 
             TextChanged="SourceTextbox"/>
 

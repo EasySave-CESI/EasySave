@@ -16,6 +16,8 @@ using EasySaveWPF.MVVM.Views;
 using EasySaveWPF.MVVM.Models;
 using EasySaveWPF.MVVM.ViewModels;
 using System.Collections.ObjectModel;
+using Microsoft.VisualBasic;
+
 
 namespace EasySaveWPF.Views
 {
@@ -68,10 +70,7 @@ namespace EasySaveWPF.Views
 
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void RichTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -81,7 +80,17 @@ namespace EasySaveWPF.Views
 
 private void Validate_ManageProfileView_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            var item = List_Profil.SelectedItem as SaveProfile;
+            if (item == null)
+            {
+                MessageBox.Show("Please select a profile to edit");
+                return;
+            }
+            item.SourceFilePath = Source_Textbox.Text;
+            item.TargetFilePath = Destination_Textbox.Text;
+            item.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "full" : "diff";
+            List_Profil.Items.Refresh();
+            //Close();
         }
 
         private void Cancel_ManageProfileView_Click(object sender, RoutedEventArgs e)
@@ -123,7 +132,64 @@ private void Validate_ManageProfileView_Click(object sender, RoutedEventArgs e)
 
         private void AddProfile_Button_Click(object sender, RoutedEventArgs e)
         {
+           
+            SaveProfile newProfile = new SaveProfile();
+            newProfile.Name = Interaction.InputBox("Enter the name of the profile", "Add a new profile", "Save", 100, 100);
+            newProfile.SourceFilePath = Source_Textbox.Text;
+            newProfile.TargetFilePath = Destination_Textbox.Text;
+            newProfile.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
+            profiles.Add(newProfile);
+            List_Profil.Items.Refresh();
 
+
+
+
+
+        }
+
+        private void List_Profil_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = List_Profil.SelectedItem as SaveProfile;
+            
+            Source_Textbox.Text = (item.SourceFilePath);
+            Destination_Textbox.Text = (item.TargetFilePath);
+
+            if (item.TypeOfSave == "full")
+            {
+               TypeFull_RadioButton.IsChecked = true;
+            }
+            else if (item.TypeOfSave == "diff")
+            {
+                TypeDiff_RadioButton.IsChecked = true;
+            }
+            else
+            {
+                TypeDiff_RadioButton.IsChecked = false;
+                TypeFull_RadioButton.IsChecked = false;
+            }
+           
+           
+
+        }
+
+        private void DeleteProfile_Button_Click(object sender, RoutedEventArgs e)
+        {
+            object item = List_Profil.SelectedItem as SaveProfile;
+            if (item == null)
+            {
+                MessageBox.Show("Please select a profile to delete");
+                return;
+            }
+
+            
+            /*List_Profil.ItemsSource = null;
+            List_Profil.Items.Remove(item as SaveProfile);
+            List_Profil.Items.Refresh();
+
+
+
+            List_Profil.UnselectAll();
+            List_Profil.Items.Remove(item);*/
         }
     }
 }

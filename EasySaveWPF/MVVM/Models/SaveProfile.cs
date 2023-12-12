@@ -34,6 +34,10 @@ namespace EasySaveWPF.MVVM.Models
             EncryptionKey = encryptionKey;
         }
 
+        public SaveProfile()
+        {
+        }
+
         public static List<SaveProfile> LoadSaveProfiles(string filePath)
         {
             string json = File.ReadAllText(filePath);
