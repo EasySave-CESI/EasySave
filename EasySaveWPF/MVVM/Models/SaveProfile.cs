@@ -88,6 +88,7 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
+
         public static string AddProfile(string filePath, SaveProfile profile)
         {
             try

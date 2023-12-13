@@ -78,7 +78,7 @@ namespace EasySaveWPF.Views
         }
 
 
-private void Validate_ManageProfileView_Click(object sender, RoutedEventArgs e)
+        private void Validate_ManageProfileView_Click(object sender, RoutedEventArgs e)
         {
             var item = List_Profil.SelectedItem as SaveProfile;
             if (item == null)
@@ -90,12 +90,13 @@ private void Validate_ManageProfileView_Click(object sender, RoutedEventArgs e)
             item.TargetFilePath = Destination_Textbox.Text;
             item.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "full" : "diff";
             List_Profil.Items.Refresh();
-            //Close();
+
+            saveProfiles = profiles.ToList();
+            SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
         }
 
         private void Cancel_ManageProfileView_Click(object sender, RoutedEventArgs e)
         {
-
             Close();
         }
 

@@ -27,7 +27,6 @@ namespace EasySaveWPF
         private readonly ConfigurationViewModel _configurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
 
-        private ObservableCollection<SaveProfile> profiles;
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
         private List<SaveProfile> saveProfiles;
@@ -48,14 +47,14 @@ namespace EasySaveWPF
 
             // Create a new list to store the save profiles
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-
-            DisplayProfiles();
         }
 
         private void DisplayProfiles()
         {
-            profiles = new ObservableCollection<SaveProfile> { };
-
+            // Epty the list
+            List_Profil.ItemsSource = null;
+            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+            ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile> { };
             foreach (SaveProfile profile in saveProfiles)
             {
                 profiles.Add(profile);
@@ -65,20 +64,23 @@ namespace EasySaveWPF
             NumberProfileLoaded_TextBox.Content = profiles.Count.ToString();
         }
 
-
         private void ManageProfile_Click(object sender, RoutedEventArgs e)
         {
             ManageProfileView manageProfileWindow = new ManageProfileView();
-            manageProfileWindow.Closing += (s, e) => ManageProfile_Button.IsEnabled = true; //Enable the button when ManageProfileView is closed
             manageProfileWindow.Show();                                                  //Open a new window
             ManageProfile_Button.IsEnabled = false;                                      //Disable the button
+            manageProfileWindow.Closing += ManageProfileWindow_Closing;                   //When the window is closed, call the function ManageProfileWindow_Closing
+        }
 
-
+        private void ManageProfileWindow_Starting(object? sender, CancelEventArgs e)
+        {
+            //
         }
 
         private void ManageProfileWindow_Closing(object? sender, CancelEventArgs e)
         {
-            throw new NotImplementedException();
+            ManageProfile_Button.IsEnabled = true;
+            DisplayProfiles();
         }
 
         private void ExecuteSave_Click(object sender, RoutedEventArgs e)
