@@ -54,7 +54,7 @@ namespace EasySaveWPF.MVVM.ViewModels
 
         }
 
-        public void ModifySaveProfile(ConsoleView consoleView, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, int id)
+        public void ModifySaveProfile(ConsoleView consoleView, List<SaveProfile> saveProfiles, Dictionary<string, string> paths)
         {
 
             try
@@ -62,7 +62,7 @@ namespace EasySaveWPF.MVVM.ViewModels
                 string profileName = string.Empty;
                 int profileIndex = -1;
 
-                profileIndex = id;
+                profileIndex = GetProfileIndex(consoleView, saveProfiles);
 
                 consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
 
@@ -97,11 +97,12 @@ namespace EasySaveWPF.MVVM.ViewModels
 
         }
 
-        public void ExecuteSaveProfile(DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config, int index)
+        public void ExecuteSaveProfile(ConsoleView consoleView, DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config)
         {
             try
             {
-                int profileIndex = index;
+                int profileIndex = GetProfileIndex(consoleView, saveProfiles);
+                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
 
                 if (saveProfiles[profileIndex].State == "READY")
                 {
@@ -110,26 +111,52 @@ namespace EasySaveWPF.MVVM.ViewModels
 
                     if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
+                        consoleView.DisplayBackupInProgress(saveProfiles[profileIndex].Name);
 
                         SaveProfile.ExecuteSaveProfile(saveProfiles, dailyLogsViewModel, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave, paths, config);
                     }
                     else
                     {
-                        // If the type of save is not full or diff, display an error message
+                        consoleView.DisplayExecuteSaveProfileTypeOfSaveError();
                     }
 
                     saveProfiles[profileIndex].State = "COMPLETED";
                     SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
+                    consoleView.DisplayExecuteSaveProfileSuccess();
                 }
                 else
                 {
-                    // If the state is not ready, display an error message
+                    consoleView.DisplayExecuteSaveProfileStateError();
                 }
             }
             catch (Exception ex)
             {
-                // If an error occurs, display an error message
+                consoleView.Error(ex.Message);
             }
+        }
+
+        public int GetProfileIndex(ConsoleView consoleView, List<SaveProfile> saveProfiles)
+        {
+            consoleView.DisplayChooseSelectedProfile();
+
+            // print all the profiles name
+            for (int i = 0; i < saveProfiles.Count; i++)
+            {
+                consoleView.DisplayProfileIndexName(i + 1, saveProfiles[i].Name);
+            }
+
+            string choice = consoleView.Read();
+
+            int profileIndex = -1;
+
+            for (int i = 0; i < saveProfiles.Count; i++)
+            {
+                if (int.Parse(choice) == i + 1)
+                {
+                    profileIndex = i;
+                }
+            }
+            return profileIndex;
         }
     }
 }

@@ -52,7 +52,7 @@
             Click="Validate_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
 
         <Button 
-            Content="Cancel" 
+            Content="Close" 
             HorizontalAlignment="Left" 
             Margin="631,367,0,0" 
             VerticalAlignment="Top" 

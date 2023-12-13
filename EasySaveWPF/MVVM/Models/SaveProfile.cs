@@ -19,10 +19,6 @@ namespace EasySaveWPF.MVVM.Models
         public bool Encryption { get; set; }
         public string EncryptionKey { get; set; }
 
-        public SaveProfile()
-        {
-        }
-
         public SaveProfile(string name, string sourceFilePath, string targetFilePath, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo, int progression, string typeOfSave, bool encryption, string encryptionKey)
         {
             Name = name;
@@ -36,6 +32,10 @@ namespace EasySaveWPF.MVVM.Models
             TypeOfSave = typeOfSave;
             Encryption = encryption;
             EncryptionKey = encryptionKey;
+        }
+
+        public SaveProfile()
+        {
         }
 
         public static List<SaveProfile> LoadSaveProfiles(string filePath)
@@ -62,6 +62,10 @@ namespace EasySaveWPF.MVVM.Models
             try
             {
                 List<SaveProfile> profiles = new List<SaveProfile>();
+                for (int i = 0; i < 5; i++)
+                {
+                    profiles.Add(new SaveProfile("Save" + (i + 1), "", "", "", 0, 0, 0, 0, "", false, ""));
+                }
                 SaveProfiles(filePath, profiles);
             }
             catch (Exception ex)

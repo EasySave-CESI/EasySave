@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using EasySaveWPF.MVVM.ViewModels;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -26,6 +27,10 @@ namespace EasySaveWPF.MVVM.Models
                 Language = "en";
                 LogFormat = "json";
             }
+        }
+
+        public Configuration()
+        {
         }
 
         public static Dictionary<string, string> LoadConfig(string filePath)
@@ -134,6 +139,11 @@ namespace EasySaveWPF.MVVM.Models
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+        }
+
+        public static implicit operator Configuration(ConfigurationViewModel v)
+        {
+            throw new NotImplementedException();
         }
     }
 }
