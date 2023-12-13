@@ -48,6 +48,8 @@ namespace EasySaveWPF
 
             // Create a new list to store the save profiles
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+
+            DisplayProfiles();
         }
 
         private void DisplayProfiles()
@@ -90,6 +92,16 @@ namespace EasySaveWPF
             executeSaveWindow.Closing += (s, e) => ExecuteSave_Button.IsEnabled = true;
             executeSaveWindow.Show();
             ExecuteSave_Button.IsEnabled = false;
+        }
+
+        private void ExecuteSaveWindow_Starting(object? sender, CancelEventArgs e)
+        {
+            //
+        }
+
+        private void ExecuteSaveWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            ExecuteSave_Button.IsEnabled = true;
         }
 
         private void ViewLogs_Click(object sender, RoutedEventArgs e)
