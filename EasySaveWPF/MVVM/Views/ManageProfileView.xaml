@@ -12,7 +12,7 @@
             <RowDefinition Height="434.04"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="800"/>
+            <ColumnDefinition Width="900"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="AddProfile_Button" 
             Content="+" 
@@ -48,7 +48,7 @@
         <Button 
             Content="Validate" 
             HorizontalAlignment="Left" 
-            Margin="481,367,0,0" 
+            Margin="630,367,0,0" 
             VerticalAlignment="Top" 
             Height="53" Width="120" 
             Click="Validate_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
@@ -56,7 +56,7 @@
         <Button 
             Content="Exit" 
             HorizontalAlignment="Left" 
-            Margin="631,367,0,0" 
+            Margin="780,367,0,0" 
             VerticalAlignment="Top" 
             Height="53" Width="120" 
             Click="Exit_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
@@ -69,17 +69,17 @@
             x:Name="Destination_Textbox"
             TextWrapping="Wrap" 
             Text="" 
-            Margin="125,367,378,42"
+            Margin="125,367,472,42"
             TextChanged="DestinationTextBox"/>
 
-        <RadioButton x:Name="TypeFull_RadioButton" Content="Full" HorizontalAlignment="Left" Margin="129,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13"/>
-        <RadioButton x:Name="TypeDiff_RadioButton" Content="Differential" HorizontalAlignment="Left" Margin="180,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13"/>
+        <RadioButton x:Name="TypeFull_RadioButton" Content="Full" HorizontalAlignment="Left" Margin="129,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="TypeGroup"/>
+        <RadioButton x:Name="TypeDiff_RadioButton" Content="Differential" HorizontalAlignment="Left" Margin="180,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="TypeGroup"/>
         <Label Content="Destination :" HorizontalAlignment="Left" Margin="40,364,0,0" VerticalAlignment="Top" Width="80" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
         <TextBox 
             x:Name="Source_Textbox" 
             TextWrapping="Wrap" 
              
-            Margin="125,332,378,77" 
+            Margin="125,332,472,77" 
             TextChanged="SourceTextbox"/>
 
         <Label 
@@ -106,6 +106,9 @@
             Margin="433,370,0,0" 
             VerticalAlignment="Top" 
             Width="25" Click="Destination_Folder_Button_Click"/>
+        <Label Content="Encryption :" HorizontalAlignment="Left" Margin="276,393,0,0" VerticalAlignment="Top" Width="82" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
+        <RadioButton x:Name="Encryption_RadioButton_Yes" Content="Yes" HorizontalAlignment="Left" Margin="374,402,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="EncryptionGroup"/>
+        <RadioButton x:Name="Encryption_RadioButton_No" Content="No" HorizontalAlignment="Center" Margin="0,402,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="EncryptionGroup"/>
 
     </Grid>
 </Window>
