@@ -7,6 +7,7 @@ namespace EasySaveWPF.MVVM.Models
 {
     public class SaveProfile
     {
+        public int Index { get; set; }
         public string Name { get; set; }
         public string SourceFilePath { get; set; }
         public string TargetFilePath { get; set; }

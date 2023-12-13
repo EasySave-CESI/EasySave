@@ -56,14 +56,19 @@ namespace EasySaveWPF
         {
             // Epty the list
             List_Profil.ItemsSource = null;
+            List_Profil.Items.Clear();
+
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
             ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile> { };
+
             foreach (SaveProfile profile in saveProfiles)
             {
+                profile.Index = profiles.Count + 1;
                 profiles.Add(profile);
             }
-
+            // Ajouter les éléments à la liste
             List_Profil.ItemsSource = profiles;
+
             NumberProfileLoaded_TextBox.Content = profiles.Count.ToString();
         }
 
