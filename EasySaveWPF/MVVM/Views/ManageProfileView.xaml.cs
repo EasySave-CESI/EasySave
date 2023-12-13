@@ -141,11 +141,6 @@ namespace EasySaveWPF.Views
             newProfile.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
             profiles.Add(newProfile);
             List_Profil.Items.Refresh();
-
-
-
-
-
         }
 
         private void List_Profil_SelectionChanged(object sender, SelectionChangedEventArgs e)

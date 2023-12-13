@@ -88,10 +88,10 @@ namespace EasySaveWPF.MVVM.ViewModels
                     _saveProfileViewModel.DisplaySaveProfiles(_consoleView, SaveProfiles);
                     break;
                 case "msp":
-                    _saveProfileViewModel.ModifySaveProfile(_consoleView, SaveProfiles, paths);
+                    //_saveProfileViewModel.ModifySaveProfile(_consoleView, SaveProfiles, paths);
                     break;
                 case "esp":
-                    _saveProfileViewModel.ExecuteSaveProfile(_consoleView, _dailyLogsViewModel, SaveProfiles, paths, config);
+                    //_saveProfileViewModel.ExecuteSaveProfile(_consoleView, _dailyLogsViewModel, SaveProfiles, paths, config);
                     break;
                 case "dl":
                     _dailyLogsViewModel.DisplayLogs(_consoleView, paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
@@ -124,10 +124,10 @@ namespace EasySaveWPF.MVVM.ViewModels
                         _saveProfileViewModel.DisplaySaveProfiles(_consoleView, SaveProfiles);
                         break;
                     case "2":
-                        _saveProfileViewModel.ModifySaveProfile(_consoleView, SaveProfiles, paths);
+                        //_saveProfileViewModel.ModifySaveProfile(_consoleView, SaveProfiles, paths);
                         break;
                     case "3":
-                        _saveProfileViewModel.ExecuteSaveProfile(_consoleView, _dailyLogsViewModel, SaveProfiles, paths, config);
+                        //_saveProfileViewModel.ExecuteSaveProfile(_consoleView, _dailyLogsViewModel, SaveProfiles, paths, config);
                         break;
                     case "4":
                         _dailyLogsViewModel.DisplayLogs(_consoleView, paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
