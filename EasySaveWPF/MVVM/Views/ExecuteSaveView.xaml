@@ -75,13 +75,13 @@
             FontFamily="Calibri" 
             FontSize="14"/>
 
-        <Button x:Name="CancelExecuteSave_Button" 
-            Content="Cancel" 
+        <Button x:Name="ExitExecuteSave_Button" 
+            Content="Exit" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Center" 
             Height="30" Width="100" 
             Grid.Row="1" Grid.Column="1" 
-            Click="Cancel_ExecuteSaveView_Click" 
+            Click="Exit_ExecuteSaveView_Click" 
             FontFamily="Calibri" 
             FontSize="14"/>
 

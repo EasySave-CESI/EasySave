@@ -68,7 +68,7 @@ namespace EasySaveWPF.Views
             }
         }
 
-        private void Cancel_ExecuteSaveView_Click(object sender, RoutedEventArgs e)
+        private void Exit_ExecuteSaveView_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
