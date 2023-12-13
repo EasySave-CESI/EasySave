@@ -36,10 +36,12 @@
         <ListView x:Name="List_Profil" Margin="40,83,-305,130" RenderTransformOrigin="0.5,0.5" SelectionChanged="List_Profil_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Profil" Width="100" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Source" Width="300" DisplayMemberBinding="{Binding SourceFilePath}"/>
-                    <GridViewColumn Header="Destination" Width="300" DisplayMemberBinding="{Binding TargetFilePath}"/>
+                    <GridViewColumn Header="Index" Width="50" DisplayMemberBinding="{Binding Index}" />
+                    <GridViewColumn Header="Profil Name" Width="100" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Source File Path" Width="300" DisplayMemberBinding="{Binding SourceFilePath}"/>
+                    <GridViewColumn Header="Destination File Path" Width="300" DisplayMemberBinding="{Binding TargetFilePath}"/>
                     <GridViewColumn Header="Type" Width="100" DisplayMemberBinding="{Binding TypeOfSave}"/>
+                    <GridViewColumn Header="State" Width="100" DisplayMemberBinding="{Binding State}"/>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -94,9 +94,9 @@ namespace EasySaveWPF
         private void ExecuteSave_Click(object sender, RoutedEventArgs e)
         {
             ExecuteSaveView executeSaveWindow = new ExecuteSaveView();
-            executeSaveWindow.Closing += (s, e) => ExecuteSave_Button.IsEnabled = true;
             executeSaveWindow.Show();
             ExecuteSave_Button.IsEnabled = false;
+            executeSaveWindow.Closing += ExecuteSaveWindow_Closing;
         }
 
         private void ExecuteSaveWindow_Starting(object? sender, CancelEventArgs e)
@@ -107,6 +107,7 @@ namespace EasySaveWPF
         private void ExecuteSaveWindow_Closing(object? sender, CancelEventArgs e)
         {
             ExecuteSave_Button.IsEnabled = true;
+            DisplayProfiles();
         }
 
         private void ViewLogs_Click(object sender, RoutedEventArgs e)
