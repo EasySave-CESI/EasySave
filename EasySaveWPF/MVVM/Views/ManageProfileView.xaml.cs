@@ -134,8 +134,19 @@ namespace EasySaveWPF.Views
 
         private void AddProfile_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (Source_Textbox.Text == "" || Destination_Textbox.Text == "" || (TypeFull_RadioButton.IsChecked == false && TypeDiff_RadioButton.IsChecked == false) || (Encryption_RadioButton_No.IsChecked == false && Encryption_RadioButton_Yes.IsChecked == false))
+            {
+                MessageBox.Show("Please enter a source, a destination, a type of save and an encryption option");
+                return;
+            }
             SaveProfile newProfile = new SaveProfile();
+
             newProfile.Name = Interaction.InputBox("Enter the name of the profile", "Add a new profile", "Save", 100, 100);
+            if (newProfile.Name == "")
+            {
+                return;
+            }
+
             newProfile.SourceFilePath = Source_Textbox.Text;
             newProfile.TargetFilePath = Destination_Textbox.Text;
             newProfile.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
@@ -147,9 +158,20 @@ namespace EasySaveWPF.Views
             newProfile.NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
             newProfile.Progression = 0;
 
+            newProfile.Encryption = Encryption_RadioButton_Yes.IsChecked == true ? true : false;
+            if (newProfile.Encryption == true)
+            {
+                newProfile.EncryptionKey = Interaction.InputBox("Enter the encryption key", "Add a new profile", "Save", 100, 100);
+            }
+            else
+            {
+                newProfile.EncryptionKey = "";
+            }
+
             newProfile.State = "READY";
 
             SaveProfile.AddProfile(paths["StateFilePath"], newProfile);
+            newProfile.Index = profiles.Count + 1;
             profiles.Add(newProfile);
             List_Profil.Items.Refresh();
         }
