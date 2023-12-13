@@ -5,75 +5,100 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySaveWPF.Views"
         mc:Ignorable="d"
-        Title="ExecuteSaveView" MaxHeight="130" MaxWidth="400" MinHeight="130" MinWidth="400">
+        Title="ExecuteSaveView" MaxHeight="320" MaxWidth="320"
+        Icon="/Views/Easysaveico.png">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
-
+            <RowDefinition Height="56.008"/>
+            <RowDefinition Height="56.008"/>
+            <RowDefinition Height="56.008"/>
+            <RowDefinition Height="56.008"/>
+            <RowDefinition Height="60.008"/>
         </Grid.RowDefinitions>
-
-        <Label x:Name="UserSelectionLabel" 
-            Margin="10,0,0,0" 
-            Content="Saves:" 
-            FontFamily="Calibri" 
-            FontSize="14" 
+        <Button x:Name="CancelExecuteSave_Button" 
+            Content="Cancel" 
             HorizontalAlignment="Left" 
-            VerticalAlignment="Center"/>
-
-        <TextBox x:Name="UserSelectionTextBox"
-            Grid.Row="0" Grid.ColumnSpan="2" 
-            Margin="60,10,50,10"
-            TextWrapping="Wrap" 
-            Text="" 
-            FontFamily="Calibri" 
-            FontSize="14"/>
-
-        <Button x:Name="InfoButton" Grid.Column="1" 
-        Content="?"
-        HorizontalAlignment="Left" 
-        VerticalAlignment="Center"
-        Height="30" Width="30"
-        FontFamily="Calibri" 
-        FontSize="14"
-        BorderThickness="1"
-        BorderBrush="Black"
-        Background="LightGray" Margin="160,0,0,0"
-        >
-            <Button.ToolTip>
-                <ToolTip>
-                    <TextBlock TextWrapping="Wrap">
-                        Veuillez saisir l'ID de la sauvegarde pour exécuter une seule sauvegarde. \n
-                        Si vous souhaitez exécuter automatiquement plusieurs sauvegardes, vous pouvez utiliser les formats suivants : 
-                        - '1-3' pour exécuter automatiquement les sauvegardes de 1 à 3. 
-                        - '1;3' pour exécuter automatiquement les sauvegardes 1 et 3. 
-                        N'oubliez pas de séparer les numéros avec '-' ou ';' selon votre choix.
-                    </TextBlock>
-                </ToolTip>
-            </Button.ToolTip>
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
-
+            VerticalAlignment="Top" 
+            Height="29" Width="66" 
+            Grid.Row="4" Grid.Column="1" 
+            Margin="61,20,0,0" 
+            Click="Cancel_ExecuteSaveView_Click" FontFamily="Calibri" FontSize="14"/>
 
         <Button x:Name="StartExecuteSave_Button" 
             Content="Start" 
-            HorizontalAlignment="Center" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top"
+            Height="29" Width="66"
+            Grid.Row="4" 
+            Margin="38,20,0,0" Click="Start_ExecuteSaveView_Click" FontFamily="Calibri" FontSize="14"/>
+
+        <RadioButton x:Name="Mode1Save_RadioButton" Content="" HorizontalAlignment="Left" Margin="19,0,0,0" VerticalAlignment="Center" Checked="RadioButton_Checked" Width="14" Height="14" Grid.Row="1"/>
+        <RadioButton x:Name="Mode2Save_RadioButton" Content="" HorizontalAlignment="Left" Margin="19,0,0,0" VerticalAlignment="Center" Checked="RadioButton_Checked" Width="14" Height="14" Grid.Row="2"/>
+        <RadioButton x:Name="Mode3Save_RadioButton" Content="" HorizontalAlignment="Left" Margin="19,0,0,0" VerticalAlignment="Center" Checked="RadioButton_Checked" Width="14" Height="14" Grid.Row="3"/>
+
+        <TextBox x:Name="Save1_Textbox" 
+            HorizontalAlignment="Left" 
+            Margin="95,0,0,0" 
+            Grid.Row="1" 
+            TextWrapping="Wrap"  
+            VerticalAlignment="Center" 
+            Width="55" Height="36" 
+            HorizontalContentAlignment="Center" 
+            VerticalContentAlignment="Center" 
+            Background="{x:Null}" PreviewTextInput="Save_Textbox_preview"/>
+
+        <TextBox x:Name="Save3A_TextBox" 
+            HorizontalAlignment="Left" 
+            Margin="95,0,0,0" 
+            Grid.Row="3" 
+            TextWrapping="Wrap" 
+            Text="" 
             VerticalAlignment="Center"
-            Height="30" Width="100"
-            Grid.Row="1"
-            Click="Start_ExecuteSaveView_Click" 
-            FontFamily="Calibri" 
-            FontSize="14"/>
+            Width="55" Height="36" 
+            HorizontalContentAlignment="Center" 
+            VerticalContentAlignment="Center" 
+            Background="{x:Null}" PreviewTextInput="Save_Textbox_preview"/>
+
+        <TextBox x:Name="Save3B_TextBox" 
+            HorizontalAlignment="Center" 
+            Grid.Row="3" 
+            TextWrapping="Wrap" 
+            Text="" 
+            VerticalAlignment="Center" 
+            Width="54" Height="36" 
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center" 
+            Background="{x:Null}" 
+            Grid.Column="1" PreviewTextInput="Save_Textbox_preview"/>
+
+        <TextBox x:Name="Save2A_TextBox" 
+            HorizontalAlignment="Left" 
+            Margin="95,12,0,0" 
+            Grid.Row="2" 
+            TextWrapping="Wrap" 
+            Text="" 
+            VerticalAlignment="Top" 
+            Width="55" Height="36" 
+            HorizontalContentAlignment="Center" 
+            VerticalContentAlignment="Center" 
+            Background="{x:Null}" PreviewTextInput="Save_Textbox_preview"/>
+
+        <TextBox x:Name="Save2B_TextBox" 
+            HorizontalAlignment="Left" 
+            Margin="19,12,0,0" 
+            Grid.Row="2" 
+            TextWrapping="Wrap" 
+            Text="" 
+            VerticalAlignment="Top" 
+            Width="55" Height="36" 
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center" 
+            Background="{x:Null}" 
+            Grid.Column="1" PreviewTextInput="Save_Textbox_preview"/>
 
         <Button x:Name="ExitExecuteSave_Button" 
             Content="Exit" 
