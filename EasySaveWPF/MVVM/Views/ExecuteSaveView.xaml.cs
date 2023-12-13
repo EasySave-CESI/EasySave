@@ -32,16 +32,128 @@ namespace EasySaveWPF.Views
 
         private void Start_ExecuteSaveView_Click(object sender, RoutedEventArgs e)
         {
- 
-            Close();
+            if (CheckInput())
+            {
+                foreach (int id in listIdsSavesToExecute)
+                {
+                    MessageBox.Show("The save profile " + saveProfiles[id - 1].Name + " will be executed", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, id-1);
+                }
+                Close();
+            }
         }
 
-        private void Cancel_ExecuteSaveView_Click(object sender, RoutedEventArgs e)
+        private void Exit_ExecuteSaveView_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        private void Save_Textbox_preview(object sender, TextCompositionEventArgs e)
+        private bool CheckInput()
+        {
+            // Empty the list
+            listIdsSavesToExecute.Clear();
+
+            // Check if the input is empty
+            if (UserSelectionTextBox.Text == "")
+            {
+                MessageBox.Show("Please enter a name for the save profile", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            
+            // Check if the regex is invalid
+            if (!Regex.IsMatch(UserSelectionTextBox.Text, RegexPattern))
+            {
+                MessageBox.Show("Please enter a valid pattern", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            // If the regex is valid then we check the numbers of groups
+            Match match = Regex.Match(UserSelectionTextBox.Text, RegexPattern, RegexOptions.IgnoreCase);
+            Match matchto = Regex.Match(UserSelectionTextBox.Text, Regexpatternto, RegexOptions.IgnoreCase);
+
+            // Create a list of string to store the groups
+            List<string> groups = new List<string>();
+            foreach (Group group in match.Groups)
+            {
+                groups.Add(group.Value);
+            }
+
+            // Remove the first element of the list because it's the whole string
+            groups.RemoveAt(0);
+
+            // Remove the empty groups
+            groups.RemoveAll(item => item == "");
+
+            // Check if one of the group is lower than 1
+            foreach (string group in groups)
+            {
+                if (int.Parse(group) < 1)
+                {
+                    MessageBox.Show("The save profile " + group + " doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
+
+            // First check if the user only want to execute one save profile
+            if (groups.Count == 1)
+            {
+                if (int.Parse(groups[0]) > saveProfiles.Count)
+                {
+                    MessageBox.Show("The save profile " + groups[0] + " doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+                else
+                {
+                    listIdsSavesToExecute.Add(int.Parse(groups[0]));
+                }
+            }
+
+            // Then check if the user want to execute a range of save profiles
+            if (Regex.IsMatch(UserSelectionTextBox.Text, Regexpatternto) && listIdsSavesToExecute.Count == 0)
+            {
+                // First get the highest number
+                int lowestNumber = int.Parse(groups[0]);
+                int highestNumber = int.Parse(groups[1]);
+
+                if (highestNumber > saveProfiles.Count || lowestNumber > saveProfiles.Count)
+                {
+                    MessageBox.Show("The save profile " + highestNumber + " or " + lowestNumber + " doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+
+                if (highestNumber < lowestNumber)
+                {
+                    MessageBox.Show("The first number must be lower than the second number", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+
+                for (int i = lowestNumber; i <= highestNumber; i++)
+                {
+                    listIdsSavesToExecute.Add(i);
+                }
+            }
+
+            // Then check if the user want to execute a list of save profiles
+            if (groups.Count > 1 && listIdsSavesToExecute.Count == 0)
+            {
+                foreach (string group in groups)
+                {
+                    if (int.Parse(group) > saveProfiles.Count)
+                    {
+                        MessageBox.Show("The save profile " + group + " doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return false;
+                    }
+                    else
+                    {
+                        listIdsSavesToExecute.Add(int.Parse(group));
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private void ListOfProfilesToSave(object sender, RoutedEventArgs e)
         {
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }

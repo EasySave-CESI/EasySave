@@ -59,6 +59,7 @@ namespace EasySaveWPF.Views
 
             foreach (SaveProfile profile in saveProfiles)
             {
+                profile.Index = profiles.Count + 1;
                 profiles.Add(profile);
             }
 
@@ -95,7 +96,7 @@ namespace EasySaveWPF.Views
             SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
         }
 
-        private void Cancel_ManageProfileView_Click(object sender, RoutedEventArgs e)
+        private void Exit_ManageProfileView_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
@@ -133,12 +134,44 @@ namespace EasySaveWPF.Views
 
         private void AddProfile_Button_Click(object sender, RoutedEventArgs e)
         {
-           
+            if (Source_Textbox.Text == "" || Destination_Textbox.Text == "" || (TypeFull_RadioButton.IsChecked == false && TypeDiff_RadioButton.IsChecked == false) || (Encryption_RadioButton_No.IsChecked == false && Encryption_RadioButton_Yes.IsChecked == false))
+            {
+                MessageBox.Show("Please enter a source, a destination, a type of save and an encryption option");
+                return;
+            }
             SaveProfile newProfile = new SaveProfile();
+
             newProfile.Name = Interaction.InputBox("Enter the name of the profile", "Add a new profile", "Save", 100, 100);
+            if (newProfile.Name == "")
+            {
+                return;
+            }
+
             newProfile.SourceFilePath = Source_Textbox.Text;
             newProfile.TargetFilePath = Destination_Textbox.Text;
             newProfile.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
+
+            List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(newProfile.SourceFilePath);
+
+            newProfile.TotalFilesToCopy = (int)sourcedirectoryinfo[0];
+            newProfile.TotalFilesSize = sourcedirectoryinfo[1];
+            newProfile.NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
+            newProfile.Progression = 0;
+
+            newProfile.Encryption = Encryption_RadioButton_Yes.IsChecked == true ? true : false;
+            if (newProfile.Encryption == true)
+            {
+                newProfile.EncryptionKey = Interaction.InputBox("Enter the encryption key", "Add a new profile", "Save", 100, 100);
+            }
+            else
+            {
+                newProfile.EncryptionKey = "";
+            }
+
+            newProfile.State = "READY";
+
+            SaveProfile.AddProfile(paths["StateFilePath"], newProfile);
+            newProfile.Index = profiles.Count + 1;
             profiles.Add(newProfile);
             List_Profil.Items.Refresh();
 
@@ -152,6 +185,10 @@ namespace EasySaveWPF.Views
         {
             var item = List_Profil.SelectedItem as SaveProfile;
             
+            if (item == null)
+            {
+                return;
+            }
             Source_Textbox.Text = (item.SourceFilePath);
             Destination_Textbox.Text = (item.TargetFilePath);
 
@@ -175,22 +212,30 @@ namespace EasySaveWPF.Views
 
         private void DeleteProfile_Button_Click(object sender, RoutedEventArgs e)
         {
-            object item = List_Profil.SelectedItem as SaveProfile;
+            var item = List_Profil.SelectedItem as SaveProfile;
+
             if (item == null)
             {
                 MessageBox.Show("Please select a profile to delete");
                 return;
             }
 
-            
-            /*List_Profil.ItemsSource = null;
-            List_Profil.Items.Remove(item as SaveProfile);
+            if (MessageBox.Show("Are you sure you want to delete this profile ?" + item.Name, "Delete a profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
+            }
+
+            foreach (SaveProfile profile in saveProfiles)
+            {
+                if (profile.Name == item.Name && profile.SourceFilePath == item.SourceFilePath && profile.TargetFilePath == item.TargetFilePath)
+                {
+                    item = profile;
+                }
+            }
+
+            profiles.Remove(item);
+            SaveProfile.SaveProfiles(paths["StateFilePath"], profiles.ToList());
             List_Profil.Items.Refresh();
-
-
-
-            List_Profil.UnselectAll();
-            List_Profil.Items.Remove(item);*/
         }
     }
 }

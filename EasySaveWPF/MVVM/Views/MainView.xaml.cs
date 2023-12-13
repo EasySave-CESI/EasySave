@@ -53,14 +53,19 @@ namespace EasySaveWPF
         {
             // Epty the list
             List_Profil.ItemsSource = null;
+            List_Profil.Items.Clear();
+
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
             ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile> { };
+
             foreach (SaveProfile profile in saveProfiles)
             {
+                profile.Index = profiles.Count + 1;
                 profiles.Add(profile);
             }
-
+            // Ajouter les éléments à la liste
             List_Profil.ItemsSource = profiles;
+
             NumberProfileLoaded_TextBox.Content = profiles.Count.ToString();
         }
 
@@ -86,9 +91,20 @@ namespace EasySaveWPF
         private void ExecuteSave_Click(object sender, RoutedEventArgs e)
         {
             ExecuteSaveView executeSaveWindow = new ExecuteSaveView();
-            executeSaveWindow.Closing += (s, e) => ExecuteSave_Button.IsEnabled = true;
             executeSaveWindow.Show();
             ExecuteSave_Button.IsEnabled = false;
+            executeSaveWindow.Closing += ExecuteSaveWindow_Closing;
+        }
+
+        private void ExecuteSaveWindow_Starting(object? sender, CancelEventArgs e)
+        {
+            //
+        }
+
+        private void ExecuteSaveWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            ExecuteSave_Button.IsEnabled = true;
+            DisplayProfiles();
         }
 
         private void ViewLogs_Click(object sender, RoutedEventArgs e)
