@@ -15,6 +15,7 @@ using EasySaveWPF.MVVM.Views;
 using EasySaveWPF.MVVM.Models;
 using EasySaveWPF.MVVM.ViewModels;
 using System;
+using System.Diagnostics;
 
 namespace EasySaveWPF
 {
@@ -93,7 +94,10 @@ namespace EasySaveWPF
 
         private void ViewLogs_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Opening logs.");
+            //MessageBox.Show("Opening logs.");
+            string appDataRoaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string logsPath = System.IO.Path.Combine(appDataRoaming, "EasySave", "Logs");
+            Process.Start("explorer.exe", logsPath);
         }
 
         private void Option_Button_Click(object sender, RoutedEventArgs e)
