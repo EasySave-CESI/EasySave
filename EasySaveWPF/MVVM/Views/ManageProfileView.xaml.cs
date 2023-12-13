@@ -59,6 +59,7 @@ namespace EasySaveWPF.Views
 
             foreach (SaveProfile profile in saveProfiles)
             {
+                profile.Index = profiles.Count + 1;
                 profiles.Add(profile);
             }
 
@@ -133,12 +134,22 @@ namespace EasySaveWPF.Views
 
         private void AddProfile_Button_Click(object sender, RoutedEventArgs e)
         {
-           
             SaveProfile newProfile = new SaveProfile();
             newProfile.Name = Interaction.InputBox("Enter the name of the profile", "Add a new profile", "Save", 100, 100);
             newProfile.SourceFilePath = Source_Textbox.Text;
             newProfile.TargetFilePath = Destination_Textbox.Text;
             newProfile.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
+
+            List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(newProfile.SourceFilePath);
+
+            newProfile.TotalFilesToCopy = (int)sourcedirectoryinfo[0];
+            newProfile.TotalFilesSize = sourcedirectoryinfo[1];
+            newProfile.NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
+            newProfile.Progression = 0;
+
+            newProfile.State = "READY";
+
+            SaveProfile.AddProfile(paths["StateFilePath"], newProfile);
             profiles.Add(newProfile);
             List_Profil.Items.Refresh();
         }

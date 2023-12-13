@@ -61,7 +61,8 @@ namespace EasySaveWPF.Views
             {
                 foreach (int id in listIdsSavesToExecute)
                 {
-                    _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, id);
+                    MessageBox.Show("The save profile " + saveProfiles[id - 1].Name + " will be executed", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, id-1);
                 }
                 Close();
             }
@@ -172,12 +173,6 @@ namespace EasySaveWPF.Views
                         listIdsSavesToExecute.Add(int.Parse(group));
                     }
                 }
-            }
-
-            // Display the save profile
-            foreach (int id in listIdsSavesToExecute)
-            {
-                MessageBox.Show("The save profile " + saveProfiles[id - 1].Name + " will be executed", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             return true;
