@@ -54,12 +54,12 @@
             Click="Validate_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
 
         <Button 
-            Content="Cancel" 
+            Content="Exit" 
             HorizontalAlignment="Left" 
             Margin="631,367,0,0" 
             VerticalAlignment="Top" 
             Height="53" Width="120" 
-            Click="Cancel_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
+            Click="Exit_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
 
         <Border BorderBrush="Black" BorderThickness="1" Margin="40,321,332,10" Background="#FFE9E6E6"/>
 
