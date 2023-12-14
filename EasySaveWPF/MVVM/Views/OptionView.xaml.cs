@@ -106,6 +106,8 @@ namespace EasySaveWPF.Views
 
         private void SetLanguage(Dictionary<string, string> printStringDictionary)
         {
+            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
             OptionView_Validate_Button.Content = printStringDictionary["Application_OptionView_Validate_Button"];
             OptionView_LogFormat_Label.Content = printStringDictionary["Application_OptionView_LogFormat_Label"];
             OptionView_Language_Label.Content = printStringDictionary["Application_OptionView_Language_Label"];

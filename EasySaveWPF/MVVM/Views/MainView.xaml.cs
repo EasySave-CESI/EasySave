@@ -138,7 +138,6 @@ namespace EasySaveWPF
             Option_Button.IsEnabled = true;
             DisplayProfiles();
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
             SetLanguage(printStringDictionary);
         }
 
@@ -151,6 +150,7 @@ namespace EasySaveWPF
 
         private void SetLanguage(Dictionary<string, string> printStringDictionary)
         {
+            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
             // Set the language
 
             // Set the title

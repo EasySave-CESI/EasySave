@@ -24,11 +24,13 @@ namespace EasySaveWPF.Views
     {
         private readonly PathViewModel _pathViewModel;
         private readonly ConfigurationViewModel _configurationViewModel;
+        private readonly LanguageConfigurationViewModel _languageConfigurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
         private readonly DailyLogsViewModel _dailyLogsViewModel;
 
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
+        private Dictionary<string, string> printStringDictionary;
         private List<SaveProfile> saveProfiles;
         private List<int> listIdsSavesToExecute = new List<int>();
         private string RegexPattern = @"^(\d+)(?:-(\d+))?(?:;(\d+))?(?:;(\d+))?(?:;(\d+))?(?:;(\d+))?$";
@@ -40,6 +42,7 @@ namespace EasySaveWPF.Views
 
             _pathViewModel = new PathViewModel();
             _configurationViewModel = new ConfigurationViewModel();
+            _languageConfigurationViewModel = new LanguageConfigurationViewModel();
             _saveProfileViewModel = new SaveProfileViewModel();
 
             // Create a new dictionary to store the paths
@@ -48,11 +51,17 @@ namespace EasySaveWPF.Views
             // Create a new dictionary to store the config
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
 
+            // Create a new language configuration
+            Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
             // Create a new list to store the save profiles
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
 
             // Create a new list to store the daily logs
             _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
+
+            // Set the language
+            SetLanguage(printStringDictionary);
         }
 
         private void Start_ExecuteSaveView_Click(object sender, RoutedEventArgs e)
@@ -79,22 +88,22 @@ namespace EasySaveWPF.Views
             listIdsSavesToExecute.Clear();
 
             // Check if the input is empty
-            if (UserSelectionTextBox.Text == "")
+            if (ExecuteSaveView_UserSelection_TextBox.Text == "")
             {
                 MessageBox.Show("Please enter a name for the save profile", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             
             // Check if the regex is invalid
-            if (!Regex.IsMatch(UserSelectionTextBox.Text, RegexPattern))
+            if (!Regex.IsMatch(ExecuteSaveView_UserSelection_TextBox.Text, RegexPattern))
             {
                 MessageBox.Show("Please enter a valid pattern", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             // If the regex is valid then we check the numbers of groups
-            Match match = Regex.Match(UserSelectionTextBox.Text, RegexPattern, RegexOptions.IgnoreCase);
-            Match matchto = Regex.Match(UserSelectionTextBox.Text, Regexpatternto, RegexOptions.IgnoreCase);
+            Match match = Regex.Match(ExecuteSaveView_UserSelection_TextBox.Text, RegexPattern, RegexOptions.IgnoreCase);
+            Match matchto = Regex.Match(ExecuteSaveView_UserSelection_TextBox.Text, Regexpatternto, RegexOptions.IgnoreCase);
 
             // Create a list of string to store the groups
             List<string> groups = new List<string>();
@@ -134,7 +143,7 @@ namespace EasySaveWPF.Views
             }
 
             // Then check if the user want to execute a range of save profiles
-            if (Regex.IsMatch(UserSelectionTextBox.Text, Regexpatternto) && listIdsSavesToExecute.Count == 0)
+            if (Regex.IsMatch(ExecuteSaveView_UserSelection_TextBox.Text, Regexpatternto) && listIdsSavesToExecute.Count == 0)
             {
                 // First get the highest number
                 int lowestNumber = int.Parse(groups[0]);
@@ -181,8 +190,13 @@ namespace EasySaveWPF.Views
         private void ListOfProfilesToSave(object sender, RoutedEventArgs e)
         {
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+        }
 
-            // Get a 
+        private void SetLanguage(Dictionary<string, string> printStringDictionary)
+        {
+            ExecuteSaveView_UserSelection_Label.Content = printStringDictionary["Application_ExecuteSaveView_UserSelection_Label"];
+            ExecuteSaveView_Start_Button.Content = printStringDictionary["Application_ExecuteSaveView_Start_Button"];
+            ExecuteSaveView_Exit_Button.Content = printStringDictionary["Application_ExecuteSaveView_Exit_Button"];
         }
     }
 }
