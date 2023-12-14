@@ -174,6 +174,11 @@ namespace EasySaveWPF.Views
             newProfile.Index = profiles.Count + 1;
             profiles.Add(newProfile);
             List_Profil.Items.Refresh();
+
+
+
+
+
         }
 
         private void List_Profil_SelectionChanged(object sender, SelectionChangedEventArgs e)

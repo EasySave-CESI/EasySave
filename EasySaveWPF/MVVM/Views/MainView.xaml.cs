@@ -121,7 +121,6 @@ namespace EasySaveWPF
 
         private void ViewLogs_Click(object sender, RoutedEventArgs e)
         {
-            //MessageBox.Show("Opening logs.");
             string appDataRoaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string logsPath = System.IO.Path.Combine(appDataRoaming, "EasySave", "Logs");
             Process.Start("explorer.exe", logsPath);

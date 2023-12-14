@@ -1,4 +1,4 @@
-﻿using EasySaveWPF.MVVM.Models;
+using EasySaveWPF.MVVM.Models;
 using EasySaveWPF.MVVM.ViewModels;
 using EasySaveWPF.MVVM.Views;
 using System;
