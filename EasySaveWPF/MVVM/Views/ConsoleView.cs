@@ -75,7 +75,7 @@ namespace EasySaveWPF.MVVM.Views
         public void PrintSeparator()
         {
             Print("");
-            Print(printStringDictionary["Separator"]);
+            Print(printStringDictionary["Console_Separator"]);
             Print("");
         }
 
@@ -85,13 +85,13 @@ namespace EasySaveWPF.MVVM.Views
 
         public void WelcomeMessage(string version)
         {
-            PrintInfo(printStringDictionary["WelcomeMessage"] + version);
+            PrintInfo(printStringDictionary["Console_WelcomeMessage"] + version);
             PrintSeparator();
         }
 
         public void ArgumentError()
         {
-            PrintError(printStringDictionary["ArgumentError"]);
+            PrintError(printStringDictionary["Console_ArgumentError"]);
         }
 
         /* Common */
@@ -99,12 +99,12 @@ namespace EasySaveWPF.MVVM.Views
         public void DisplaySelectedProfileName(string saveProfileName)
         {
             Print("");
-            PrintInfo(printStringDictionary["DisplaySelectedProfileName"] + saveProfileName);
+            PrintInfo(printStringDictionary["Console_DisplaySelectedProfileName"] + saveProfileName);
         }
 
         public void DisplayChooseSelectedProfile()
         {
-            Print(printStringDictionary["DisplayChooseSelectedProfile"]);
+            Print(printStringDictionary["Console_DisplayChooseSelectedProfile"]);
         }
 
         public void DisplayProfileIndexName(int index, string saveProfileName)
@@ -115,29 +115,30 @@ namespace EasySaveWPF.MVVM.Views
         public void Error(string error)
         {
             Print("");
-            PrintError(printStringDictionary["Error"] + error);
+            PrintError(printStringDictionary["Console_Error"] + error);
         }
 
         /* Menu */
 
         public void DisplayMenu()
         {
-            PrintInfo(printStringDictionary["DisplayMenu_Header"]);
-            Print(printStringDictionary["DisplayMenu_DislaySaveProfiles"]);
-            // Print(printStringDictionary["DisplayMenu_CreateSaveProfile"]);
-            Print(printStringDictionary["DisplayMenu_ModifySaveProfile"]);
-            Print(printStringDictionary["DisplayMenu_ExecuteSaveProfile"]);
-            Print(printStringDictionary["DisplayMenu_DisplayLogs"]);
-            Print(printStringDictionary["DisplayMenu_Help"]);
-            Print(printStringDictionary["DisplayMenu_Configuration"]);
-            Print(printStringDictionary["DisplayMenu_Clear"]);
-            Print(printStringDictionary["DisplayMenu_Exit"]);
+            PrintInfo(printStringDictionary["Console_DisplayMenu_Header"]);
+            Print(printStringDictionary["Console_DisplayMenu_DislaySaveProfiles"]);
+            //Print(printStringDictionary["Console_DisplayMenu_CreateSaveProfile"]);
+            //Print(printStringDictionary["Console_DisplayMenu_DeleteSaveProfile"]);
+            Print(printStringDictionary["Console_DisplayMenu_ModifySaveProfile"]);
+            Print(printStringDictionary["Console_DisplayMenu_ExecuteSaveProfile"]);
+            Print(printStringDictionary["Console_DisplayMenu_DisplayLogs"]);
+            Print(printStringDictionary["Console_DisplayMenu_Help"]);
+            Print(printStringDictionary["Console_DisplayMenu_Configuration"]);
+            Print(printStringDictionary["Console_DisplayMenu_Clear"]);
+            Print(printStringDictionary["Console_DisplayMenu_Exit"]);
             Print("");
         }
 
         public void DisplayMenuError()
         {
-            PrintError(printStringDictionary["DisplayMenuError"]);
+            PrintError(printStringDictionary["Console_DisplayMenuError"]);
         }
 
         /* Display Save Profiles */
@@ -145,22 +146,22 @@ namespace EasySaveWPF.MVVM.Views
         public void DisplaySaveProfiles(List<string> saveProfilesInfos)
         {
             Print("");
-            Print(printStringDictionary["DisplaySaveProfiles_Name"] + saveProfilesInfos[0]);
-            Print(printStringDictionary["DisplaySaveProfiles_SourceFilePath"] + saveProfilesInfos[1]);
-            Print(printStringDictionary["DisplaySaveProfiles_TargetFilePath"] + saveProfilesInfos[2]);
-            Print(printStringDictionary["DisplaySaveProfiles_State"] + saveProfilesInfos[3]);
-            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesToCopy"] + saveProfilesInfos[4]);
-            Print(printStringDictionary["DisplaySaveProfiles_TotalFilesSize"] + saveProfilesInfos[5]);
-            Print(printStringDictionary["DisplaySaveProfiles_NbFilesLeftToDo"] + saveProfilesInfos[6]);
-            Print(printStringDictionary["DisplaySaveProfiles_Progression"] + saveProfilesInfos[7]);
-            Print(printStringDictionary["DisplaySaveProfiles_TypeOfSave"] + saveProfilesInfos[8]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_Name"] + saveProfilesInfos[0]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_SourceFilePath"] + saveProfilesInfos[1]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_TargetFilePath"] + saveProfilesInfos[2]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_State"] + saveProfilesInfos[3]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_TotalFilesToCopy"] + saveProfilesInfos[4]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_TotalFilesSize"] + saveProfilesInfos[5]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_NbFilesLeftToDo"] + saveProfilesInfos[6]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_Progression"] + saveProfilesInfos[7]);
+            Print(printStringDictionary["Console_DisplaySaveProfiles_TypeOfSave"] + saveProfilesInfos[8]);
             PrintSeparator();
         }
 
 
         public void DisplaySaveProfilesError()
         {
-            PrintError(printStringDictionary["DisplaySaveProfilesError"]);
+            PrintError(printStringDictionary["Console_DisplaySaveProfilesError"]);
         }
 
         /* Modify Save Profile */
@@ -168,159 +169,159 @@ namespace EasySaveWPF.MVVM.Views
         public void DisplayModifySaveProfileNewName()
         {
             Print("");
-            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewName"]);
+            PrintInfo(printStringDictionary["Console_DisplayModifySaveProfileNewName"]);
         }
 
         public void DisplayModifySaveProfileNewSourceFilePath()
         {
             Print("");
-            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewSourceFilePath"]);
+            PrintInfo(printStringDictionary["Console_DisplayModifySaveProfileNewSourceFilePath"]);
         }
 
         public void DisplayModifySaveProfileNewTargetFilePath()
         {
             Print("");
-            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewTargetFilePath"]);
+            PrintInfo(printStringDictionary["Console_DisplayModifySaveProfileNewTargetFilePath"]);
         }
 
         public void DisplayModifySaveProfileNewTypeOfSave()
         {
             Print("");
-            PrintInfo(printStringDictionary["DisplayModifySaveProfileNewTypeOfSave"]);
+            PrintInfo(printStringDictionary["Console_DisplayModifySaveProfileNewTypeOfSave"]);
         }
 
 
         public void DisplayModifySaveProfileSuccess()
         {
-            PrintSuccess(printStringDictionary["DisplayModifySaveProfileSuccess"]);
+            PrintSuccess(printStringDictionary["Console_DisplayModifySaveProfileSuccess"]);
         }
 
         /* Execute Save Profile */
 
         public void DisplayBackupInProgress(string name)
         {
-            PrintInfo(printStringDictionary["DisplayBackupInProgress"] + name + printStringDictionary["dots"]);
+            PrintInfo(printStringDictionary["Console_DisplayBackupInProgress"] + name + printStringDictionary["dots"]);
         }
 
         public void DisplayExecuteSaveProfileSuccess()
         {
-            PrintSuccess(printStringDictionary["DisplayExecuteSaveProfileSuccess"]);
+            PrintSuccess(printStringDictionary["Console_DisplayExecuteSaveProfileSuccess"]);
         }
 
         public void DisplayExecuteSaveProfileStateError()
         {
-            PrintError(printStringDictionary["DisplayExecuteSaveProfileStateError"]);
+            PrintError(printStringDictionary["Console_DisplayExecuteSaveProfileStateError"]);
         }
 
         public void DisplayExecuteSaveProfileTypeOfSaveError()
         {
-            PrintError(printStringDictionary["DisplayExecuteSaveProfileTypeOfSaveError"]);
+            PrintError(printStringDictionary["Console_DisplayExecuteSaveProfileTypeOfSaveError"]);
         }
 
         /* Display Logs */
 
         public void DisplayLogsHeader()
         {
-            PrintInfo(printStringDictionary["DisplayLogsHeader"]);
+            PrintInfo(printStringDictionary["Console_DisplayLogsHeader"]);
         }
 
         public void DisplayLog(DailyLog log)
         {
             Print("");
-            Print(printStringDictionary["DisplayLog_Name"] + log.Name);
-            Print(printStringDictionary["DisplayLog_SourceFilePath"] + log.SourceFilePath);
-            Print(printStringDictionary["DisplayLog_TargetFilePath"] + log.TargetFilePath);
-            Print(printStringDictionary["DisplayLog_FileSize"] + log.FileSize);
-            Print(printStringDictionary["DisplayLog_FileTransferTime"] + log.FileTransferTime);
-            Print(printStringDictionary["DisplayLog_Time"] + log.Time);
+            Print(printStringDictionary["Console_DisplayLog_Name"] + log.Name);
+            Print(printStringDictionary["Console_DisplayLog_SourceFilePath"] + log.SourceFilePath);
+            Print(printStringDictionary["Console_DisplayLog_TargetFilePath"] + log.TargetFilePath);
+            Print(printStringDictionary["Console_DisplayLog_FileSize"] + log.FileSize);
+            Print(printStringDictionary["Console_DisplayLog_FileTransferTime"] + log.FileTransferTime);
+            Print(printStringDictionary["Console_DisplayLog_Time"] + log.Time);
             PrintSeparator();
         }
 
         public void DisplayLogError()
         {
-            PrintError(printStringDictionary["DisplayLogError"]);
+            PrintError(printStringDictionary["Console_DisplayLogError"]);
         }
 
         /* Help */
 
         public void Help()
         {
-            PrintInfo(printStringDictionary["Help_Header"]);
+            PrintInfo(printStringDictionary["Console_Help_Header"]);
             Print("");
-            PrintInfo(printStringDictionary["Help_Menu"]);
-            PrintInfo(printStringDictionary["Help_DislaySaveProfiles"]);
-            // PrintInfo(printStringDictionary["Help_CreateSaveProfile"]);
-            PrintInfo(printStringDictionary["Help_ModifySaveProfile"]);
-            PrintInfo(printStringDictionary["Help_ExecuteSaveProfile"]);
-            PrintInfo(printStringDictionary["Help_DisplayLogs"]);
-            PrintInfo(printStringDictionary["Help_Help"]);
-            PrintInfo(printStringDictionary["Help_Configuration"]);
-            PrintInfo(printStringDictionary["Help_Exit"]);
+            PrintInfo(printStringDictionary["Console_Help_Menu"]);
+            PrintInfo(printStringDictionary["Console_Help_DislaySaveProfiles"]);
+            // PrintInfo(printStringDictionary["Console_Help_CreateSaveProfile"]);
+            PrintInfo(printStringDictionary["Console_Help_ModifySaveProfile"]);
+            PrintInfo(printStringDictionary["Console_Help_ExecuteSaveProfile"]);
+            PrintInfo(printStringDictionary["Console_Help_DisplayLogs"]);
+            PrintInfo(printStringDictionary["Console_Help_Help"]);
+            PrintInfo(printStringDictionary["Console_Help_Configuration"]);
+            PrintInfo(printStringDictionary["Console_Help_Exit"]);
             PrintSeparator();
         }
 
         public void DisplayConfigurationMenu(string language, string logformat)
         {
-            Print(printStringDictionary["DisplayConfigurationMenu_DisplayLanguage"] + language);
-            Print(printStringDictionary["DisplayConfigurationMenu_DisplayLogFormat"] + logformat);
+            Print(printStringDictionary["Console_DisplayConfigurationMenu_DisplayLanguage"] + language);
+            Print(printStringDictionary["Console_DisplayConfigurationMenu_DisplayLogFormat"] + logformat);
             Print("");
-            PrintInfo(printStringDictionary["DisplayConfigurationMenu_Header"]);
-            Print(printStringDictionary["DisplayConfigurationMenu_ChangeLanguage"]);
-            Print(printStringDictionary["DisplayConfigurationMenu_ChangeLogFormat"]);
-            Print(printStringDictionary["DisplayConfigurationMenu_Back"]);
+            PrintInfo(printStringDictionary["Console_DisplayConfigurationMenu_Header"]);
+            Print(printStringDictionary["Console_DisplayConfigurationMenu_ChangeLanguage"]);
+            Print(printStringDictionary["Console_DisplayConfigurationMenu_ChangeLogFormat"]);
+            Print(printStringDictionary["Console_DisplayConfigurationMenu_Back"]);
             Print("");
         }
 
         public void DisplayLanguageMenu()
         {
             PrintSeparator();
-            PrintInfo(printStringDictionary["DisplayLanguageMenu_Header"]);
+            PrintInfo(printStringDictionary["Console_DisplayLanguageMenu_Header"]);
             Print("");
-            Print(printStringDictionary["DisplayLanguageMenu_French"]);
-            Print(printStringDictionary["DisplayLanguageMenu_English"]);
+            Print(printStringDictionary["Console_DisplayLanguageMenu_French"]);
+            Print(printStringDictionary["Console_DisplayLanguageMenu_English"]);
             PrintSeparator();
         }
 
         public void DisplayLanguageSuccess(string language)
         {
-            PrintSuccess(printStringDictionary["DisplayLanguageSuccess"] + language);
+            PrintSuccess(printStringDictionary["Console_DisplayLanguageSuccess"] + language);
         }
 
         public void DisplayLanguageError()
         {
-            PrintError(printStringDictionary["DisplayLanguageError"]);
+            PrintError(printStringDictionary["Console_DisplayLanguageError"]);
         }
 
         public void DisplayLogFileFormatMenu()
         {
             PrintSeparator();
-            PrintInfo(printStringDictionary["DisplayLogFileFormatMenu_Header"]);
+            PrintInfo(printStringDictionary["Console_DisplayLogFileFormatMenu_Header"]);
             Print("");
-            Print(printStringDictionary["DisplayLogFileFormatMenu_Json"]);
-            Print(printStringDictionary["DisplayLogFileFormatMenu_Xml"]);
+            Print(printStringDictionary["Console_DisplayLogFileFormatMenu_Json"]);
+            Print(printStringDictionary["Console_DisplayLogFileFormatMenu_Xml"]);
             PrintSeparator();
         }
 
         public void DisplayLogFileFormatSuccess(string format)
         {
-            PrintSuccess(printStringDictionary["DisplayLogFileFormatSuccess"] + format);
+            PrintSuccess(printStringDictionary["Console_DisplayLogFileFormatSuccess"] + format);
         }
 
         public void DisplayLogFileFormatError()
         {
-            PrintError(printStringDictionary["DisplayLogFileFormatError"]);
+            PrintError(printStringDictionary["Console_DisplayLogFileFormatError"]);
         }
 
         public void Exit()
         {
-            PrintInfo(printStringDictionary["Exit"]);
+            PrintInfo(printStringDictionary["Console_Exit"]);
         }
 
         /* Not implemented yet */
 
         public void NotImplementedYet()
         {
-            PrintError(printStringDictionary["NotImplementedYet"]);
+            PrintError(printStringDictionary["Console_NotImplementedYet"]);
         }
     }
 }

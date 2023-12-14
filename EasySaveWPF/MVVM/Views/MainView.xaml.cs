@@ -26,6 +26,7 @@ namespace EasySaveWPF
     {
         private readonly PathViewModel _pathViewModel;
         private readonly ConfigurationViewModel _configurationViewModel;
+        private readonly LanguageConfigurationViewModel _languageConfigurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
 
         private Dictionary<string, string> paths;
@@ -38,6 +39,7 @@ namespace EasySaveWPF
 
             _pathViewModel = new PathViewModel();
             _configurationViewModel = new ConfigurationViewModel();
+            _languageConfigurationViewModel = new LanguageConfigurationViewModel();
             _saveProfileViewModel = new SaveProfileViewModel();
 
             // Create a new dictionary to store the paths
@@ -46,17 +48,24 @@ namespace EasySaveWPF
             // Create a new dictionary to store the config
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
 
+            // Create a new language configuration
+            Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
             // Create a new list to store the save profiles
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
 
+            // Set the language
+            SetLanguage(printStringDictionary);
+
+            // Display the profiles
             DisplayProfiles();
         }
 
         private void DisplayProfiles()
         {
             // Epty the list
-            List_Profil.ItemsSource = null;
-            List_Profil.Items.Clear();
+            MainWindow_List_Profil.ItemsSource = null;
+            MainWindow_List_Profil.Items.Clear();
 
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
             ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile> { };
@@ -67,17 +76,17 @@ namespace EasySaveWPF
                 profiles.Add(profile);
             }
             // Ajouter les éléments à la liste
-            List_Profil.ItemsSource = profiles;
+            MainWindow_List_Profil.ItemsSource = profiles;
 
-            NumberProfileLoaded_TextBox.Content = profiles.Count.ToString();
+            MainWindow_NumberProfileLoaded_TextBox.Content = profiles.Count.ToString();
         }
 
         private void ManageProfile_Click(object sender, RoutedEventArgs e)
         {
             ManageProfileView manageProfileWindow = new ManageProfileView();
-            manageProfileWindow.Show();                                                  //Open a new window
-            ManageProfile_Button.IsEnabled = false;                                      //Disable the button
-            manageProfileWindow.Closing += ManageProfileWindow_Closing;                   //When the window is closed, call the function ManageProfileWindow_Closing
+            manageProfileWindow.Show();
+            MainWindow_ManageProfile_Button.IsEnabled = false;
+            manageProfileWindow.Closing += ManageProfileWindow_Closing;
         }
 
         private void ManageProfileWindow_Starting(object? sender, CancelEventArgs e)
@@ -87,7 +96,7 @@ namespace EasySaveWPF
 
         private void ManageProfileWindow_Closing(object? sender, CancelEventArgs e)
         {
-            ManageProfile_Button.IsEnabled = true;
+            MainWindow_ManageProfile_Button.IsEnabled = true;
             DisplayProfiles();
         }
 
@@ -95,7 +104,7 @@ namespace EasySaveWPF
         {
             ExecuteSaveView executeSaveWindow = new ExecuteSaveView();
             executeSaveWindow.Show();
-            ExecuteSave_Button.IsEnabled = false;
+            MainWindow_ExecuteSave_Button.IsEnabled = false;
             executeSaveWindow.Closing += ExecuteSaveWindow_Closing;
         }
 
@@ -106,7 +115,7 @@ namespace EasySaveWPF
 
         private void ExecuteSaveWindow_Closing(object? sender, CancelEventArgs e)
         {
-            ExecuteSave_Button.IsEnabled = true;
+            MainWindow_ExecuteSave_Button.IsEnabled = true;
             DisplayProfiles();
         }
 
@@ -126,6 +135,30 @@ namespace EasySaveWPF
             Option_Button.IsEnabled = false;
         }
 
+        private void SetLanguage(Dictionary<string, string> printStringDictionary)
+        {
+            // Set the language
 
+            // Set the title
+            Title = printStringDictionary["Application_MainWindow_Title"];
+
+            // Set the buttons
+            MainWindow_ManageProfile_Button.Content = printStringDictionary["Application_MainWindow_ManageProfile_Button"];
+            MainWindow_ExecuteSave_Button.Content = printStringDictionary["Application_MainWindow_ExecuteSave_Button"];
+            MainWindow_ViewLogs_Button.Content = printStringDictionary["Application_MainWindow_ViewLogs_Button"];
+
+            // Set the labels
+            MainWindow_ListOfProfiles_Label.Content = printStringDictionary["Application_MainWindow_ListOfProfiles_Label"];
+            MainWindow_NumberOfprofiles_Label.Content = printStringDictionary["Application_MainWindow_NumberOfprofiles_Label"];
+            MainWindow_State_Label.Content = printStringDictionary["Application_MainWindow_State_Label"];
+
+            // Set the columns
+            MainWindow_Index_Header.Header = printStringDictionary["Application_MainWindow_Index_Header"];
+            MainWindow_ProfileName_Header.Header = printStringDictionary["Application_MainWindow_ProfileName_Header"];
+            MainWindow_SourceFilePath_Header.Header = printStringDictionary["Application_MainWindow_SourceFilePath_Header"];
+            MainWindow_DestinationFilePath_Header.Header = printStringDictionary["Application_MainWindow_TargetFilePath_Header"];
+            MainWindow_Type_Header.Header = printStringDictionary["Application_MainWindow_TypeOfSave_Header"];
+            MainWindow_State_Header.Header = printStringDictionary["Application_MainWindow_State_Header"];
+        }
     }
 }
