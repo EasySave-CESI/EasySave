@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using EasySaveWPF.MVVM.Models;
+using EasySaveWPF.MVVM.ViewModels;
 
 namespace EasySaveWPF.Views
 {
@@ -20,14 +22,37 @@ namespace EasySaveWPF.Views
     /// </summary>
     public partial class ExecuteSaveView : Window
     {
+        private readonly PathViewModel _pathViewModel;
+        private readonly ConfigurationViewModel _configurationViewModel;
+        private readonly SaveProfileViewModel _saveProfileViewModel;
+        private readonly DailyLogsViewModel _dailyLogsViewModel;
+
+        private Dictionary<string, string> paths;
+        private Dictionary<string, string> config;
+        private List<SaveProfile> saveProfiles;
+        private List<int> listIdsSavesToExecute = new List<int>();
+        private string RegexPattern = @"^(\d+)(?:-(\d+))?(?:;(\d+))?(?:;(\d+))?(?:;(\d+))?(?:;(\d+))?$";
+        private string Regexpatternto = @"^(\d+)(?:-(\d+))?$";
+
         public ExecuteSaveView()
         {
             InitializeComponent();
-        }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
+            _pathViewModel = new PathViewModel();
+            _configurationViewModel = new ConfigurationViewModel();
+            _saveProfileViewModel = new SaveProfileViewModel();
 
+            // Create a new dictionary to store the paths
+            paths = _pathViewModel.LoadPaths();
+
+            // Create a new dictionary to store the config
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+
+            // Create a new list to store the save profiles
+            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+
+            // Create a new list to store the daily logs
+            _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
         }
 
         private void Start_ExecuteSaveView_Click(object sender, RoutedEventArgs e)
@@ -155,7 +180,9 @@ namespace EasySaveWPF.Views
 
         private void ListOfProfilesToSave(object sender, RoutedEventArgs e)
         {
-            e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
+            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+
+            // Get a 
         }
     }
 }
