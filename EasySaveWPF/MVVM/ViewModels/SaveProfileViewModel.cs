@@ -1,4 +1,4 @@
-﻿using EasySaveWPF.MVVM.Models;
+using EasySaveWPF.MVVM.Models;
 using EasySaveWPF.MVVM.Views;
 using System.IO;
 
@@ -54,7 +54,7 @@ namespace EasySaveWPF.MVVM.ViewModels
 
         }
 
-        public void ModifySaveProfile(ConsoleView consoleView, List<SaveProfile> saveProfiles, Dictionary<string, string> paths)
+        public void ModifySaveProfile(ConsoleView consoleView, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, int id)
         {
 
             try
@@ -62,7 +62,7 @@ namespace EasySaveWPF.MVVM.ViewModels
                 string profileName = string.Empty;
                 int profileIndex = -1;
 
-                profileIndex = GetProfileIndex(consoleView, saveProfiles);
+                profileIndex = id;
 
                 consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
 
@@ -97,12 +97,11 @@ namespace EasySaveWPF.MVVM.ViewModels
 
         }
 
-        public void ExecuteSaveProfile(ConsoleView consoleView, DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config)
+        public void ExecuteSaveProfile(DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config, int index)
         {
             try
             {
-                int profileIndex = GetProfileIndex(consoleView, saveProfiles);
-                consoleView.DisplaySelectedProfileName(saveProfiles[profileIndex].Name);
+                int profileIndex = index;
 
                 if (saveProfiles[profileIndex].State == "READY")
                 {
@@ -111,52 +110,26 @@ namespace EasySaveWPF.MVVM.ViewModels
 
                     if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
-                        consoleView.DisplayBackupInProgress(saveProfiles[profileIndex].Name);
 
                         SaveProfile.ExecuteSaveProfile(saveProfiles, dailyLogsViewModel, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave, paths, config);
                     }
                     else
                     {
-                        consoleView.DisplayExecuteSaveProfileTypeOfSaveError();
+                        // If the type of save is not full or diff, display an error message
                     }
 
                     saveProfiles[profileIndex].State = "COMPLETED";
                     SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
-                    consoleView.DisplayExecuteSaveProfileSuccess();
                 }
                 else
                 {
-                    consoleView.DisplayExecuteSaveProfileStateError();
+                    // If the state is not ready, display an error message
                 }
             }
             catch (Exception ex)
             {
-                consoleView.Error(ex.Message);
+                // If an error occurs, display an error message
             }
-        }
-
-        public int GetProfileIndex(ConsoleView consoleView, List<SaveProfile> saveProfiles)
-        {
-            consoleView.DisplayChooseSelectedProfile();
-
-            // print all the profiles name
-            for (int i = 0; i < saveProfiles.Count; i++)
-            {
-                consoleView.DisplayProfileIndexName(i + 1, saveProfiles[i].Name);
-            }
-
-            string choice = consoleView.Read();
-
-            int profileIndex = -1;
-
-            for (int i = 0; i < saveProfiles.Count; i++)
-            {
-                if (int.Parse(choice) == i + 1)
-                {
-                    profileIndex = i;
-                }
-            }
-            return profileIndex;
         }
     }
 }
