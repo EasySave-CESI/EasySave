@@ -125,6 +125,11 @@ namespace EasySaveWPF.MVVM.Models
             printStrings_en.Add("Application_MainWindow_TargetFilePath_Header", "Target File Path");
             printStrings_en.Add("Application_MainWindow_TypeOfSave_Header", "Type");
             printStrings_en.Add("Application_MainWindow_State_Header", "State");
+
+            // OptionWindow
+            printStrings_en.Add("Application_OptionView_Validate_Button", "Validate");
+            printStrings_en.Add("Application_OptionView_LogFormat_Label", "Log format :");
+            printStrings_en.Add("Application_OptionView_Language_Label", "Language :");
         }
 
         private void LoadPrintStringsFr()
@@ -226,6 +231,11 @@ namespace EasySaveWPF.MVVM.Models
             printStrings_fr.Add("Application_MainWindow_TargetFilePath_Header", "Chemin Cible");
             printStrings_fr.Add("Application_MainWindow_TypeOfSave_Header", "Type");
             printStrings_fr.Add("Application_MainWindow_State_Header", "État");
+
+            // OptionWindow
+            printStrings_fr.Add("Application_OptionView_Validate_Button", "Valider");
+            printStrings_fr.Add("Application_OptionView_LogFormat_Label", "Format du journal :");
+            printStrings_fr.Add("Application_OptionView_Language_Label", "Langue :");
         }
     }
 }

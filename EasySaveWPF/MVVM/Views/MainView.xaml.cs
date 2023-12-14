@@ -31,6 +31,7 @@ namespace EasySaveWPF
 
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
+        private Dictionary<string, string> printStringDictionary;
         private List<SaveProfile> saveProfiles;
 
         public MainWindow()
@@ -61,7 +62,7 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
-        private void DisplayProfiles()
+        private void DisplayProfiles() 
         {
             // Epty the list
             MainWindow_List_Profil.ItemsSource = null;
@@ -119,19 +120,33 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
+        private void Option_Button_Click(object sender, RoutedEventArgs e)
+        {
+            OptionView optionView = new OptionView();
+            optionView.Show();
+            Option_Button.IsEnabled = false;
+            optionView.Closing += OptionView_Closing;
+        }
+
+        private void OptionView_Starting(object? sender, CancelEventArgs e)
+        {
+            //
+        }
+
+        private void OptionView_Closing(object? sender, CancelEventArgs e)
+        {
+            Option_Button.IsEnabled = true;
+            DisplayProfiles();
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+            SetLanguage(printStringDictionary);
+        }
+
         private void ViewLogs_Click(object sender, RoutedEventArgs e)
         {
             string appDataRoaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string logsPath = System.IO.Path.Combine(appDataRoaming, "EasySave", "Logs");
             Process.Start("explorer.exe", logsPath);
-        }
-
-        private void Option_Button_Click(object sender, RoutedEventArgs e)
-        {
-            OptionView optionView = new OptionView();
-            optionView.Closing += (s, e) => Option_Button.IsEnabled = true;
-            optionView.Show();
-            Option_Button.IsEnabled = false;
         }
 
         private void SetLanguage(Dictionary<string, string> printStringDictionary)

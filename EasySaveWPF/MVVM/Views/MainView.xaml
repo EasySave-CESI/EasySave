@@ -74,7 +74,7 @@
             Width="347" Height="76" 
             BorderThickness="1,1,1,1" OpacityMask="#FFAC6B6B">
         </Label>
-        <Label x:Name="MainWindow_ListOfProfiles_Label" Content="List of profiles" Margin="403,11,247,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri Light" FontSize="14"/>
+        <Label x:Name="MainWindow_ListOfProfiles_Label" Content="List of profiles" Margin="403,11,5,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri Light" FontSize="14"/>
         <Button 
             Content="⚙️" 
             x:Name="Option_Button" 
