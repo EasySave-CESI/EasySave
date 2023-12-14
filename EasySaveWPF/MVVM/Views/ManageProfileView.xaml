@@ -14,7 +14,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="900"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="AddProfile_Button" 
+        <Button x:Name="ManageProfileView_AddProfile_Button" 
             Content="+" 
             HorizontalAlignment="Left" 
             Margin="38,17,0,362" 
@@ -23,7 +23,7 @@
             VerticalContentAlignment="Stretch" 
             HorizontalContentAlignment="Center" Click="AddProfile_Button_Click"/>
 
-        <Button x:Name="DeleteProfile_Button" 
+        <Button x:Name="ManageProfileView_DeleteProfile_Button" 
             Content="-" 
             HorizontalAlignment="Left" 
             Margin="125,16,0,362" 
@@ -33,50 +33,52 @@
             HorizontalContentAlignment="Center" Click="DeleteProfile_Button_Click" 
             />
 
-        <ListView x:Name="List_Profil" Margin="40,83,-305,130" RenderTransformOrigin="0.5,0.5" SelectionChanged="List_Profil_SelectionChanged">
+        <ListView x:Name="ManageProfileView_ListProfil_ListView" Margin="40,83,-305,130" RenderTransformOrigin="0.5,0.5" SelectionChanged="List_Profil_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Index" Width="50" DisplayMemberBinding="{Binding Index}" />
-                    <GridViewColumn Header="Profil Name" Width="100" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Source File Path" Width="300" DisplayMemberBinding="{Binding SourceFilePath}"/>
-                    <GridViewColumn Header="Destination File Path" Width="300" DisplayMemberBinding="{Binding TargetFilePath}"/>
-                    <GridViewColumn Header="Type" Width="100" DisplayMemberBinding="{Binding TypeOfSave}"/>
-                    <GridViewColumn Header="State" Width="100" DisplayMemberBinding="{Binding State}"/>
+                    <GridViewColumn x:Name="ManageProfileView_Index_Header" Header="" Width="50" DisplayMemberBinding="{Binding Index}" />
+                    <GridViewColumn x:Name="ManageProfileView_ProfileName_Header" Header="" Width="100" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn x:Name="ManageProfileView_SourceFilePath_Header" Header="" Width="300" DisplayMemberBinding="{Binding SourceFilePath}"/>
+                    <GridViewColumn x:Name="ManageProfileView_DestinationFilePath_Header" Header="" Width="300" DisplayMemberBinding="{Binding TargetFilePath}"/>
+                    <GridViewColumn x:Name="ManageProfileView_Type_Header" Header="" Width="100" DisplayMemberBinding="{Binding TypeOfSave}"/>
+                    <GridViewColumn x:Name="ManageProfileView_State_Header" Header="" Width="100" DisplayMemberBinding="{Binding State}"/>
                 </GridView>
             </ListView.View>
         </ListView>
         <Button 
+            x:Name="ManageProfileView_Validate_Button"
             Content="Validate" 
             HorizontalAlignment="Left" 
             Margin="630,367,0,0" 
             VerticalAlignment="Top" 
             Height="53" Width="120" 
-            Click="Validate_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
+            Click="ManageProfileView_Validate_Button_Click" FontFamily="Calibri" FontSize="16"/>
 
-        <Button 
+        <Button
+            x:Name="ManageProfileView_Exit_Button"
             Content="Exit" 
             HorizontalAlignment="Left" 
             Margin="780,367,0,0" 
             VerticalAlignment="Top" 
             Height="53" Width="120" 
-            Click="Exit_ManageProfileView_Click" FontFamily="Calibri" FontSize="16"/>
+            Click="ManageProfileView_Exit_Button_Click" FontFamily="Calibri" FontSize="16"/>
 
         <Border BorderBrush="Black" BorderThickness="1" Margin="40,321,332,10" Background="#FFE9E6E6"/>
 
-        <Label Content="Source :" HorizontalAlignment="Left" Margin="48,330,0,0" VerticalAlignment="Top" Width="72" Height="32" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
-        <Label Content="Type :" HorizontalAlignment="Left" Margin="38,393,0,0" VerticalAlignment="Top" Width="82" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
+        <Label x:Name="ManageProfileView_Source_Label" Content="Source :" HorizontalAlignment="Left" Margin="48,330,0,0" VerticalAlignment="Top" Width="72" Height="32" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
+        <Label x:Name="ManageProfileView_Type_Label" Content="Type :" HorizontalAlignment="Left" Margin="38,393,0,0" VerticalAlignment="Top" Width="82" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
         <TextBox 
-            x:Name="Destination_Textbox"
+            x:Name="ManageProfileView_Destination_Textbox"
             TextWrapping="Wrap" 
             Text="" 
             Margin="125,367,472,42"
             TextChanged="DestinationTextBox"/>
 
-        <RadioButton x:Name="TypeFull_RadioButton" Content="Full" HorizontalAlignment="Left" Margin="129,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="TypeGroup"/>
-        <RadioButton x:Name="TypeDiff_RadioButton" Content="Differential" HorizontalAlignment="Left" Margin="180,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="TypeGroup"/>
-        <Label Content="Destination :" HorizontalAlignment="Left" Margin="40,364,0,0" VerticalAlignment="Top" Width="80" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
+        <RadioButton x:Name="ManageProfileView_TypeFull_RadioButton" Content="Full" HorizontalAlignment="Left" Margin="129,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="TypeGroup"/>
+        <RadioButton x:Name="ManageProfileView_TypeDiff_RadioButton" Content="Differential" HorizontalAlignment="Left" Margin="180,403,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="TypeGroup"/>
+        <Label x:Name="ManageProfileView_Destination_Label" Content="Destination :" HorizontalAlignment="Left" Margin="40,364,0,0" VerticalAlignment="Top" Width="80" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
         <TextBox 
-            x:Name="Source_Textbox" 
+            x:Name="ManageProfileView_Source_Textbox" 
             TextWrapping="Wrap" 
              
             Margin="125,332,472,77" 
@@ -91,7 +93,7 @@
             BorderThickness="1,1,1,1">
         </Label>
 
-        <Button x:Name="Source_Folder_Button" 
+        <Button x:Name="ManageProfileView_SourceFolder_Button" 
             Content="..." 
             HorizontalAlignment="Left" 
             Margin="433,335,0,0" 
@@ -100,15 +102,15 @@
             Click="Source_Folder_Button_Click"/>
 
         <Button 
-            x:Name="Destination_Folder_Button" 
+            x:Name="ManageProfileView_DestinationFolder_Button" 
             Content="..." 
             HorizontalAlignment="Left" 
             Margin="433,370,0,0" 
             VerticalAlignment="Top" 
             Width="25" Click="Destination_Folder_Button_Click"/>
-        <Label Content="Encryption :" HorizontalAlignment="Left" Margin="276,393,0,0" VerticalAlignment="Top" Width="82" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
-        <RadioButton x:Name="Encryption_RadioButton_Yes" Content="Yes" HorizontalAlignment="Left" Margin="374,402,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="EncryptionGroup"/>
-        <RadioButton x:Name="Encryption_RadioButton_No" Content="No" HorizontalAlignment="Center" Margin="0,402,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="EncryptionGroup"/>
+        <Label x:Name="ManageProfileView_Encryption_Label" Content="Encryption :" HorizontalAlignment="Left" Margin="276,393,0,0" VerticalAlignment="Top" Width="82" Height="31" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontFamily="Calibri Light" FontSize="14"/>
+        <RadioButton x:Name="ManageProfileView_EncryptionYes_RadioButton" Content="Yes" HorizontalAlignment="Left" Margin="374,402,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="EncryptionGroup"/>
+        <RadioButton x:Name="ManageProfileView_EncryptionNo_RadioButton" Content="No" HorizontalAlignment="Center" Margin="0,402,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="13" GroupName="EncryptionGroup"/>
 
     </Grid>
 </Window>

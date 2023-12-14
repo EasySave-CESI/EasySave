@@ -28,6 +28,7 @@ namespace EasySaveWPF.Views
         private readonly MVVM.Models.Configuration _configuration;
         private readonly PathViewModel _pathViewModel;
         private readonly ConfigurationViewModel _configurationViewModel;
+        private readonly LanguageConfigurationViewModel _languageConfigurationViewModel;
 
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
@@ -40,18 +41,25 @@ namespace EasySaveWPF.Views
             _pathViewModel = new PathViewModel();
             _configuration = new MVVM.Models.Configuration();
             _configurationViewModel = new ConfigurationViewModel();
+            _languageConfigurationViewModel = new LanguageConfigurationViewModel();
 
             // Create a new dictionary to store the paths
             paths = _pathViewModel.LoadPaths();
 
             // Create a new dictionary to store the config
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+
+            // Create a new language configuration
+            Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
+            // Set the language
+            SetLanguage(printStringDictionary);
         }
 
         private void OptionOK_Button_Click(object sender, RoutedEventArgs e)
         {
             /* LOG CONFIGURATION */
-            var itemLog = LogFormat_ComboBox.SelectedItem as ComboBoxItem;
+            var itemLog = OptionView_LogFormat_ComboBox.SelectedItem as ComboBoxItem;
             MVVM.Models.Configuration configuration = new MVVM.Models.Configuration();
             string newLogFormat = itemLog.Content.ToString();
 
@@ -66,7 +74,7 @@ namespace EasySaveWPF.Views
 
 
             /* LANGUAGE CONFIGURATION */
-            var itemLanguage = Language_ComboBox.SelectedItem as ComboBoxItem;
+            var itemLanguage = OptionView_Language_ComboBox.SelectedItem as ComboBoxItem;
             string newLanguage = itemLanguage.Content.ToString();
 
             if (newLanguage == "Englsh")
@@ -80,19 +88,29 @@ namespace EasySaveWPF.Views
                 configuration.Language = "fr";
             }
 
-            MVVM.Models.Configuration.WriteConfig("C:\\Users\\elmas\\AppData\\Roaming\\EasySave\\Config\\config.xml", configuration.Language, configuration.LogFormat);
+            MVVM.Models.Configuration.WriteConfig(paths["ConfigFilePath"], configuration.Language, configuration.LogFormat);
+            SetLanguage(_languageConfigurationViewModel.LoadPrintStrings(configuration.Language));
             MessageBox.Show("Configuration saved");
             Close();
         }
 
-        private void LogFormat_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OptionView_LogFormat_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
 
-        private void Language_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OptionView_Language_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void SetLanguage(Dictionary<string, string> printStringDictionary)
+        {
+            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
+            OptionView_Validate_Button.Content = printStringDictionary["Application_OptionView_Validate_Button"];
+            OptionView_LogFormat_Label.Content = printStringDictionary["Application_OptionView_LogFormat_Label"];
+            OptionView_Language_Label.Content = printStringDictionary["Application_OptionView_Language_Label"];
         }
     }
 }

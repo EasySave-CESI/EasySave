@@ -26,11 +26,13 @@ namespace EasySaveWPF.Views
     {
         private readonly PathViewModel _pathViewModel;
         private readonly ConfigurationViewModel _configurationViewModel;
+        private readonly LanguageConfigurationViewModel _languageConfigurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
 
         private ObservableCollection<SaveProfile> profiles;
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
+        private Dictionary<string, string> printStringDictionary;
         private List<SaveProfile> saveProfiles;
 
         public ManageProfileView()
@@ -39,6 +41,7 @@ namespace EasySaveWPF.Views
 
             _pathViewModel = new PathViewModel();
             _configurationViewModel = new ConfigurationViewModel();
+            _languageConfigurationViewModel = new LanguageConfigurationViewModel();
             _saveProfileViewModel = new SaveProfileViewModel();
 
             // Create a new dictionary to store the paths
@@ -49,6 +52,9 @@ namespace EasySaveWPF.Views
 
             // Create a new list to store the save profiles
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+
+            // Set the language
+            SetLanguage(printStringDictionary);
 
             DisplayProfiles();
         }
@@ -63,7 +69,7 @@ namespace EasySaveWPF.Views
                 profiles.Add(profile);
             }
 
-            List_Profil.ItemsSource = profiles;
+            ManageProfileView_ListProfil_ListView.ItemsSource = profiles;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -79,24 +85,24 @@ namespace EasySaveWPF.Views
         }
 
 
-        private void Validate_ManageProfileView_Click(object sender, RoutedEventArgs e)
+        private void ManageProfileView_Validate_Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = List_Profil.SelectedItem as SaveProfile;
+            var item = ManageProfileView_ListProfil_ListView.SelectedItem as SaveProfile;
             if (item == null)
             {
                 MessageBox.Show("Please select a profile to edit");
                 return;
             }
-            item.SourceFilePath = Source_Textbox.Text;
-            item.TargetFilePath = Destination_Textbox.Text;
-            item.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "full" : "diff";
-            List_Profil.Items.Refresh();
+            item.SourceFilePath = ManageProfileView_Source_Textbox.Text;
+            item.TargetFilePath = ManageProfileView_Destination_Textbox.Text;
+            item.TypeOfSave = ManageProfileView_TypeFull_RadioButton.IsChecked == true ? "full" : "diff";
+            ManageProfileView_ListProfil_ListView.Items.Refresh();
 
             saveProfiles = profiles.ToList();
             SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
         }
 
-        private void Exit_ManageProfileView_Click(object sender, RoutedEventArgs e)
+        private void ManageProfileView_Exit_Button_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
@@ -105,8 +111,8 @@ namespace EasySaveWPF.Views
         {
             OpenFolderDialog sourceFolderDialog = new OpenFolderDialog();
             sourceFolderDialog.ShowDialog();                              // Open Folder Dialog
-            string sourcepathText = sourceFolderDialog.FolderName;        
-            Source_Textbox.Text = sourcepathText;
+            string sourcepathText = sourceFolderDialog.FolderName;
+            ManageProfileView_Source_Textbox.Text = sourcepathText;
         }
 
         private void SourceTextbox(object sender, TextChangedEventArgs e)
@@ -119,7 +125,7 @@ namespace EasySaveWPF.Views
             OpenFolderDialog destinationFolderDialog = new OpenFolderDialog();
             destinationFolderDialog.ShowDialog();
             string destinationpathText = destinationFolderDialog.FolderName;
-            Destination_Textbox.Text = destinationpathText;
+            ManageProfileView_Destination_Textbox.Text = destinationpathText;
         }
 
         private void DestinationTextBox(object sender, TextChangedEventArgs e)
@@ -134,7 +140,7 @@ namespace EasySaveWPF.Views
 
         private void AddProfile_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Source_Textbox.Text == "" || Destination_Textbox.Text == "" || (TypeFull_RadioButton.IsChecked == false && TypeDiff_RadioButton.IsChecked == false) || (Encryption_RadioButton_No.IsChecked == false && Encryption_RadioButton_Yes.IsChecked == false))
+            if (ManageProfileView_Source_Textbox.Text == "" || ManageProfileView_Destination_Textbox.Text == "" || (ManageProfileView_TypeFull_RadioButton.IsChecked == false && ManageProfileView_TypeDiff_RadioButton.IsChecked == false) || (ManageProfileView_EncryptionNo_RadioButton.IsChecked == false && ManageProfileView_EncryptionYes_RadioButton.IsChecked == false))
             {
                 MessageBox.Show("Please enter a source, a destination, a type of save and an encryption option");
                 return;
@@ -147,9 +153,9 @@ namespace EasySaveWPF.Views
                 return;
             }
 
-            newProfile.SourceFilePath = Source_Textbox.Text;
-            newProfile.TargetFilePath = Destination_Textbox.Text;
-            newProfile.TypeOfSave = TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
+            newProfile.SourceFilePath = ManageProfileView_Source_Textbox.Text;
+            newProfile.TargetFilePath = ManageProfileView_Destination_Textbox.Text;
+            newProfile.TypeOfSave = ManageProfileView_TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
 
             List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(newProfile.SourceFilePath);
 
@@ -158,7 +164,7 @@ namespace EasySaveWPF.Views
             newProfile.NbFilesLeftToDo = (int)sourcedirectoryinfo[0];
             newProfile.Progression = 0;
 
-            newProfile.Encryption = Encryption_RadioButton_Yes.IsChecked == true ? true : false;
+            newProfile.Encryption = ManageProfileView_EncryptionYes_RadioButton.IsChecked == true ? true : false;
             if (newProfile.Encryption == true)
             {
                 newProfile.EncryptionKey = Interaction.InputBox("Enter the encryption key", "Add a new profile", "Save", 100, 100);
@@ -173,7 +179,7 @@ namespace EasySaveWPF.Views
             SaveProfile.AddProfile(paths["StateFilePath"], newProfile);
             newProfile.Index = profiles.Count + 1;
             profiles.Add(newProfile);
-            List_Profil.Items.Refresh();
+            ManageProfileView_ListProfil_ListView.Items.Refresh();
 
 
 
@@ -183,27 +189,27 @@ namespace EasySaveWPF.Views
 
         private void List_Profil_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = List_Profil.SelectedItem as SaveProfile;
+            var item = ManageProfileView_ListProfil_ListView.SelectedItem as SaveProfile;
             
             if (item == null)
             {
                 return;
             }
-            Source_Textbox.Text = (item.SourceFilePath);
-            Destination_Textbox.Text = (item.TargetFilePath);
+            ManageProfileView_Source_Textbox.Text = (item.SourceFilePath);
+            ManageProfileView_Destination_Textbox.Text = (item.TargetFilePath);
 
             if (item.TypeOfSave == "full")
             {
-               TypeFull_RadioButton.IsChecked = true;
+                ManageProfileView_TypeFull_RadioButton.IsChecked = true;
             }
             else if (item.TypeOfSave == "diff")
             {
-                TypeDiff_RadioButton.IsChecked = true;
+                ManageProfileView_TypeDiff_RadioButton.IsChecked = true;
             }
             else
             {
-                TypeDiff_RadioButton.IsChecked = false;
-                TypeFull_RadioButton.IsChecked = false;
+                ManageProfileView_TypeDiff_RadioButton.IsChecked = false;
+                ManageProfileView_TypeFull_RadioButton.IsChecked = false;
             }
            
            
@@ -212,7 +218,7 @@ namespace EasySaveWPF.Views
 
         private void DeleteProfile_Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = List_Profil.SelectedItem as SaveProfile;
+            var item = ManageProfileView_ListProfil_ListView.SelectedItem as SaveProfile;
 
             if (item == null)
             {
@@ -235,7 +241,29 @@ namespace EasySaveWPF.Views
 
             profiles.Remove(item);
             SaveProfile.SaveProfiles(paths["StateFilePath"], profiles.ToList());
-            List_Profil.Items.Refresh();
+            ManageProfileView_ListProfil_ListView.Items.Refresh();
+        }
+
+        private void SetLanguage(Dictionary<string, string> printStringDictionary)
+        {
+            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
+            ManageProfileView_Validate_Button.Content = printStringDictionary["Application_ManageProfileView_Validate_Button"];
+            ManageProfileView_Exit_Button.Content = printStringDictionary["Application_ManageProfileView_Exit_Button"];
+
+            ManageProfileView_Source_Label.Content = printStringDictionary["Application_ManageProfileView_Source_Label"];
+            ManageProfileView_Destination_Label.Content = printStringDictionary["Application_ManageProfileView_Destination_Label"];
+
+            ManageProfileView_Type_Label.Content = printStringDictionary["Application_ManageProfileView_Type_Label"];
+            ManageProfileView_TypeFull_RadioButton.Content = printStringDictionary["Application_ManageProfileView_TypeFull_RadioButton"];
+            ManageProfileView_TypeDiff_RadioButton.Content = printStringDictionary["Application_ManageProfileView_TypeDiff_RadioButton"];
+
+            ManageProfileView_Index_Header.Header = printStringDictionary["Application_ManageProfileView_Index_Header"];
+            ManageProfileView_ProfileName_Header.Header = printStringDictionary["Application_ManageProfileView_ProfileName_Header"];
+            ManageProfileView_SourceFilePath_Header.Header = printStringDictionary["Application_ManageProfileView_SourceFilePath_Header"];
+            ManageProfileView_DestinationFilePath_Header.Header = printStringDictionary["Application_ManageProfileView_DestinationFilePath_Header"];
+            ManageProfileView_Type_Header.Header = printStringDictionary["Application_ManageProfileView_TypeOfSave_Header"];
+            ManageProfileView_State_Header.Header = printStringDictionary["Application_ManageProfileView_State_Header"];
         }
     }
 }

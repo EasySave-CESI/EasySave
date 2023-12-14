@@ -17,7 +17,7 @@
 
         </Grid.RowDefinitions>
 
-        <Label x:Name="UserSelectionLabel" 
+        <Label x:Name="ExecuteSaveView_UserSelection_Label" 
             Margin="10,0,0,0" 
             Content="Saves:" 
             FontFamily="Calibri" 
@@ -25,15 +25,15 @@
             HorizontalAlignment="Left" 
             VerticalAlignment="Center"/>
 
-        <TextBox x:Name="UserSelectionTextBox"
+        <TextBox x:Name="ExecuteSaveView_UserSelection_TextBox"
             Grid.Row="0" Grid.ColumnSpan="2" 
-            Margin="60,10,50,10"
+            Margin="95,10,50,10"
             TextWrapping="Wrap" 
             Text="" 
             FontFamily="Calibri" 
             FontSize="14"/>
 
-        <Button x:Name="InfoButton" Grid.Column="1" 
+        <Button x:Name="ExecuteSaveView_Info_Button" Grid.Column="1" 
         Content="?"
         HorizontalAlignment="Left" 
         VerticalAlignment="Center"
@@ -46,7 +46,7 @@
         >
             <Button.ToolTip>
                 <ToolTip>
-                    <TextBlock TextWrapping="Wrap">
+                    <TextBlock x:Name="ExecuteSaveView_Informations_TextBlock" TextWrapping="Wrap">
                         Veuillez saisir l'ID de la sauvegarde pour exécuter une seule sauvegarde. \n
                         Si vous souhaitez exécuter automatiquement plusieurs sauvegardes, vous pouvez utiliser les formats suivants : 
                         - '1-3' pour exécuter automatiquement les sauvegardes de 1 à 3. 
@@ -65,7 +65,7 @@
         </Button>
 
 
-        <Button x:Name="StartExecuteSave_Button" 
+        <Button x:Name="ExecuteSaveView_Start_Button" 
             Content="Start" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Center"
@@ -75,7 +75,7 @@
             FontFamily="Calibri" 
             FontSize="14"/>
 
-        <Button x:Name="ExitExecuteSave_Button" 
+        <Button x:Name="ExecuteSaveView_Exit_Button" 
             Content="Exit" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Center" 
