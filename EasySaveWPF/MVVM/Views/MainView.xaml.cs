@@ -47,6 +47,8 @@ namespace EasySaveWPF
 
             // Create a new list to store the save profiles
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+
+            DisplayProfiles();
         }
 
         private void DisplayProfiles()
