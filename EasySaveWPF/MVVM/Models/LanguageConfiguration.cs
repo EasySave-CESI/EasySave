@@ -106,59 +106,24 @@ namespace EasySaveWPF.MVVM.Models
             // ------------------     WPF     ------------------
 
             // Title
-            printStrings_en.Add("Application_MainWindow_Title", "EasySave"); 
+            printStrings_en.Add("Application_MainWindow_Title", "EasySave");
 
-            // MainWindow Buttons
-            printStrings_en.Add("Application_MainWindow_ManageProfile_Button", "Manage Profile");
-            printStrings_en.Add("Application_MainWindow_ExecuteSave_Button", "Execute save(s)");
-            printStrings_en.Add("Application_MainWindow_ViewLogs_Button", "View Logs");
+            // Navigation bar
+            printStrings_en.Add("Application_MainWindow_NavigationBar_PagesList_Home", "Home");
+            printStrings_en.Add("Application_MainWindow_NavigationBar_PagesList_Logs", "Logs");
+            printStrings_en.Add("Application_MainWindow_NavigationBar_PagesList_Settings", "Settings");
 
-            // MainWindow Labels
-            printStrings_en.Add("Application_MainWindow_ListOfProfiles_Label", "List of save profiles :");
-            printStrings_en.Add("Application_MainWindow_NumberOfprofiles_Label", "Number of profiles loaded :");
-            printStrings_en.Add("Application_MainWindow_State_Label", "State :");
+            // Home page
 
-            // MainWindow Headers
-            printStrings_en.Add("Application_MainWindow_Index_Header", "Index");
-            printStrings_en.Add("Application_MainWindow_ProfileName_Header", "Name");
-            printStrings_en.Add("Application_MainWindow_SourceFilePath_Header", "Source File Path");
-            printStrings_en.Add("Application_MainWindow_TargetFilePath_Header", "Target File Path");
-            printStrings_en.Add("Application_MainWindow_TypeOfSave_Header", "Type");
-            printStrings_en.Add("Application_MainWindow_State_Header", "State");
+            // Existing save profiles
+            printStrings_en.Add("Application_MainWindow_MainContentHeader_ExistingSaves_Label", "Existing save profiles");
 
-            // ManageProfileWindow Buttons
-            printStrings_en.Add("Application_ManageProfileView_Validate_Button", "Validate");
-            printStrings_en.Add("Application_ManageProfileView_Exit_Button", "Exit");
+            // Execute all save profiles button
+            printStrings_en.Add("Application_MainWindow_MainContentHeader_ExecuteAll_Button", "Execute all");
 
-            // ManageProfileWindow Labels
-            printStrings_en.Add("Application_ManageProfileView_Source_Label", "Source :");
-            printStrings_en.Add("Application_ManageProfileView_Destination_Label", "Destination :");
+            // Create save profile button
+            printStrings_en.Add("Application_MainWindow_MainContentHeader_CreateSave_Button", "Create");
 
-            printStrings_en.Add("Application_ManageProfileView_Type_Label", "Type :");
-            printStrings_en.Add("Application_ManageProfileView_TypeFull_RadioButton", "full");
-            printStrings_en.Add("Application_ManageProfileView_TypeDiff_RadioButton", "diff");
-
-            printStrings_en.Add("Application_ManageProfileView_Encryption_Label", "Encryption :");
-            printStrings_en.Add("Application_ManageProfileView_EncryptionYes_RadioButton", "yes");
-            printStrings_en.Add("Application_ManageProfileView_EncryptionNo_RadioButton", "no");
-
-            // ManageProfileWindow Header
-            printStrings_en.Add("Application_ManageProfileView_Index_Header", "Index");
-            printStrings_en.Add("Application_ManageProfileView_ProfileName_Header", "Name");
-            printStrings_en.Add("Application_ManageProfileView_SourceFilePath_Header", "Source File Path");
-            printStrings_en.Add("Application_ManageProfileView_DestinationFilePath_Header", "Target File Path");
-            printStrings_en.Add("Application_ManageProfileView_TypeOfSave_Header", "Type");
-            printStrings_en.Add("Application_ManageProfileView_State_Header", "State");
-
-            // ExecuteSaveWindow
-            printStrings_en.Add("Application_ExecuteSaveView_UserSelection_Label", "Saves :");
-            printStrings_en.Add("Application_ExecuteSaveView_Start_Button", "Start");
-            printStrings_en.Add("Application_ExecuteSaveView_Exit_Button", "Exit");
-
-            // OptionWindow
-            printStrings_en.Add("Application_OptionView_Validate_Button", "Validate");
-            printStrings_en.Add("Application_OptionView_LogFormat_Label", "Log format :");
-            printStrings_en.Add("Application_OptionView_Language_Label", "Language :");
         }
 
         private void LoadPrintStringsFr()
@@ -243,57 +208,21 @@ namespace EasySaveWPF.MVVM.Models
             // Title
             printStrings_fr.Add("Application_MainWindow_Title", "EasySave");
 
-            // MainWindow Buttons
-            printStrings_fr.Add("Application_MainWindow_ManageProfile_Button", "Gérer les profils");
-            printStrings_fr.Add("Application_MainWindow_ExecuteSave_Button", "Exécuter les sauvegardes");
-            printStrings_fr.Add("Application_MainWindow_ViewLogs_Button", "Voir les registres");
+            // Navigation bar
+            printStrings_fr.Add("Application_MainWindow_NavigationBar_PagesList_Home", "Accueil");
+            printStrings_fr.Add("Application_MainWindow_NavigationBar_PagesList_Logs", "Registres");
+            printStrings_fr.Add("Application_MainWindow_NavigationBar_PagesList_Settings", "Paramètres");
 
-            // MainWindow Labels
-            printStrings_fr.Add("Application_MainWindow_ListOfProfiles_Label", "Liste des profils de sauvegarde :");
-            printStrings_fr.Add("Application_MainWindow_NumberOfprofiles_Label", "Nombre de profils chargés :");
-            printStrings_fr.Add("Application_MainWindow_State_Label", "État :");
+            // Home page
 
-            // MainWindow Headers
-            printStrings_fr.Add("Application_MainWindow_Index_Header", "Indice");
-            printStrings_fr.Add("Application_MainWindow_ProfileName_Header", "Nom");
-            printStrings_fr.Add("Application_MainWindow_SourceFilePath_Header", "Chemin Source");
-            printStrings_fr.Add("Application_MainWindow_TargetFilePath_Header", "Chemin Cible");
-            printStrings_fr.Add("Application_MainWindow_TypeOfSave_Header", "Type");
-            printStrings_fr.Add("Application_MainWindow_State_Header", "État");
+            // Existing save profiles
+            printStrings_fr.Add("Application_MainWindow_MainContentHeader_ExistingSaves_Label", "Profils de sauvegarde existants");
 
-            // ManageProfileWindow Buttons
-            printStrings_fr.Add("Application_ManageProfileView_Validate_Button", "Valider");
-            printStrings_fr.Add("Application_ManageProfileView_Exit_Button", "Quitter");
+            // Execute all save profiles button
+            printStrings_fr.Add("Application_MainWindow_MainContentHeader_ExecuteAll_Button", "Exécuter tous");
 
-            // ManageProfileWindow Labels
-            printStrings_fr.Add("Application_ManageProfileView_Source_Label", "Source :");
-            printStrings_fr.Add("Application_ManageProfileView_Destination_Label", "Destination :");
-
-            printStrings_fr.Add("Application_ManageProfileView_Type_Label", "Type :");
-            printStrings_fr.Add("Application_ManageProfileView_TypeFull_RadioButton", "full");
-            printStrings_fr.Add("Application_ManageProfileView_TypeDiff_RadioButton", "diff");
-
-            printStrings_fr.Add("Application_ManageProfileView_Encryption_Label", "Chiffrement :");
-            printStrings_fr.Add("Application_ManageProfileView_EncryptionYes_RadioButton", "oui");
-            printStrings_fr.Add("Application_ManageProfileView_EncryptionNo_RadioButton", "non");
-
-            // ManageProfileWindow Header
-            printStrings_fr.Add("Application_ManageProfileView_Index_Header", "Indice");
-            printStrings_fr.Add("Application_ManageProfileView_ProfileName_Header", "Nom");
-            printStrings_fr.Add("Application_ManageProfileView_SourceFilePath_Header", "Chemin Source");
-            printStrings_fr.Add("Application_ManageProfileView_DestinationFilePath_Header", "Chemin Cible");
-            printStrings_fr.Add("Application_ManageProfileView_TypeOfSave_Header", "Type");
-            printStrings_fr.Add("Application_ManageProfileView_State_Header", "État");
-
-            // ExecuteSaveWindow
-            printStrings_fr.Add("Application_ExecuteSaveView_UserSelection_Label", "Sauvegardes :");
-            printStrings_fr.Add("Application_ExecuteSaveView_Start_Button", "Démarrer");
-            printStrings_fr.Add("Application_ExecuteSaveView_Exit_Button", "Quitter");
-
-            // OptionWindow
-            printStrings_fr.Add("Application_OptionView_Validate_Button", "Valider");
-            printStrings_fr.Add("Application_OptionView_LogFormat_Label", "Format du journal :");
-            printStrings_fr.Add("Application_OptionView_Language_Label", "Langue :");
+            // Create save profile button
+            printStrings_fr.Add("Application_MainWindow_MainContentHeader_CreateSave_Button", "Créer");
         }
     }
 }

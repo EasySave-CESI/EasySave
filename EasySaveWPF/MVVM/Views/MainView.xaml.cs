@@ -33,6 +33,10 @@ namespace EasySaveWPF
         private Dictionary<string, string> config;
         private Dictionary<string, string> printStringDictionary;
         private List<SaveProfile> saveProfiles;
+        private List<SaveProfile> profilesToExecute = new List<SaveProfile>();
+        private ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile>();
+
+        private bool isSelectionDotPressed = false;
 
         public MainWindow()
         {
@@ -56,7 +60,7 @@ namespace EasySaveWPF
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
 
             // Set the language
-            SetLanguage(printStringDictionary);
+            Setlanguage();
 
             // Display the profiles
             DisplayProfiles();
@@ -64,115 +68,102 @@ namespace EasySaveWPF
 
         private void DisplayProfiles() 
         {
-            // Epty the list
-            MainWindow_List_Profil.ItemsSource = null;
-            MainWindow_List_Profil.Items.Clear();
-
+            profiles.Clear();
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-            ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile> { };
-
             foreach (SaveProfile profile in saveProfiles)
             {
-                profile.Index = profiles.Count + 1;
                 profiles.Add(profile);
             }
-            // Ajouter les éléments à la liste
-            MainWindow_List_Profil.ItemsSource = profiles;
-
-            MainWindow_NumberProfileLoaded_TextBox.Content = profiles.Count.ToString();
+            MainWindow_Content_ExistingSaves_Grid.ItemsSource = profiles;
         }
 
-        private void ManageProfile_Click(object sender, RoutedEventArgs e)
+        private void SelectionDot_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ManageProfileView manageProfileWindow = new ManageProfileView();
-            manageProfileWindow.Show();
-            MainWindow_ManageProfile_Button.IsEnabled = false;
-            manageProfileWindow.Closing += ManageProfileWindow_Closing;
+            Ellipse selectionDot = (Ellipse)sender;
+
+            if (isSelectionDotPressed)
+            {
+                selectionDot.Fill = Brushes.White;
+                profilesToExecute.Remove((SaveProfile)selectionDot.DataContext);
+            }
+            else
+            {
+                selectionDot.Fill = Brushes.Black;
+                profilesToExecute.Add((SaveProfile)selectionDot.DataContext);
+            }
+
+            isSelectionDotPressed = !isSelectionDotPressed;
         }
 
-        private void ManageProfileWindow_Starting(object? sender, CancelEventArgs e)
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            //
+            Button startButton = (Button)sender;
+            SaveProfile profileToStart = (SaveProfile)startButton.DataContext;
+            MessageBox.Show($"Starting {profileToStart.Name}");
         }
 
-        private void ManageProfileWindow_Closing(object? sender, CancelEventArgs e)
+        private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow_ManageProfile_Button.IsEnabled = true;
-            DisplayProfiles();
+            Button stopButton = (Button)sender;
+            SaveProfile profileToStop = (SaveProfile)stopButton.DataContext;
+            MessageBox.Show($"Stopping {profileToStop.Name}");
         }
 
-        private void ExecuteSave_Click(object sender, RoutedEventArgs e)
+        private void ModifyButton_Click(object sender, RoutedEventArgs e)
         {
-            ExecuteSaveView executeSaveWindow = new ExecuteSaveView();
-            executeSaveWindow.Show();
-            MainWindow_ExecuteSave_Button.IsEnabled = false;
-            executeSaveWindow.Closing += ExecuteSaveWindow_Closing;
+            Button modifyButton = (Button)sender;
+            SaveProfile profileToModify = (SaveProfile)modifyButton.DataContext;
+            MessageBox.Show($"Modifying {profileToModify.Name}");
         }
 
-        private void ExecuteSaveWindow_Starting(object? sender, CancelEventArgs e)
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            //
+            Button deleteButton = (Button)sender;
+            SaveProfile profileToDelete = (SaveProfile)deleteButton.DataContext;
+            MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {profileToDelete.Name} ?", "Delete profile", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes) 
+            {
+                _saveProfileViewModel.DeleteSaveProfile(saveProfiles, profileToDelete, paths);
+                DisplayProfiles();
+            }
         }
 
-        private void ExecuteSaveWindow_Closing(object? sender, CancelEventArgs e)
+        private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow_ExecuteSave_Button.IsEnabled = true;
-            DisplayProfiles();
+            MessageBox.Show("Creating a new save profile");
         }
 
-        private void Option_Button_Click(object sender, RoutedEventArgs e)
+        private void ExecuteAllButton_Click(object sender, RoutedEventArgs e)
         {
-            OptionView optionView = new OptionView();
-            optionView.Show();
-            Option_Button.IsEnabled = false;
-            optionView.Closing += OptionView_Closing;
+            foreach (SaveProfile profile in profilesToExecute)
+            {
+                MessageBox.Show($"Executing {profile.Name}");
+            }
         }
 
-        private void OptionView_Starting(object? sender, CancelEventArgs e)
-        {
-            //
-        }
-
-        private void OptionView_Closing(object? sender, CancelEventArgs e)
-        {
-            Option_Button.IsEnabled = true;
-            DisplayProfiles();
-            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-            SetLanguage(printStringDictionary);
-        }
-
-        private void ViewLogs_Click(object sender, RoutedEventArgs e)
-        {
-            string appDataRoaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string logsPath = System.IO.Path.Combine(appDataRoaming, "EasySave", "Logs");
-            Process.Start("explorer.exe", logsPath);
-        }
-
-        private void SetLanguage(Dictionary<string, string> printStringDictionary)
+        private void Setlanguage()
         {
             printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-            // Set the language
 
-            // Set the title
-            Title = printStringDictionary["Application_MainWindow_Title"];
+            // Title
+            MainWindow_NavigationBar_EasySaveName_Label.Content = printStringDictionary["Application_MainWindow_Title"];
 
-            // Set the buttons
-            MainWindow_ManageProfile_Button.Content = printStringDictionary["Application_MainWindow_ManageProfile_Button"];
-            MainWindow_ExecuteSave_Button.Content = printStringDictionary["Application_MainWindow_ExecuteSave_Button"];
-            MainWindow_ViewLogs_Button.Content = printStringDictionary["Application_MainWindow_ViewLogs_Button"];
+            // Navigation bar
+            MainWindow_NavigationBar_PagesList_Home.Content = printStringDictionary["Application_MainWindow_NavigationBar_PagesList_Home"];
+            MainWindow_NavigationBar_PagesList_Logs.Content = printStringDictionary["Application_MainWindow_NavigationBar_PagesList_Logs"];
+            MainWindow_NavigationBar_PagesList_Settings.Content = printStringDictionary["Application_MainWindow_NavigationBar_PagesList_Settings"];
 
-            // Set the labels
-            MainWindow_ListOfProfiles_Label.Content = printStringDictionary["Application_MainWindow_ListOfProfiles_Label"];
-            MainWindow_NumberOfprofiles_Label.Content = printStringDictionary["Application_MainWindow_NumberOfprofiles_Label"];
-            MainWindow_State_Label.Content = printStringDictionary["Application_MainWindow_State_Label"];
+            // Home page
 
-            // Set the columns
-            MainWindow_Index_Header.Header = printStringDictionary["Application_MainWindow_Index_Header"];
-            MainWindow_ProfileName_Header.Header = printStringDictionary["Application_MainWindow_ProfileName_Header"];
-            MainWindow_SourceFilePath_Header.Header = printStringDictionary["Application_MainWindow_SourceFilePath_Header"];
-            MainWindow_DestinationFilePath_Header.Header = printStringDictionary["Application_MainWindow_TargetFilePath_Header"];
-            MainWindow_Type_Header.Header = printStringDictionary["Application_MainWindow_TypeOfSave_Header"];
-            MainWindow_State_Header.Header = printStringDictionary["Application_MainWindow_State_Header"];
+            // Existing saves
+            MainWindow_MainContentHeader_ExistingSaves_Label.Content = printStringDictionary["Application_MainWindow_MainContentHeader_ExistingSaves_Label"];
+
+            // Execute all button
+            MainWindow_MainContentHeader_ExecuteAll_Button.Content = printStringDictionary["Application_MainWindow_MainContentHeader_ExecuteAll_Button"];
+
+            // Create button
+            MainWindow_MainContentHeader_CreateSave_Button.Content = printStringDictionary["Application_MainWindow_MainContentHeader_CreateSave_Button"];
         }
     }
 }
