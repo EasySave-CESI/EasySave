@@ -1,0 +1,88 @@
+﻿<Window x:Name="GridMainView" x:Class="EasySaveWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasySaveWPF"
+        mc:Ignorable="d"
+        Title="EasySave" MaxHeight="475" MaxWidth="1400" MinHeight="475" MinWidth="1400"
+        >
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="450"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="800"/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="MainWindow_List_Profil" Margin="400,50,-569,85" RenderTransformOrigin="0.5,0.5">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn x:Name="MainWindow_Index_Header" Header="" Width="50" DisplayMemberBinding="{Binding Index}" />
+                    <GridViewColumn x:Name="MainWindow_ProfileName_Header" Header="" Width="100" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn x:Name="MainWindow_SourceFilePath_Header" Header="" Width="300" DisplayMemberBinding="{Binding SourceFilePath}"/>
+                    <GridViewColumn x:Name="MainWindow_DestinationFilePath_Header" Header="" Width="300" DisplayMemberBinding="{Binding TargetFilePath}"/>
+                    <GridViewColumn x:Name="MainWindow_Type_Header" Header="" Width="100" DisplayMemberBinding="{Binding TypeOfSave}"/>
+                    <GridViewColumn x:Name="MainWindow_State_Header" Header="" Width="100" DisplayMemberBinding="{Binding State}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Label x:Name="MainWindow_NumberOfprofiles_Label" Content="Number of profiles loaded : " HorizontalAlignment="Left" Margin="518,379,0,0" VerticalAlignment="Top" Width="172" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri Light" FontSize="14"/>
+        <Button
+            x:Name="MainWindow_ExecuteSave_Button"
+            Content="Execute save(s)" 
+            HorizontalAlignment="Left" 
+            Margin="80,180,0,0" 
+            VerticalAlignment="Top" 
+            Height="42" Width="243" 
+            Click="ExecuteSave_Click" FontFamily="Calibri" FontSize="14"/>
+
+        <Button 
+            x:Name="MainWindow_ManageProfile_Button" 
+            Content="Manage Profile" 
+            HorizontalAlignment="Left" 
+            Margin="80,118,0,0" 
+            VerticalAlignment="Top" 
+            Height="42" Width="243" 
+            Click="ManageProfile_Click" FontFamily="Calibri" FontSize="14"/>
+
+        <Button 
+            x:Name="MainWindow_ViewLogs_Button"
+            Content="View Logs" 
+            HorizontalAlignment="Left" 
+            Margin="80,244,0,0" 
+            VerticalAlignment="Top" 
+            Height="42" Width="243" 
+            Click="ViewLogs_Click" FontFamily="Calibri" FontSize="14"/>
+
+        <ProgressBar x:Name="MainWindow_ProgressBar" 
+            HorizontalAlignment="Left" 
+            Height="48" Width="347"
+            Margin="28,373,0,0" 
+            VerticalAlignment="Top" 
+            Minimum="0"
+            Maximum="100"
+            />
+
+        <Rectangle HorizontalAlignment="Left" Height="1" Margin="28,348,0,0" Stroke="Black" VerticalAlignment="Top" Width="347"/>
+        <Label x:Name="MainWindow_State_Label" Content="State : " HorizontalAlignment="Left" Margin="28,326,0,0" VerticalAlignment="Top" Width="44" FontFamily="Calibri Light" HorizontalContentAlignment="Right" Padding="5,5,5,1"/>
+        <Label 
+            x:Name="MainWindow_EasySave_Banniere" 
+            HorizontalAlignment="Left" 
+            Margin="28,10,0,0" 
+            VerticalAlignment="Top" 
+            Width="347" Height="76" 
+            BorderThickness="1,1,1,1" OpacityMask="#FFAC6B6B">
+        </Label>
+        <Label x:Name="MainWindow_ListOfProfiles_Label" Content="List of profiles" Margin="403,11,5,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri Light" FontSize="14"/>
+        <Button 
+            Content="⚙️" 
+            x:Name="Option_Button" 
+            Margin="1342,10,-569,0" 
+            VerticalAlignment="Top" 
+            Height="27" 
+            Opacity="0.5" Click="Option_Button_Click"/>
+        <Label x:Name="MainWindow_NumberProfileLoaded_TextBox" Content="X" HorizontalAlignment="Left" Margin="680,380,0,0" VerticalAlignment="Top" Width="30" VerticalContentAlignment="Center" FontFamily="Calibri" FontWeight="Bold" FontSize="14" Height="26" Padding="5,4,5,3"/>
+        <Label x:Name="MainWindow_State_TextBox" Content="Backup #1 in progress..." HorizontalAlignment="Left" Margin="72,326,0,0" VerticalAlignment="Top" Width="298" FontFamily="Calibri" Padding="5,5,5,1"/>
+    </Grid>
+</Window>
