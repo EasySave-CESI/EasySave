@@ -131,7 +131,19 @@ namespace EasySaveWPF
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Creating a new save profile");
+            CreateSaveProfileView _createSaveProfileView = new CreateSaveProfileView(paths, config, saveProfiles);
+            _createSaveProfileView.Show();
+            MainWindow_MainContentHeader_CreateSave_Button.IsEnabled = false;
+            MainWindow_MainContentHeader_CreateSave_Button.Background = Brushes.Black;
+            _createSaveProfileView.Closing += CreateSaveProfileView_Closing;
+
+        }
+
+        private void CreateSaveProfileView_Closing(object? sender, CancelEventArgs e)
+        {
+            MainWindow_MainContentHeader_CreateSave_Button.IsEnabled = true;
+            MainWindow_MainContentHeader_CreateSave_Button.Background = Brushes.LightGray;
+            DisplayProfiles();
         }
 
         private void ExecuteAllButton_Click(object sender, RoutedEventArgs e)

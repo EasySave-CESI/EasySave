@@ -1,0 +1,167 @@
+﻿<Window x:Class="EasySaveWPF.MVVM.Views.CreateSaveProfileView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create Save Profile" Height="300" Width="400">
+    <Grid
+        x:Name="CreateSaveProfileView_MainGrid_Grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid
+            x:Name="CreateSaveProfileView_MainGrid_Grid1"
+            Grid.Row="0"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label
+                x:Name="CreateSaveProfileView_MainGrid1_Name_Label"
+                Grid.Row="0"
+                Grid.Column="0"
+                Content="Name"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                />
+
+            <TextBox
+                x:Name="CreateSaveProfileView_MainGrid1_Name_TextBox"
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Width="200"
+                Text="{Binding Name}"
+                />
+
+            <Label
+                x:Name="CreateSaveProfileView_MainGrid1_Source_Label"
+                Grid.Row="1"
+                Grid.Column="0"
+                Content="Source"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                />
+
+            <TextBox
+                x:Name="CreateSaveProfileView_MainGrid1_Source_TextBox"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Width="200"
+                Text="{Binding Source}"
+                />
+
+            <Button
+                x:Name="CreateSaveProfileView_MainGrid1_Source_Button"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Width="25"
+                Content="..."
+                Command="{Binding SourceCommand}"
+                Margin="207,0,0,0"
+                Click="CreateSaveProfileView_MainGrid1_Source_Button_Click"
+                />
+
+            <Label
+                x:Name="CreateSaveProfileView_MainGrid1_Target_Label"
+                Grid.Row="2"
+                Grid.Column="0"
+                Content="Target"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                />
+
+            <TextBox
+                x:Name="CreateSaveProfileView_MainGrid1_Target_TextBox"
+                Grid.Row="2"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Width="200"
+                Text="{Binding Target}"
+                />
+
+            <Button
+                x:Name="CreateSaveProfileView_MainGrid1_Target_Button"
+                Grid.Row="2"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Width="25"
+                Content="..."
+                Command="{Binding TargetCommand}"
+                Margin="207,0,0,0"
+                Click="CreateSaveProfileView_MainGrid1_Target_Button_Click"
+                />
+
+            <Label
+                x:Name="CreateSaveProfileView_MainGrid1_Type_Label"
+                Grid.Row="3"
+                Grid.Column="0"
+                Content="Type"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                />
+
+            <ComboBox
+                x:Name="CreateSaveProfileView_MainGrid1_Type_ComboBox"
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Width="200"
+                ItemsSource="{Binding TypeList}"
+                SelectedItem="{Binding Type}"
+                />
+        </Grid>
+
+        <Grid
+            x:Name="CreateSaveProfileView_MainGrid_Grid2"
+            Grid.Row="1"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button
+                x:Name="CreateSaveProfileView_MainGrid2_Save_Button"
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="100"
+                Content="Save"
+                Click="CreateSaveProfileView_MainGrid2_Save_Button_Click"
+                />
+
+            <Button
+                x:Name="CreateSaveProfileView_MainGrid2_Cancel_Button"
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="100"
+                Content="Cancel"
+                Click="CreateSaveProfileView_MainGrid2_Cancel_Button_Click"
+                />
+        </Grid>
+    </Grid>
+</Window>

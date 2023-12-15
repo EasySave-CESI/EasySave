@@ -56,7 +56,7 @@
 
                     <!-- Save Source -->
                     <Label
-                        Content="{Binding Source}"
+                        Content="{Binding SourceFilePath}"
                         Grid.Column="2"
                         Grid.Row="0"
                         HorizontalAlignment="Left"
@@ -66,7 +66,7 @@
 
                     <!-- Save Destination -->
                     <Label
-                        Content="{Binding Destination}"
+                        Content="{Binding TargetFilePath}"
                         Grid.Column="3"
                         Grid.Row="0"
                         HorizontalAlignment="Left"

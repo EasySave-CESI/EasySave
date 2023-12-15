@@ -10,16 +10,14 @@ namespace EasySaveWPF.MVVM.Models
         public string Name { get; set; }
         public string SourceFilePath { get; set; }
         public string TargetFilePath { get; set; }
+        public string TypeOfSave { get; set; }
         public string State { get; set; }
         public int TotalFilesToCopy { get; set; }
         public long TotalFilesSize { get; set; }
         public int NbFilesLeftToDo { get; set; }
         public int Progression { get; set; }
-        public string TypeOfSave { get; set; }
-        public bool Encryption { get; set; }
-        public string EncryptionKey { get; set; }
 
-        public SaveProfile(string name, string sourceFilePath, string targetFilePath, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo, int progression, string typeOfSave, bool encryption, string encryptionKey)
+        public SaveProfile(string name, string sourceFilePath, string targetFilePath, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo, int progression, string typeOfSave)
         {
             Name = name;
             SourceFilePath = sourceFilePath;
@@ -30,8 +28,6 @@ namespace EasySaveWPF.MVVM.Models
             NbFilesLeftToDo = nbFilesLeftToDo;
             Progression = progression;
             TypeOfSave = typeOfSave;
-            Encryption = encryption;
-            EncryptionKey = encryptionKey;
         }
 
         public SaveProfile()
@@ -57,6 +53,27 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
+        public static SaveProfile CreateSaveProfile(string Name, string SourceFilePath, string TargetFilePath, string TypeOfSave)
+        {
+            try
+            {
+                // First we calculate the number of files to copy
+                int totalFilesToCopy = Directory.GetFiles(SourceFilePath, "*", SearchOption.AllDirectories).Length;
+
+                // Then we calculate the total size of the files to copy
+                long totalFilesSize = Directory.GetFiles(SourceFilePath, "*", SearchOption.AllDirectories).Sum(t => new FileInfo(t).Length);
+
+                // We create the save profile
+                SaveProfile saveProfile = new SaveProfile(Name, SourceFilePath, TargetFilePath, "READY", totalFilesToCopy, totalFilesSize, totalFilesToCopy, 0, TypeOfSave);
+
+                return saveProfile;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public static void CreateEmptySaveProfiles(string filePath)
         {
             try
@@ -64,7 +81,7 @@ namespace EasySaveWPF.MVVM.Models
                 List<SaveProfile> profiles = new List<SaveProfile>();
                 for (int i = 0; i < 5; i++)
                 {
-                    profiles.Add(new SaveProfile("Save" + (i + 1), "", "", "", 0, 0, 0, 0, "", false, ""));
+                    profiles.Add(new SaveProfile("Save" + (i + 1), "", "", "", 0, 0, 0, 0, ""));
                 }
                 SaveProfiles(filePath, profiles);
             }
@@ -134,6 +151,7 @@ namespace EasySaveWPF.MVVM.Models
                     {
                         if (!File.Exists(targetFilePath) || File.GetLastWriteTime(file) > File.GetLastWriteTime(targetFilePath))
                         {
+                            /*
                             if (saveProfile.Encryption)
                             {
                                 string encryptedText = CallCryptoSoft(File.ReadAllText(file), saveProfile.EncryptionKey);
@@ -143,10 +161,13 @@ namespace EasySaveWPF.MVVM.Models
                             {
                                 File.Copy(file, targetFilePath, true);
                             }
+                            */
+                            File.Copy(file, targetFilePath, true);
                         }
                     }
                     else
                     {
+                        /*
                         if (saveProfile.Encryption)
                         {
                             string encryptedText = CallCryptoSoft(File.ReadAllText(file), saveProfile.EncryptionKey);
@@ -156,6 +177,8 @@ namespace EasySaveWPF.MVVM.Models
                         {
                             File.Copy(file, targetFilePath, true);
                         }
+                        */
+                        File.Copy(file, targetFilePath, true);
                     }
                     TimeSpan elapsedTime = DateTime.Now - startTime;
                     dailyLogsViewModel.CreateLog(paths["EasySaveFileLogsDirectoryPath"], config["logformat"], saveProfile.Name, file, targetFilePath, file.Length, elapsedTime.TotalSeconds);
@@ -185,7 +208,7 @@ namespace EasySaveWPF.MVVM.Models
             // this function calls the CryptoSoft.exe program and returns the encrypted text
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "D:\\école\\CESI\\A3\\EasySave\\CryptoSoft\\CryptoSoft\\bin\\Release\\net8.0\\publish\\CryptoSoft.exe"; // A changer
-            start.Arguments = textToEncrypt + " " + key;
+            start.Arguments = textToEncrypt;
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             using (Process process = Process.Start(start))
