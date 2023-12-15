@@ -155,7 +155,7 @@ namespace EasySaveWPF.Views
 
             newProfile.SourceFilePath = ManageProfileView_Source_Textbox.Text;
             newProfile.TargetFilePath = ManageProfileView_Destination_Textbox.Text;
-            newProfile.TypeOfSave = ManageProfileView_TypeFull_RadioButton.IsChecked == true ? "diff" : "full";
+            newProfile.TypeOfSave = ManageProfileView_TypeFull_RadioButton.IsChecked == true ? "full" : "diff";
 
             List<long> sourcedirectoryinfo = SaveProfile.sourceDirectoryInfos(newProfile.SourceFilePath);
 
