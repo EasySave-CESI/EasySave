@@ -236,17 +236,33 @@
         </ListBox>
 
         <Grid
+            x:Name="MainWindow_Home_Grid"
+            Grid.Column="2"
+            Grid.Row="0"
+            Grid.RowSpan="4">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <Grid
             x:Name="MainWindow_MainContentHeader_Grid"
             Grid.Column="2"
             Grid.Row="0"
             >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <Label
+                <Label
                 x:Name="MainWindow_MainContentHeader_ExistingSaves_Label"
                 Content=""
                 Grid.Column="0"
@@ -255,9 +271,9 @@
                 FontSize="30"
                 FontWeight="Bold"
                 >
-            </Label>
+                </Label>
 
-            <Button
+                <Button
                 x:Name="MainWindow_MainContentHeader_CreateSave_Button"
                 Content="Create Save"
                 Grid.Column="1"
@@ -268,9 +284,9 @@
                 FontSize="20"
                 Click="CreateButton_Click"
                 >
-            </Button>
+                </Button>
 
-            <Button
+                <Button
                 x:Name="MainWindow_MainContentHeader_ExecuteAll_Button"
                 Content="Execute All"
                 Grid.Column="2"
@@ -281,26 +297,191 @@
                 FontSize="20"
                 Click="ExecuteAllButton_Click"
                 >
-            </Button>
+                </Button>
+            </Grid>
+
+            <!-- Grid to Display the existing saves with ScrollViewer -->
+            <ScrollViewer
+            x:Name="MainWindow_Content_ExistingSaves_ScrollViewer"
+            Grid.Column="2"
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
+                <ItemsControl
+                x:Name="MainWindow_Content_ExistingSaves_Grid"
+                ItemsSource="{Binding profiles}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Template="{StaticResource SaveTemplate}" Content="{Binding}" Margin="0,0,10,30" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
 
-        <!-- Grid to Display the existing saves with ScrollViewer -->
-        <ScrollViewer
-            x:Name="MainWindow_Content_ExistingSaves_ScrollViewer"
-    Grid.Column="2"
-    Grid.Row="1"
-    Grid.RowSpan="2"
-    HorizontalScrollBarVisibility="Auto"
-    VerticalScrollBarVisibility="Auto">
-            <ItemsControl
-        x:Name="MainWindow_Content_ExistingSaves_Grid"
-        ItemsSource="{Binding profiles}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ContentControl Template="{StaticResource SaveTemplate}" Content="{Binding}" Margin="0,0,10,30" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <!-- Settings Page -->
+        <Grid
+            x:Name="MainWindow_Settings_Grid"
+            Grid.Column="2"
+            Grid.Row="0"
+            Grid.RowSpan="4"
+            Visibility="Hidden"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid
+                x:Name="MainWindow_Settings_Language_Grid"
+                Grid.Column="0"
+                Grid.Row="0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    x:Name="MainWindow_Settings_Language_Label"
+                    Content="Language"
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    >
+                </Label>
+
+                <ComboBox
+                    x:Name="MainWindow_Settings_Language_ComboBox"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Height="30"
+                    Width="150"
+                    FontSize="20"
+                    >
+                    <ComboBoxItem x:Name="MainWindow_Settings_Language_ComboBox_French"></ComboBoxItem>
+                    <ComboBoxItem x:Name="MainWindow_Settings_Language_ComboBox_English"></ComboBoxItem>
+                </ComboBox>
+            </Grid>
+
+            <Grid
+                x:Name="MainWindow_Settings_LogFormat_Grid"
+                Grid.Column="0"
+                Grid.Row="1"
+                >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    x:Name="MainWindow_Settings_LogFormat_Label"
+                    Content="Log Format"
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    >
+                </Label>
+
+                <ComboBox
+                    x:Name="MainWindow_Settings_LogFormat_ComboBox"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Height="30"
+                    Width="150"
+                    FontSize="20"
+                    >
+                    <ComboBoxItem x:Name="MainWindow_Settings_LogFormat_ComboBox_Simple"></ComboBoxItem>
+                    <ComboBoxItem x:Name="MainWindow_Settings_LogFormat_ComboBox_Complete"></ComboBoxItem>
+                </ComboBox>
+            </Grid>
+
+            <Grid
+                x:Name="MainWindow_Settings_Theme_Grid"
+                Grid.Column="0"
+                Grid.Row="2">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    x:Name="MainWindow_Settings_Theme_Label"
+                    Content="Theme"
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold"
+                    >
+                </Label>
+
+                <ComboBox
+                    x:Name="MainWindow_Settings_Theme_ComboBox"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Height="30"
+                    Width="150"
+                    FontSize="20"
+                    >
+                    <ComboBoxItem x:Name="MainWindow_Settings_Theme_ComboBox_Light"></ComboBoxItem>
+                    <ComboBoxItem x:Name="MainWindow_Settings_Theme_ComboBox_Dark"></ComboBoxItem>
+                </ComboBox>
+            </Grid>
+
+            <Grid
+                x:Name="MainWindow_Settings_Buttons_Grid"
+                Grid.Column="0"
+                Grid.Row="3"
+                >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    x:Name="MainWindow_Settings_Buttons_Save_Button"
+                    Content="Save"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Height="30"
+                    Width="150"
+                    FontSize="20"
+                    Click="MainWindow_Settings_Buttons_Save_Button_Click"
+                    >
+                </Button>
+
+                <Button
+                    x:Name="MainWindow_Settings_Buttons_Reset_Button"
+                    Content="Reset"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Height="30"
+                    Width="150"
+                    FontSize="20"
+                    Click="MainWindow_Settings_Buttons_Reset_Button_Click"
+                    >
+                </Button>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

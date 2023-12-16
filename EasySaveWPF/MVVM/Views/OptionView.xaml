@@ -30,8 +30,6 @@
             Margin="80,37,0,0" 
             VerticalAlignment="Top" 
             Width="103" SelectionChanged="OptionView_LogFormat_ComboBox_SelectionChanged" >
-            <ComboBoxItem Content=".json" IsSelected="True"></ComboBoxItem>
-            <ComboBoxItem Content=".xml"></ComboBoxItem>
         </ComboBox>
 
         <ComboBox x:Name="OptionView_Language_ComboBox"

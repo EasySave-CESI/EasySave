@@ -54,6 +54,9 @@ namespace EasySaveWPF.Views
 
             // Set the language
             SetLanguage(printStringDictionary);
+
+            // Set comboboxes values
+            SetComboBoxes(config);
         }
 
         private void OptionOK_Button_Click(object sender, RoutedEventArgs e)
@@ -111,6 +114,55 @@ namespace EasySaveWPF.Views
             OptionView_Validate_Button.Content = printStringDictionary["Application_OptionView_Validate_Button"];
             OptionView_LogFormat_Label.Content = printStringDictionary["Application_OptionView_LogFormat_Label"];
             OptionView_Language_Label.Content = printStringDictionary["Application_OptionView_Language_Label"];
+        }
+
+        private void SetComboBoxes(Dictionary<string, string> config)
+        {
+            // Create a new list of log formats
+            List<string> logFormats = new List<string>();
+
+            // Add the log formats to the list
+            logFormats.Add(".json");
+            logFormats.Add(".xml");
+
+            // Create a combobox item for each log format
+            foreach (string logFormat in logFormats)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = logFormat;
+
+                // Add the item to the combobox
+                OptionView_LogFormat_ComboBox.Items.Add(item);
+
+                // Set the selected item
+                if (logFormat == config["logformat"])
+                {
+                    OptionView_LogFormat_ComboBox.SelectedItem = item;
+                }
+            }
+
+            // Create a new list of languages
+            List<string> languages = new List<string>();
+
+            // Add the languages to the list
+            languages.Add("English");
+            languages.Add("French");
+
+            // Create a combobox item for each language
+            foreach (string language in languages)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = language;
+
+                // Add the item to the combobox
+                OptionView_Language_ComboBox.Items.Add(item);
+
+                // Set the selected item
+                if (language == config["language"])
+                {
+                    OptionView_Language_ComboBox.SelectedItem = item;
+                }
+            }
         }
     }
 }

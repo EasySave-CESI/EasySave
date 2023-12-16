@@ -37,6 +37,7 @@ namespace EasySaveWPF
         private ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile>();
 
         private bool isSelectionDotPressed = false;
+        private string ActualPage;
 
         public MainWindow()
         {
@@ -62,8 +63,8 @@ namespace EasySaveWPF
             // Set the language
             Setlanguage();
 
-            // Display the profiles
-            DisplayProfiles();
+            // Set the page
+            HandlePageSelection("Home");
         }
 
         private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -95,15 +96,99 @@ namespace EasySaveWPF
             switch (selectedPage)
             {
                 case "Home":
+                    if (ActualPage != "Home")
+                    {
+                        MainWindow_Home_Grid.Visibility = Visibility.Visible;
+                        MainWindow_Settings_Grid.Visibility = Visibility.Hidden;
+                        ActualPage = "Home";
+                        DisplayProfiles();
+                    }
                     break;
                 case "Logs":
                     OpenLogsFolder();
                     break;
                 case "Settings":
+                    if (ActualPage != "Settings")
+                    {
+                        MainWindow_Home_Grid.Visibility = Visibility.Hidden;
+                        MainWindow_Settings_Grid.Visibility = Visibility.Visible;
+                        ActualPage = "Settings";
+                        SetComboBoxes(config);
+                    }
                     break;
                 default:
                     break;
             }
+        }
+
+        private void MainWindow_Settings_Buttons_Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            // First extract the values from the ComboBoxes
+            string language = MainWindow_Settings_Language_ComboBox.Text;
+            string logFormat = MainWindow_Settings_LogFormat_ComboBox.Text;
+
+            // Then check if the values are correct
+            if (language == "" || logFormat == "")
+            {
+                MessageBox.Show("Please select a language and a log format");
+                return;
+            }
+
+            // Change the values to match the config file
+            if (language == "English" || language == "Anglais")
+            {
+                language = "en";
+            }
+            else if (language == "French" || language == "Français")
+            {
+                language = "fr";
+            }
+
+            if (logFormat == ".json")
+            {
+                logFormat = "json";
+            }
+            else if (logFormat == ".xml")
+            {
+                logFormat = "xml";
+            }
+
+            // Then save the values in the config file
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat);
+
+            // Then reload the config file
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+
+            // Then reload the language
+            Setlanguage();
+
+            // Then reload the comboboxes
+            SetComboBoxes(config);
+
+            // Then display a message to the user
+            MessageBox.Show("Configuration saved");
+        }
+
+        private void MainWindow_Settings_Buttons_Reset_Button_Click(object sender, RoutedEventArgs e)
+        {
+            // First we set the default values
+            string language = "en";
+            string logFormat = "json";
+
+            // Then save the values in the config file
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat);
+
+            // Then reload the config file
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+
+            // Then reload the language
+            Setlanguage();
+
+            // Then reload the comboboxes
+            SetComboBoxes(config);
+
+            // Then display a message to the user
+            MessageBox.Show("Configuration reset");
         }
 
         private void OpenLogsFolder()
@@ -224,6 +309,64 @@ namespace EasySaveWPF
 
             // Create button
             MainWindow_MainContentHeader_CreateSave_Button.Content = printStringDictionary["Application_MainWindow_MainContentHeader_CreateSave_Button"];
+        }
+
+        private void SetComboBoxes(Dictionary<string, string> config)
+        {
+            // Create a new list of log formats
+            List<string> logFormats = new List<string>();
+            logFormats.Add(".json");
+            logFormats.Add(".xml");
+
+            // Create a new list of languages
+            List<string> languages = new List<string>();
+            languages.Add("English");
+            languages.Add("French");
+
+            // Clear the comboboxes
+            MainWindow_Settings_LogFormat_ComboBox.Items.Clear();
+            MainWindow_Settings_Language_ComboBox.Items.Clear();
+
+            // Create a combobox item for each log format
+            foreach (string logFormat in logFormats)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = logFormat;
+
+                // Add the item to the combobox
+                MainWindow_Settings_LogFormat_ComboBox.Items.Add(item);
+
+                // Set the selected item
+                if ((logFormat == ".json") && (config["logformat"] == "json"))
+                {
+                    MainWindow_Settings_LogFormat_ComboBox.SelectedItem = item;
+                }
+                else if ((logFormat == ".xml") && (config["logformat"] == "xml"))
+                {
+                    MainWindow_Settings_LogFormat_ComboBox.SelectedItem = item;
+                }
+            }
+
+            // Create a combobox item for each language
+            foreach (string language in languages)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = language;
+
+                // Add the item to the combobox
+                MainWindow_Settings_Language_ComboBox.Items.Add(item);
+
+                // Set the selected item
+                if ((language == "English") && (config["language"] == "en"))
+                {
+                    MainWindow_Settings_Language_ComboBox.SelectedItem = item;
+                }
+                else if ((language == "French") && (config["language"] == "fr"))
+                {
+                    MainWindow_Settings_Language_ComboBox.SelectedItem = item;
+                }
+            }
+
         }
     }
 }
