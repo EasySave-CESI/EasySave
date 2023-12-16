@@ -228,11 +228,11 @@
             Background="{StaticResource NavigationBarColor}"
             Height="auto"
             VerticalAlignment="Stretch"
+            SelectionChanged="MainWindow_NavigationBar_PagesList_SelectionChanged"
             >
-            <ListBoxItem 
-                x:Name="MainWindow_NavigationBar_PagesList_Home"></ListBoxItem>
-            <ListBoxItem x:Name="MainWindow_NavigationBar_PagesList_Logs">Logs</ListBoxItem>
-            <ListBoxItem x:Name="MainWindow_NavigationBar_PagesList_Settings">Settings</ListBoxItem>
+            <ListBoxItem x:Name="MainWindow_NavigationBar_PagesList_Home"></ListBoxItem>
+            <ListBoxItem x:Name="MainWindow_NavigationBar_PagesList_Logs"></ListBoxItem>
+            <ListBoxItem x:Name="MainWindow_NavigationBar_PagesList_Settings"></ListBoxItem>
         </ListBox>
 
         <Grid

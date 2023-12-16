@@ -126,7 +126,7 @@ namespace EasySaveWPF.MVVM.ViewModels
                     // If the state is not ready, display an error message
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // If an error occurs, display an error message
             }

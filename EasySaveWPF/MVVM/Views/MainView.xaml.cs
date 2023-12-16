@@ -66,6 +66,54 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
+        private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox listBox = (ListBox)sender;
+            ListBoxItem selectedListBoxItem = (ListBoxItem)listBox.SelectedItem;
+
+            if (selectedListBoxItem != null)
+            {
+                string selectedPage = selectedListBoxItem.Content.ToString();
+                if (selectedPage == "Accueil")
+                {
+                    selectedPage = "Home";
+                }
+                else if (selectedPage == "Journaux")
+                {
+                    selectedPage = "Logs";
+                }
+                else if (selectedPage == "Paramètres")
+                {
+                    selectedPage = "Settings";
+                }
+                HandlePageSelection(selectedPage);
+            }
+        }
+
+        private void HandlePageSelection(string selectedPage)
+        {
+            switch (selectedPage)
+            {
+                case "Home":
+                    break;
+                case "Logs":
+                    OpenLogsFolder();
+                    break;
+                case "Settings":
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void OpenLogsFolder()
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = "explorer.exe";
+            process.StartInfo.Arguments = paths["EasySaveFileLogsDirectoryPath"];
+            process.Start();
+        }
+
         private void DisplayProfiles() 
         {
             profiles.Clear();
