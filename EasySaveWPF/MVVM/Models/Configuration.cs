@@ -10,6 +10,7 @@ namespace EasySaveWPF.MVVM.Models
         public string ConfigFilePath { get; set; }
         public string Language { get; set; }
         public string LogFormat { get; set; }
+        public string Theme { get; set; }
 
         public Configuration(string path)
         {
@@ -17,27 +18,32 @@ namespace EasySaveWPF.MVVM.Models
 
             Dictionary<string, string> parameters = LoadConfig(path);
 
-            if (parameters != null && parameters.ContainsKey("language") && parameters.ContainsKey("logformat"))
+            if (parameters != null && parameters.ContainsKey("language") && parameters.ContainsKey("logformat") && parameters.ContainsKey("theme"))
             {
                 Language = parameters["language"];
                 LogFormat = parameters["logformat"];
+                Theme = parameters["theme"];
             }
             else
             {
                 Language = "en";
                 LogFormat = "json";
+                Theme = "light";
             }
-        }
-
-        public Configuration()
-        {
         }
 
         public static Dictionary<string, string> LoadConfig(string filePath)
         {
             try
             {
-                if (filePath == null || !File.Exists(filePath)) { CreateConfigFile(filePath); }
+                // Check if the filePath is null
+                if (filePath == null)
+                {
+                    Console.WriteLine("Error: filePath is null");
+                    return new Dictionary<string, string>();
+                }
+
+                if (!File.Exists(filePath)) { CreateConfigFile(filePath); }
 
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filePath);
@@ -53,7 +59,10 @@ namespace EasySaveWPF.MVVM.Models
                     string key = node.Attributes["key"].Value;
                     string value = node.Attributes["value"].Value;
 
-                    if (key == "language" || key == "logformat") { parameters[key] = value; }
+                    if (key == "language" || key == "logformat" || key == "theme")
+                    {
+                        parameters.Add(key, value);
+                    }
                 }
 
                 doc.Save(filePath);
@@ -86,6 +95,7 @@ namespace EasySaveWPF.MVVM.Models
 
                 AddAppSettingNode(doc, configurationNode, "language", "en");
                 AddAppSettingNode(doc, configurationNode, "logformat", "json");
+                AddAppSettingNode(doc, configurationNode, "theme", "light");
 
                 doc.Save(configFilePath);
             }
@@ -110,7 +120,7 @@ namespace EasySaveWPF.MVVM.Models
             appSettingsNode.AppendChild(addNode);
         }
 
-        public static void WriteConfig(string filePath, string language, string logFormat)
+        public static void WriteConfig(string filePath, string newlanguage, string newlogFormat, string newtheme)
         {
             try
             {
@@ -126,10 +136,17 @@ namespace EasySaveWPF.MVVM.Models
                         string key = node.Attributes["key"].Value;
                         string value = node.Attributes["value"].Value;
 
-                        if (key == "language" || key == "logformat")
+                        if (key == "language")
                         {
-                            XmlAttribute attribute = node.Attributes["value"];
-                            if (attribute != null) { attribute.Value = (key == "language") ? language : logFormat; }
+                            node.Attributes["value"].Value = newlanguage;
+                        }
+                        else if (key == "logformat")
+                        {
+                            node.Attributes["value"].Value = newlogFormat;
+                        }
+                        else if (key == "theme")
+                        {
+                            node.Attributes["value"].Value = newtheme;
                         }
                     }
                 }

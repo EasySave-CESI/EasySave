@@ -124,6 +124,30 @@ namespace EasySaveWPF.MVVM.Models
             // Create save profile button
             printStrings_en.Add("Application_MainWindow_MainContentHeader_CreateSave_Button", "Create");
 
+            // Save profiles
+
+            printStrings_en.Add("Application_MainWindow_MainContent_SaveProfileStart_Button", "Start");
+            printStrings_en.Add("Application_MainWindow_MainContent_SaveProfileStop_Button", "Stop");
+            printStrings_en.Add("Application_MainWindow_MainContent_SaveProfileModify_Button", "Modify");
+            printStrings_en.Add("Application_MainWindow_MainContent_SaveProfileDelete_Button", "Delete");
+
+            // Settings page
+
+            printStrings_en.Add("Application_MainWindow_Settings_Language_Label", "Language");
+            printStrings_en.Add("Application_MainWindow_Settings_LogFormat_Label", "Log format");
+            printStrings_en.Add("Application_MainWindow_Settings_Theme_Label", "Theme");
+
+            // Settings options
+            printStrings_en.Add("Application_MainWindow_Settings_Language_French", "French");
+            printStrings_en.Add("Application_MainWindow_Settings_Language_English", "English");
+            printStrings_en.Add("Application_MainWindow_Settings_LogFormat_Json", ".json");
+            printStrings_en.Add("Application_MainWindow_Settings_LogFormat_Xml", ".xml");
+            printStrings_en.Add("Application_MainWindow_Settings_Theme_Light", "Light");
+            printStrings_en.Add("Application_MainWindow_Settings_Theme_Dark", "Dark");
+
+            // Settings Buttons
+            printStrings_en.Add("Application_MainWindow_Settings_Buttons_Save_Button", "Save");
+            printStrings_en.Add("Application_MainWindow_Settings_Buttons_Reset_Button", "Reset");
         }
 
         private void LoadPrintStringsFr()
@@ -223,6 +247,31 @@ namespace EasySaveWPF.MVVM.Models
 
             // Create save profile button
             printStrings_fr.Add("Application_MainWindow_MainContentHeader_CreateSave_Button", "Créer");
+
+            // Save profiles
+
+            printStrings_fr.Add("Application_MainWindow_MainContent_SaveProfileStart_Button", "Démarrer");
+            printStrings_fr.Add("Application_MainWindow_MainContent_SaveProfileStop_Button", "Arrêter");
+            printStrings_fr.Add("Application_MainWindow_MainContent_SaveProfileModify_Button", "Modifier");
+            printStrings_fr.Add("Application_MainWindow_MainContent_SaveProfileDelete_Button", "Supprimer");
+
+            // Settings page
+
+            printStrings_fr.Add("Application_MainWindow_Settings_Language_Label", "Langue");
+            printStrings_fr.Add("Application_MainWindow_Settings_LogFormat_Label", "Format du journal");
+            printStrings_fr.Add("Application_MainWindow_Settings_Theme_Label", "Thème");
+
+            // Settings options
+            printStrings_fr.Add("Application_MainWindow_Settings_Language_French", "Français");
+            printStrings_fr.Add("Application_MainWindow_Settings_Language_English", "Anglais");
+            printStrings_fr.Add("Application_MainWindow_Settings_LogFormat_Json", ".json");
+            printStrings_fr.Add("Application_MainWindow_Settings_LogFormat_Xml", ".xml");
+            printStrings_fr.Add("Application_MainWindow_Settings_Theme_Light", "Clair");
+            printStrings_fr.Add("Application_MainWindow_Settings_Theme_Dark", "Sombre");
+
+            // Settings Buttons
+            printStrings_fr.Add("Application_MainWindow_Settings_Buttons_Save_Button", "Sauvegarder");
+            printStrings_fr.Add("Application_MainWindow_Settings_Buttons_Reset_Button", "Réinitialiser");
         }
     }
 }

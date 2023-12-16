@@ -9,28 +9,41 @@
         MaxHeight="800" MinHeight="800" MaxWidth="1400" MinWidth="1400">
 
     <Window.Resources>
-        <SolidColorBrush x:Key="BackgroundColor" Color="#f0f5f5"/>
-        <SolidColorBrush x:Key="NavigationBarColor" Color="#b3e0ff"/>
-        <SolidColorBrush x:Key="SaveBackgroundColor" Color="#d1e0e0"/>
-        <SolidColorBrush x:Key="ButtonBackgroundColor" Color="#ffffff"/>
+        <!-- Colors -->
+        <SolidColorBrush x:Key="BackgroundColor"/>
+        <SolidColorBrush x:Key="NavigationBarColor"/>
+        <SolidColorBrush x:Key="SaveBackgroundColor"/>
+        <SolidColorBrush x:Key="ButtonBackgroundColor"/>
+        
+        <!-- Light Theme Colors -->
+        <SolidColorBrush x:Key="LightBackgroundColor" Color="#f0f5f5"/>
+        <SolidColorBrush x:Key="LightNavigationBarColor" Color="#b3e0ff"/>
+        <SolidColorBrush x:Key="LightSaveBackgroundColor" Color="#d1e0e0"/>
+        <SolidColorBrush x:Key="LightButtonBackgroundColor" Color="#ffffff"/>
+
+        <!-- Dark Theme Colors -->
+        <SolidColorBrush x:Key="DarkBackgroundColor" Color="#333333"/>
+        <SolidColorBrush x:Key="DarkNavigationBarColor" Color="#666666"/>
+        <SolidColorBrush x:Key="DarkSaveBackgroundColor" Color="#444444"/>
+        <SolidColorBrush x:Key="DarkButtonBackgroundColor" Color="#555555"/>
 
 
         <!-- Define a Style for Save Border -->
-        <Style x:Key="SaveBorderStyle" TargetType="Border">
+        <Style x:Key="MainWindow_Home_SaveBorderStyle" TargetType="Border">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="CornerRadius" Value="15"/>
-            <Setter Property="Background" Value="{StaticResource SaveBackgroundColor}"/>
+            <Setter Property="Background" Value="{DynamicResource SaveBackgroundColor}"/>
         </Style>
 
         <!-- Define a Style for Save Grid -->
-        <Style x:Key="SaveGridStyle" TargetType="Grid">
+        <Style x:Key="MainWindow_Home_SaveGridStyle" TargetType="Grid">
             <Setter Property="Margin" Value="5"/>
         </Style>
 
         <!-- Save Template -->
-        <ControlTemplate x:Key="SaveTemplate" TargetType="Control">
-            <Border Style="{StaticResource SaveBorderStyle}">
-                <Grid Style="{StaticResource SaveGridStyle}">
+        <ControlTemplate x:Key="MainWindow_Home_SaveTemplate" TargetType="Control">
+            <Border Style="{DynamicResource MainWindow_Home_SaveBorderStyle}">
+                <Grid Style="{DynamicResource MainWindow_Home_SaveGridStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
@@ -46,6 +59,7 @@
 
                     <!-- Save Name -->
                     <Label
+                        x:Name="MainWindow_Home_SaveProfileName_Label"
                         Content="{Binding Name}"
                         Grid.Column="1"
                         Grid.Row="0"
@@ -56,6 +70,7 @@
 
                     <!-- Save Source -->
                     <Label
+                        x:Name="MainWindow_Home_SaveProfileSource_Label"
                         Content="{Binding SourceFilePath}"
                         Grid.Column="2"
                         Grid.Row="0"
@@ -64,8 +79,9 @@
                         FontSize="10"
                         />
 
-                    <!-- Save Destination -->
+                    <!-- Save Target -->
                     <Label
+                        x:Name="MainWindow_Home_SaveProfileTarget_Label"
                         Content="{Binding TargetFilePath}"
                         Grid.Column="3"
                         Grid.Row="0"
@@ -76,6 +92,7 @@
 
                     <!-- Save State -->
                     <Label
+                        x:Name="MainWindow_Home_SaveProfileState_Label"
                         Content="{Binding State}"
                         Grid.Column="4"
                         Grid.Row="0"
@@ -86,17 +103,18 @@
 
                     <!-- Save Progress Bar -->
                     <ProgressBar
-                Grid.Column="1"
-                Grid.Row="1"
-                Grid.ColumnSpan="4"
-                Height="18"
-                Margin="5"
-                Background="{StaticResource ButtonBackgroundColor}"
-            />
+                        x:Name="MainWindow_Home_SaveProfileProgressBar_ProgressBar"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="4"
+                        Height="18"
+                        Margin="5"
+                        Background="{DynamicResource ButtonBackgroundColor}"
+                    />
 
                     <!-- Save Modify - Ellipse Dot -->
-                    <Ellipse 
-                        x:Name="SelectionDot"
+                    <Ellipse
+                        x:Name="MainWindow_Home_SaveProfileSelectionDot_Label"
                         Grid.Column="0"
                         Grid.Row="1"
                         Width="20"
@@ -104,32 +122,9 @@
                         Fill="White"
                         MouseDown="SelectionDot_MouseDown"/>
 
-                    <!-- Save Modify -->
-                    <Button
-                        x:Name="ModifyButton"
-                        Content="Modify"
-                        Grid.Column="3"
-                        Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Click="ModifyButton_Click"
-                        />
-
-                    <!-- Save Delete -->
-                    <Button
-                        x:Name="DeleteButton"
-                        Content="Delete"
-                        Grid.Column="4"
-                        Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Click="DeleteButton_Click"
-                        />
-
                     <!-- Save Start -->
                     <Button
-                        x:Name="StartButton"
-                        Content="Start"
+                        x:Name="MainWindow_Home_SaveProfileStart_Button"
                         Grid.Column="1"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
@@ -139,13 +134,32 @@
 
                     <!-- Save Stop -->
                     <Button
-                        x:Name="StopButton"
-                        Content="Stop"
+                        x:Name="MainWindow_Home_SaveProfileStop_Button"
                         Grid.Column="2"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Click="StopButton_Click"
+                        />
+
+                    <!-- Save Modify -->
+                    <Button
+                        x:Name="MainWindow_Home_SaveProfileModify_Button"
+                        Grid.Column="3"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Click="ModifyButton_Click"
+                    />
+
+                    <!-- Save Delete -->
+                    <Button
+                        x:Name="MainWindow_Home_SaveProfileDelete_Button"
+                        Grid.Column="4"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Click="DeleteButton_Click"
                         />
                 </Grid>
             </Border>
@@ -155,7 +169,7 @@
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Background" Value="{StaticResource ButtonBackgroundColor}"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundColor}"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
 
@@ -176,9 +190,9 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="MainWindow_NavigationBar" Width="*" />
-            <ColumnDefinition x:Name="MainWindow_MainContent_Margin_1" Width="75"/>
-            <ColumnDefinition x:Name="MainWindow_MainContent" Width="5*"/>
-            <ColumnDefinition x:Name="MainWindow_MainContent_Margin_2" Width="75"/>
+            <ColumnDefinition x:Name="MainWindow_Home_MainContent_Margin_1" Width="75"/>
+            <ColumnDefinition x:Name="MainWindow_Home_MainContent" Width="5*"/>
+            <ColumnDefinition x:Name="MainWindow_Main_HomeContent_Margin_2" Width="75"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -189,26 +203,27 @@
 
         <!-- Navigation Bar Background -->
         <Rectangle
+            x:Name="MainWindow_NavigationBar_Background"
             Grid.Column="0"
             Grid.Row="0"
             Grid.RowSpan="4"
-            Fill="{StaticResource NavigationBarColor}"
+            Fill="{DynamicResource NavigationBarColor}"
             VerticalAlignment="Stretch"
             />
 
         <!-- Content Background -->
         <Rectangle
+            x:Name="MainWindow_Content_Background"
             Grid.Column="1"
             Grid.Row="0"
             Grid.RowSpan="4"
             Grid.ColumnSpan="5"
-            Fill="{StaticResource BackgroundColor}"
+            Fill="{DynamicResource BackgroundColor}"
             />
 
         <!-- EasySave Label -->
         <Label
             x:Name="MainWindow_NavigationBar_EasySaveName_Label"
-            Content=""
             Grid.Column="0"
             Grid.Row="0"
             Grid.RowSpan="1"
@@ -225,7 +240,7 @@
             Grid.Row="2"
             FontSize="30"
             BorderThickness="0"
-            Background="{StaticResource NavigationBarColor}"
+            Background="{DynamicResource NavigationBarColor}"
             Height="auto"
             VerticalAlignment="Stretch"
             SelectionChanged="MainWindow_NavigationBar_PagesList_SelectionChanged"
@@ -252,7 +267,7 @@
             </Grid.RowDefinitions>
 
             <Grid
-            x:Name="MainWindow_MainContentHeader_Grid"
+            x:Name="MainWindow_Home_Header_Grid"
             Grid.Column="2"
             Grid.Row="0"
             >
@@ -263,8 +278,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label
-                x:Name="MainWindow_MainContentHeader_ExistingSaves_Label"
-                Content=""
+                x:Name="MainWindow_Home_Header_ExistingSaves_Label"
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -274,46 +288,44 @@
                 </Label>
 
                 <Button
-                x:Name="MainWindow_MainContentHeader_CreateSave_Button"
-                Content="Create Save"
+                x:Name="MainWindow_Home_Header_CreateSave_Button"
                 Grid.Column="1"
                 HorizontalAlignment="center"
                 VerticalAlignment="Center"
                 Height="30"
                 Width="150"
                 FontSize="20"
-                Click="CreateButton_Click"
+                Click="MainWindow_Home_Header_CreateSave_Button_Click"
                 >
                 </Button>
 
                 <Button
-                x:Name="MainWindow_MainContentHeader_ExecuteAll_Button"
-                Content="Execute All"
+                x:Name="MainWindow_Home_Header_ExecuteAll_Button"
                 Grid.Column="2"
                 HorizontalAlignment="center"
                 VerticalAlignment="Center"
                 Height="30"
                 Width="150"
                 FontSize="20"
-                Click="ExecuteAllButton_Click"
+                Click="MainWindow_Home_Header_ExecuteAll_Button_Click"
                 >
                 </Button>
             </Grid>
 
             <!-- Grid to Display the existing saves with ScrollViewer -->
             <ScrollViewer
-            x:Name="MainWindow_Content_ExistingSaves_ScrollViewer"
+            x:Name="MainWindow_Home_ExistingSaves_ScrollViewer"
             Grid.Column="2"
             Grid.Row="1"
             Grid.RowSpan="2"
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Auto">
                 <ItemsControl
-                x:Name="MainWindow_Content_ExistingSaves_Grid"
+                x:Name="MainWindow_Home_ExistingSaves_Grid"
                 ItemsSource="{Binding profiles}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ContentControl Template="{StaticResource SaveTemplate}" Content="{Binding}" Margin="0,0,10,30" />
+                            <ContentControl Template="{DynamicResource MainWindow_Home_SaveTemplate}" Content="{Binding}" Margin="0,0,10,30" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -351,7 +363,6 @@
 
                 <Label
                     x:Name="MainWindow_Settings_Language_Label"
-                    Content="Language"
                     Grid.Column="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -387,7 +398,6 @@
 
                 <Label
                     x:Name="MainWindow_Settings_LogFormat_Label"
-                    Content="Log Format"
                     Grid.Column="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -422,7 +432,6 @@
 
                 <Label
                     x:Name="MainWindow_Settings_Theme_Label"
-                    Content="Theme"
                     Grid.Column="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -458,7 +467,6 @@
 
                 <Button
                     x:Name="MainWindow_Settings_Buttons_Save_Button"
-                    Content="Save"
                     Grid.Column="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -471,7 +479,6 @@
 
                 <Button
                     x:Name="MainWindow_Settings_Buttons_Reset_Button"
-                    Content="Reset"
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"

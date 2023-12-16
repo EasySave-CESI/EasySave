@@ -195,7 +195,7 @@ namespace EasySaveWPF.MVVM.ViewModels
             {
                 case "1":
                     config["language"] = "fr";
-                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"]);
+                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"], config["theme"]);
                     printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
                     _consoleView.SetprintStringDictionary(printStringDictionary);
                     fulllanguagename = "Français";
@@ -204,7 +204,7 @@ namespace EasySaveWPF.MVVM.ViewModels
                     break;
                 case "2":
                     config["language"] = "en";
-                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"]);
+                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"], config["theme"]);
                     printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
                     fulllanguagename = "English";
                     _consoleView.Clear();
@@ -225,13 +225,13 @@ namespace EasySaveWPF.MVVM.ViewModels
             {
                 case "1":
                     config["logformat"] = "json";
-                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"]);
+                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"], config["theme"]);
                     _consoleView.Clear();
                     _consoleView.DisplayLogFileFormatSuccess(config["logformat"]);
                     break;
                 case "2":
                     config["logformat"] = "xml";
-                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"]);
+                    Configuration.WriteConfig(paths["ConfigFilePath"], config["language"], config["logformat"], config["theme"]);
                     _consoleView.Clear();
                     _consoleView.DisplayLogFileFormatSuccess(config["logformat"]);
                     break;
