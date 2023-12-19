@@ -220,11 +220,18 @@ namespace EasySaveWPF
 
             MessageBox.Show($"Starting {profileToStart.Name}");
 
-            await Task.Run(() =>
+            // Get the index of the profile to start from the list of profiles
+            foreach (SaveProfile profile in saveProfiles)
             {
-                int index = profiles.IndexOf(profileToStart);
-                _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, index);
-            });
+                if (profile.Name == profileToStart.Name)
+                {
+                    int index = saveProfiles.IndexOf(profile);
+                    await Task.Run(() =>
+                    {
+                        _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, index);
+                    });
+                }
+            }
 
             DisplayProfiles();
         }
