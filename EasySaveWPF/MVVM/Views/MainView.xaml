@@ -125,42 +125,69 @@
                     <!-- Save Start -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileStart_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="1"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Click="StartButton_Click"
-                        />
+                        >
+                        <Button.Foreground>
+                            <SolidColorBrush Color="Black" Opacity="1"/>
+                        </Button.Foreground>
+                        <Button.Background>
+                            <ImageBrush Stretch="Uniform" ImageSource="/MVVM/Views/Start_button.png" TileMode="None"/>
+                        </Button.Background>
+                    </Button>
 
                     <!-- Save Stop -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileStop_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="2"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Click="StopButton_Click"
-                        />
+                        Click="StopButton_Click" 
+                        >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Stop_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
 
                     <!-- Save Modify -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileModify_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="3"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Click="ModifyButton_Click"
-                    />
+                    >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Modify_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
 
                     <!-- Save Delete -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileDelete_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="4"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Click="DeleteButton_Click"
-                        />
+                        >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Delete_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                 </Grid>
             </Border>
         </ControlTemplate>
@@ -342,6 +369,7 @@
             >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -359,6 +387,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Label
@@ -455,12 +484,101 @@
             </Grid>
 
             <Grid
+                x:Name="MainWindow_Settings_Extensions_Grid"
+                Grid.Column="1"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                >
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Button
+                    x:Name="AddExtension_Button"
+                    Content="Add"
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Width="50"
+                    FontSize="20" Height="30"
+                >
+                </Button>
+                <Button
+                    x:Name="DeleteExtension_Button"
+                    Content="Del"
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="50"
+                    FontSize="20" Height="30"
+                    >
+                </Button>
+                <Button
+                    x:Name="UpExtension_Button"
+                    Content="Up"
+                    Grid.Column="2"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="50"
+                    FontSize="20" Height="30"
+                    >
+                </Button>
+                <Button
+                    x:Name="DownExtension_Button"
+                    Content="Down"
+                    Grid.Column="3"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="60"
+                    FontSize="20" Height="30"
+                    >
+                </Button>
+
+                <TextBox 
+                    x:Name="Extension_TextBox"
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="4"
+                    TextWrapping="Wrap"  
+                    VerticalAlignment="Top" 
+                    Width="120"/>
+
+                <ListView 
+                    x:Name="Extension_ListView" 
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="4"
+                    >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Extension" Width="auto" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+
+            <Grid
                 x:Name="MainWindow_Settings_Buttons_Grid"
                 Grid.Column="0"
                 Grid.Row="3"
                 >
-
+            
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
