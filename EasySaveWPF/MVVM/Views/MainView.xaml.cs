@@ -15,6 +15,9 @@ using EasySaveWPF.MVVM.Models;
 using EasySaveWPF.MVVM.ViewModels;
 using System;
 using System.Diagnostics;
+using System.Windows.Threading;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace EasySaveWPF
 {
@@ -27,6 +30,7 @@ namespace EasySaveWPF
         private readonly ConfigurationViewModel _configurationViewModel;
         private readonly LanguageConfigurationViewModel _languageConfigurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
+        private readonly DailyLogsViewModel _dailyLogsViewModel;
 
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
@@ -37,6 +41,7 @@ namespace EasySaveWPF
 
         private bool isSelectionDotPressed = false;
         private string ActualPage;
+        
 
         public MainWindow()
         {
@@ -48,12 +53,14 @@ namespace EasySaveWPF
             _configurationViewModel = new ConfigurationViewModel();
             _languageConfigurationViewModel = new LanguageConfigurationViewModel();
             _saveProfileViewModel = new SaveProfileViewModel();
+            
 
             // Create a new dictionary to store the paths
             paths = _pathViewModel.LoadPaths();
 
             // Create a new dictionary to store the config
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+            _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]); ;
 
             // Create a new language configuration
             Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
@@ -255,11 +262,19 @@ namespace EasySaveWPF
             isSelectionDotPressed = !isSelectionDotPressed;
         }
 
-        private void StartButton_Click(object sender, RoutedEventArgs e)
+        private async void StartButton_Click(object sender, RoutedEventArgs e)
         {
             Button startButton = (Button)sender;
             SaveProfile profileToStart = (SaveProfile)startButton.DataContext;
+
             MessageBox.Show($"Starting {profileToStart.Name}");
+
+            await Task.Run(() =>
+            {
+                _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, profiles.IndexOf(profileToStart));
+            });
+
+            DisplayProfiles();
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -306,13 +321,27 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
-        private void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
+        /*private async void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
         {
-            foreach (SaveProfile profile in profilesToExecute)
+            await Task.WhenAll(profilesToExecute.Select(profile =>
+            _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, profiles.IndexOf(profile))));
+
+            DisplayProfiles();
+        }*/
+
+        private async void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (SaveProfile profile in profiles)
             {
-                MessageBox.Show($"Executing {profile.Name}");
+                await Task.Run(() =>
+                {
+                    _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, profiles.IndexOf(profile));
+                });
             }
+
+            DisplayProfiles();
         }
+
 
         private void Setlanguage()
         {
@@ -455,6 +484,11 @@ namespace EasySaveWPF
                 Resources["SaveBackgroundColor"] = Resources["DarkSaveBackgroundColor"];
                 Resources["ButtonBackgroundColor"] = Resources["DarkButtonBackgroundColor"];
             }
+        }
+
+        private void Transfert_Limit_TextBox_Preview(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }
     }
 }

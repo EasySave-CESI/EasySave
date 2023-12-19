@@ -1,6 +1,7 @@
 using EasySaveWPF.MVVM.Models;
 using EasySaveWPF.MVVM.Views;
 using System.IO;
+using System.Windows;
 
 namespace EasySaveWPF.MVVM.ViewModels
 {
@@ -97,7 +98,7 @@ namespace EasySaveWPF.MVVM.ViewModels
 
         }
 
-        public void ExecuteSaveProfile(DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config, int index)
+        public async Task ExecuteSaveProfile(DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config, int index)
         {
             try
             {
@@ -105,32 +106,30 @@ namespace EasySaveWPF.MVVM.ViewModels
 
                 if (saveProfiles[profileIndex].State == "READY")
                 {
-                    saveProfiles[profileIndex].State = "IN PROGRESS";
-                    SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
+                        saveProfiles[profileIndex].State = "IN PROGRESS";
+                        SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
 
                     if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
-
-                        SaveProfile.ExecuteSaveProfile(saveProfiles, dailyLogsViewModel, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave, paths, config);
-                    }
-                    else
-                    {
-                        // If the type of save is not full or diff, display an error message
+                        await SaveProfile.ExecuteSaveProfile(saveProfiles, dailyLogsViewModel, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave, paths, config);
                     }
 
-                    saveProfiles[profileIndex].State = "COMPLETED";
-                    SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
+                        saveProfiles[profileIndex].State = "READY";
+                        SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
+
+                    MessageBox.Show($"{saveProfiles[profileIndex].Name} has just finished");
                 }
                 else
                 {
-                    // If the state is not ready, display an error message
+                    MessageBox.Show($"{saveProfiles[profileIndex].Name} isn't ready");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // If an error occurs, display an error message
+                MessageBox.Show($"An error occurred: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         public void DeleteSaveProfile(List<SaveProfile> saveProfiles, SaveProfile saveProfile, Dictionary<string, string> paths)
         {
@@ -139,9 +138,9 @@ namespace EasySaveWPF.MVVM.ViewModels
                 saveProfiles.Remove(saveProfile);
                 SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // If an error occurs, display an error message
+                MessageBox.Show($"An error occurred: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

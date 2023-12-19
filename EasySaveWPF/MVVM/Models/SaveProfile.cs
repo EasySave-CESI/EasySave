@@ -121,35 +121,53 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        public static void ExecuteSaveProfile(List<SaveProfile> profiles,DailyLogsViewModel dailyLogsViewModel ,SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
+        public static async Task ExecuteSaveProfile(List<SaveProfile> profiles,DailyLogsViewModel dailyLogsViewModel ,SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
         {
             try
             {
-                if (Directory.Exists(saveProfile.TargetFilePath))
+                await Task.Run(() =>
                 {
-                    Directory.Delete(saveProfile.TargetFilePath, true);
-                }
-
-                Directory.CreateDirectory(saveProfile.TargetFilePath);
-
-                string[] files = Directory.GetFiles(saveProfile.SourceFilePath, "*", SearchOption.AllDirectories);
-
-                foreach (string file in files)
-                {
-                    DateTime startTime = DateTime.Now;
-                    string relativePath = file.Substring(saveProfile.SourceFilePath.Length + 1);
-                    string targetFilePath = Path.Combine(saveProfile.TargetFilePath, relativePath);
-
-                    string targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
-
-                    if (!Directory.Exists(targetDirectoryPath))
+                    if (Directory.Exists(saveProfile.TargetFilePath))
                     {
-                        Directory.CreateDirectory(targetDirectoryPath);
+                        Directory.Delete(saveProfile.TargetFilePath, true);
                     }
 
-                    if (mode == "diff")
+                    Directory.CreateDirectory(saveProfile.TargetFilePath);
+
+                    string[] files = Directory.GetFiles(saveProfile.SourceFilePath, "*", SearchOption.AllDirectories);
+
+                    foreach (string file in files)
                     {
-                        if (!File.Exists(targetFilePath) || File.GetLastWriteTime(file) > File.GetLastWriteTime(targetFilePath))
+                        DateTime startTime = DateTime.Now;
+                        string relativePath = file.Substring(saveProfile.SourceFilePath.Length + 1);
+                        string targetFilePath = Path.Combine(saveProfile.TargetFilePath, relativePath);
+
+                        string targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
+
+                        if (!Directory.Exists(targetDirectoryPath))
+                        {
+                            Directory.CreateDirectory(targetDirectoryPath);
+                        }
+
+                        if (mode == "diff")
+                        {
+                            if (!File.Exists(targetFilePath) || File.GetLastWriteTime(file) > File.GetLastWriteTime(targetFilePath))
+                            {
+                                /*
+                                if (saveProfile.Encryption)
+                                {
+                                    string encryptedText = CallCryptoSoft(File.ReadAllText(file), saveProfile.EncryptionKey);
+                                    File.WriteAllText(targetFilePath, encryptedText);
+                                }
+                                else
+                                {
+                                    File.Copy(file, targetFilePath, true);
+                                }
+                                */
+                                File.Copy(file, targetFilePath, true);
+                            }
+                        }
+                        else
                         {
                             /*
                             if (saveProfile.Encryption)
@@ -164,29 +182,15 @@ namespace EasySaveWPF.MVVM.Models
                             */
                             File.Copy(file, targetFilePath, true);
                         }
-                    }
-                    else
-                    {
-                        /*
-                        if (saveProfile.Encryption)
-                        {
-                            string encryptedText = CallCryptoSoft(File.ReadAllText(file), saveProfile.EncryptionKey);
-                            File.WriteAllText(targetFilePath, encryptedText);
-                        }
-                        else
-                        {
-                            File.Copy(file, targetFilePath, true);
-                        }
-                        */
-                        File.Copy(file, targetFilePath, true);
-                    }
-                    TimeSpan elapsedTime = DateTime.Now - startTime;
-                    dailyLogsViewModel.CreateLog(paths["EasySaveFileLogsDirectoryPath"], config["logformat"], saveProfile.Name, file, targetFilePath, file.Length, elapsedTime.TotalSeconds);
+                        TimeSpan elapsedTime = DateTime.Now - startTime;
+                        dailyLogsViewModel.CreateLog(paths["EasySaveFileLogsDirectoryPath"], config["logformat"], saveProfile.Name, file, targetFilePath, file.Length, elapsedTime.TotalSeconds);
 
-                    saveProfile.NbFilesLeftToDo--;
-                    saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
-                    SaveProfiles(paths["StateFilePath"], profiles);
-                }
+                        saveProfile.NbFilesLeftToDo--;
+                        saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
+                        SaveProfiles(paths["StateFilePath"], profiles);
+                    }
+
+                });
             }
             catch (Exception)
             {
