@@ -125,42 +125,69 @@
                     <!-- Save Start -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileStart_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="1"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Click="StartButton_Click"
-                        />
+                        >
+                        <Button.Foreground>
+                            <SolidColorBrush Color="Black" Opacity="1"/>
+                        </Button.Foreground>
+                        <Button.Background>
+                            <ImageBrush Stretch="Uniform" ImageSource="/MVVM/Views/Start_button.png" TileMode="None"/>
+                        </Button.Background>
+                    </Button>
 
                     <!-- Save Stop -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileStop_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="2"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Click="StopButton_Click"
-                        />
+                        Click="StopButton_Click" 
+                        >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Stop_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
 
                     <!-- Save Modify -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileModify_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="3"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Click="ModifyButton_Click"
-                    />
+                    >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Modify_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
 
                     <!-- Save Delete -->
                     <Button
                         x:Name="MainWindow_Home_SaveProfileDelete_Button"
+                        Height="30"
+                        Width="30"
                         Grid.Column="4"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Click="DeleteButton_Click"
-                        />
+                        >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Delete_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                 </Grid>
             </Border>
         </ControlTemplate>
@@ -459,7 +486,7 @@
                 Grid.Column="0"
                 Grid.Row="3"
                 >
-
+            
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -488,6 +515,18 @@
                     Click="MainWindow_Settings_Buttons_Reset_Button_Click"
                     >
                 </Button>
+                
+                <Button
+                    x:Name="AddExtension_Button"
+                    Content="Add"
+                    
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="150"
+                    FontSize="20" Height="30" Margin="0,0,0,200"
+                    >
+                </Button>
+
             </Grid>
         </Grid>
     </Grid>
