@@ -1,5 +1,4 @@
-﻿using EasySaveWPF.Views;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using System.Windows;
@@ -33,11 +32,18 @@ namespace EasySaveWPF
         private Dictionary<string, string> config;
         private Dictionary<string, string> printStringDictionary;
         private List<SaveProfile> saveProfiles;
+        private List<SaveProfile> profilesToExecute = new List<SaveProfile>();
+        private ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile>();
+
+        private bool isSelectionDotPressed = false;
+        private string ActualPage;
 
         public MainWindow()
         {
+            // Initialize the window
             InitializeComponent();
 
+            // Initialize the view models
             _pathViewModel = new PathViewModel();
             _configurationViewModel = new ConfigurationViewModel();
             _languageConfigurationViewModel = new LanguageConfigurationViewModel();
@@ -56,123 +62,399 @@ namespace EasySaveWPF
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
 
             // Set the language
-            SetLanguage(printStringDictionary);
+            Setlanguage();
 
-            // Display the profiles
-            DisplayProfiles();
+            // Set the theme
+            SetThemeColors();
+
+            // Set the page
+            HandlePageSelection("Home");
         }
 
-        private void DisplayProfiles() 
+        private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Epty the list
-            MainWindow_List_Profil.ItemsSource = null;
-            MainWindow_List_Profil.Items.Clear();
+            ListBox listBox = (ListBox)sender;
+            ListBoxItem selectedListBoxItem = (ListBoxItem)listBox.SelectedItem;
 
+            if (selectedListBoxItem != null)
+            {
+                string selectedPage = selectedListBoxItem.Content.ToString();
+                if (selectedPage == "Accueil")
+                {
+                    selectedPage = "Home";
+                }
+                else if (selectedPage == "Journaux")
+                {
+                    selectedPage = "Logs";
+                }
+                else if (selectedPage == "Paramètres")
+                {
+                    selectedPage = "Settings";
+                }
+                HandlePageSelection(selectedPage);
+            }
+        }
+
+        private void HandlePageSelection(string selectedPage)
+        {
+            switch (selectedPage)
+            {
+                case "Home":
+                    if (ActualPage != "Home")
+                    {
+                        MainWindow_Home_Grid.Visibility = Visibility.Visible;
+                        MainWindow_Settings_Grid.Visibility = Visibility.Hidden;
+                        ActualPage = "Home";
+                        DisplayProfiles();
+                    }
+                    break;
+                case "Logs":
+                    OpenLogsFolder();
+                    break;
+                case "Settings":
+                    if (ActualPage != "Settings")
+                    {
+                        MainWindow_Home_Grid.Visibility = Visibility.Hidden;
+                        MainWindow_Settings_Grid.Visibility = Visibility.Visible;
+                        ActualPage = "Settings";
+                        SetComboBoxes(config);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void MainWindow_Settings_Buttons_Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            // First extract the values from the ComboBoxes
+            string selectedLanguage = MainWindow_Settings_Language_ComboBox.Text;
+            string selectedLogFormat = MainWindow_Settings_LogFormat_ComboBox.Text;
+            string selectedTheme = MainWindow_Settings_Theme_ComboBox.Text;
+
+            string newLanguage = "";
+            string newLogFormat = "";
+            string newTheme = "";
+
+            // Then check if the values are correct
+            if (selectedLanguage == "" || selectedLogFormat == "" || selectedTheme == "")
+            {
+                MessageBox.Show("Please select a value for each field");
+                return;
+            }
+
+            // Change the values to match the config file
+            if (selectedLanguage == "English" || selectedLanguage == "Anglais")
+            {
+                newLanguage = "en";
+            }
+            else if (selectedLanguage == "French" || selectedLanguage == "Français")
+            {
+                newLanguage = "fr";
+            }
+
+            if (selectedLogFormat == ".json")
+            {
+                newLogFormat = "json";
+            }
+            else if (selectedLogFormat == ".xml")
+            {
+                newLogFormat = "xml";
+            }
+
+            if (selectedTheme == "Light" || selectedTheme == "Clair")
+            {
+                newTheme = "light";
+            }
+            else if (selectedTheme == "Dark" || selectedTheme == "Sombre")
+            {
+                newTheme = "dark";
+            }
+
+            // Then save the values in the config file
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme);
+
+            // Then reload the config file
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+
+
+
+            // Then reload the language
+            Setlanguage();
+
+            // Then reload the comboboxes
+            SetComboBoxes(config);
+
+            // Then reload the theme
+            SetThemeColors();
+
+            // Then display a message to the user
+            MessageBox.Show("Configuration saved");
+        }
+
+        private void MainWindow_Settings_Buttons_Reset_Button_Click(object sender, RoutedEventArgs e)
+        {
+            // First we set the default values
+            string language = "en";
+            string logFormat = "json";
+            string theme = "light";
+
+            // Then save the values in the config file
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme);
+
+            // Then reload the config file
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+
+            // Then reload the language
+            Setlanguage();
+
+            // Then reload the comboboxes
+            SetComboBoxes(config);
+
+            // Then reload the theme
+            SetThemeColors();
+
+            // Then display a message to the user
+            MessageBox.Show("Configuration reset");
+        }
+
+        private void OpenLogsFolder()
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = "explorer.exe";
+            process.StartInfo.Arguments = paths["EasySaveFileLogsDirectoryPath"];
+            process.Start();
+        }
+
+        private void DisplayProfiles()
+        {
+            profiles.Clear();
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-            ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile> { };
-
             foreach (SaveProfile profile in saveProfiles)
             {
-                profile.Index = profiles.Count + 1;
                 profiles.Add(profile);
             }
-            // Ajouter les éléments à la liste
-            MainWindow_List_Profil.ItemsSource = profiles;
-
-            MainWindow_NumberProfileLoaded_TextBox.Content = profiles.Count.ToString();
+            MainWindow_Home_ExistingSaves_Grid.ItemsSource = profiles;
         }
 
-        private void ManageProfile_Click(object sender, RoutedEventArgs e)
+        private void SelectionDot_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ManageProfileView manageProfileWindow = new ManageProfileView();
-            manageProfileWindow.Show();
-            MainWindow_ManageProfile_Button.IsEnabled = false;
-            manageProfileWindow.Closing += ManageProfileWindow_Closing;
+            Ellipse selectionDot = (Ellipse)sender;
+
+            if (isSelectionDotPressed)
+            {
+                selectionDot.Fill = Brushes.White;
+                profilesToExecute.Remove((SaveProfile)selectionDot.DataContext);
+            }
+            else
+            {
+                selectionDot.Fill = Brushes.Black;
+                profilesToExecute.Add((SaveProfile)selectionDot.DataContext);
+            }
+
+            isSelectionDotPressed = !isSelectionDotPressed;
         }
 
-        private void ManageProfileWindow_Starting(object? sender, CancelEventArgs e)
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            //
+            Button startButton = (Button)sender;
+            SaveProfile profileToStart = (SaveProfile)startButton.DataContext;
+            MessageBox.Show($"Starting {profileToStart.Name}");
         }
 
-        private void ManageProfileWindow_Closing(object? sender, CancelEventArgs e)
+        private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow_ManageProfile_Button.IsEnabled = true;
+            Button stopButton = (Button)sender;
+            SaveProfile profileToStop = (SaveProfile)stopButton.DataContext;
+            MessageBox.Show($"Stopping {profileToStop.Name}");
+        }
+
+        private void ModifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button modifyButton = (Button)sender;
+            SaveProfile profileToModify = (SaveProfile)modifyButton.DataContext;
+            MessageBox.Show($"Modifying {profileToModify.Name}");
+        }
+
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button deleteButton = (Button)sender;
+            SaveProfile profileToDelete = (SaveProfile)deleteButton.DataContext;
+            MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {profileToDelete.Name} ?", "Delete profile", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                _saveProfileViewModel.DeleteSaveProfile(saveProfiles, profileToDelete, paths);
+                DisplayProfiles();
+            }
+        }
+
+        private void MainWindow_Home_Header_CreateSave_Button_Click(object sender, RoutedEventArgs e)
+        {
+            CreateSaveProfileView _createSaveProfileView = new CreateSaveProfileView(paths, config, saveProfiles);
+            _createSaveProfileView.Show();
+            MainWindow_Home_Header_CreateSave_Button.IsEnabled = false;
+            MainWindow_Home_Header_CreateSave_Button.Background = Brushes.Black;
+            _createSaveProfileView.Closing += CreateSaveProfileView_Closing;
+
+        }
+
+        private void CreateSaveProfileView_Closing(object? sender, CancelEventArgs e)
+        {
+            MainWindow_Home_Header_CreateSave_Button.IsEnabled = true;
+            MainWindow_Home_Header_CreateSave_Button.Background = Brushes.LightGray;
             DisplayProfiles();
         }
 
-        private void ExecuteSave_Click(object sender, RoutedEventArgs e)
+        private void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
         {
-            ExecuteSaveView executeSaveWindow = new ExecuteSaveView();
-            executeSaveWindow.Show();
-            MainWindow_ExecuteSave_Button.IsEnabled = false;
-            executeSaveWindow.Closing += ExecuteSaveWindow_Closing;
+            foreach (SaveProfile profile in profilesToExecute)
+            {
+                MessageBox.Show($"Executing {profile.Name}");
+            }
         }
 
-        private void ExecuteSaveWindow_Starting(object? sender, CancelEventArgs e)
-        {
-            //
-        }
-
-        private void ExecuteSaveWindow_Closing(object? sender, CancelEventArgs e)
-        {
-            MainWindow_ExecuteSave_Button.IsEnabled = true;
-            DisplayProfiles();
-        }
-
-        private void Option_Button_Click(object sender, RoutedEventArgs e)
-        {
-            OptionView optionView = new OptionView();
-            optionView.Show();
-            Option_Button.IsEnabled = false;
-            optionView.Closing += OptionView_Closing;
-        }
-
-        private void OptionView_Starting(object? sender, CancelEventArgs e)
-        {
-            //
-        }
-
-        private void OptionView_Closing(object? sender, CancelEventArgs e)
-        {
-            Option_Button.IsEnabled = true;
-            DisplayProfiles();
-            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-            SetLanguage(printStringDictionary);
-        }
-
-        private void ViewLogs_Click(object sender, RoutedEventArgs e)
-        {
-            string appDataRoaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string logsPath = System.IO.Path.Combine(appDataRoaming, "EasySave", "Logs");
-            Process.Start("explorer.exe", logsPath);
-        }
-
-        private void SetLanguage(Dictionary<string, string> printStringDictionary)
+        private void Setlanguage()
         {
             printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-            // Set the language
 
-            // Set the title
-            Title = printStringDictionary["Application_MainWindow_Title"];
+            // Title
+            MainWindow_NavigationBar_EasySaveName_Label.Content = printStringDictionary["Application_MainWindow_Title"];
 
-            // Set the buttons
-            MainWindow_ManageProfile_Button.Content = printStringDictionary["Application_MainWindow_ManageProfile_Button"];
-            MainWindow_ExecuteSave_Button.Content = printStringDictionary["Application_MainWindow_ExecuteSave_Button"];
-            MainWindow_ViewLogs_Button.Content = printStringDictionary["Application_MainWindow_ViewLogs_Button"];
+            // Navigation bar
+            MainWindow_NavigationBar_PagesList_Home.Content = printStringDictionary["Application_MainWindow_NavigationBar_PagesList_Home"];
+            MainWindow_NavigationBar_PagesList_Logs.Content = printStringDictionary["Application_MainWindow_NavigationBar_PagesList_Logs"];
+            MainWindow_NavigationBar_PagesList_Settings.Content = printStringDictionary["Application_MainWindow_NavigationBar_PagesList_Settings"];
 
-            // Set the labels
-            MainWindow_ListOfProfiles_Label.Content = printStringDictionary["Application_MainWindow_ListOfProfiles_Label"];
-            MainWindow_NumberOfprofiles_Label.Content = printStringDictionary["Application_MainWindow_NumberOfprofiles_Label"];
-            MainWindow_State_Label.Content = printStringDictionary["Application_MainWindow_State_Label"];
+            // Home page
 
-            // Set the columns
-            MainWindow_Index_Header.Header = printStringDictionary["Application_MainWindow_Index_Header"];
-            MainWindow_ProfileName_Header.Header = printStringDictionary["Application_MainWindow_ProfileName_Header"];
-            MainWindow_SourceFilePath_Header.Header = printStringDictionary["Application_MainWindow_SourceFilePath_Header"];
-            MainWindow_DestinationFilePath_Header.Header = printStringDictionary["Application_MainWindow_TargetFilePath_Header"];
-            MainWindow_Type_Header.Header = printStringDictionary["Application_MainWindow_TypeOfSave_Header"];
-            MainWindow_State_Header.Header = printStringDictionary["Application_MainWindow_State_Header"];
+            // Existing saves
+            MainWindow_Home_Header_ExistingSaves_Label.Content = printStringDictionary["Application_MainWindow_MainContentHeader_ExistingSaves_Label"];
+
+            // Execute all button
+            MainWindow_Home_Header_ExecuteAll_Button.Content = printStringDictionary["Application_MainWindow_MainContentHeader_ExecuteAll_Button"];
+
+            // Create button
+            MainWindow_Home_Header_CreateSave_Button.Content = printStringDictionary["Application_MainWindow_MainContentHeader_CreateSave_Button"];
+
+            // Save profiles
+            /*
+            MainWindow_Home_SaveProfileStart_Button.Content = printStringDictionary["Application_MainWindow_MainContent_SaveProfileStart_Button"];
+            MainWindow_Home_SaveProfileStop_Button.Content = printStringDictionary["Application_MainWindow_MainContent_SaveProfileStop_Button"];
+            MainWindow_Home_SaveProfileModify_Button.Content = printStringDictionary["Application_MainWindow_MainContent_SaveProfileModify_Button"];
+            MainWindow_Home_SaveProfileDelete_Button.Content = printStringDictionary["Application_MainWindow_MainContent_SaveProfileDelete_Button"];
+            */
+
+            // Settings page
+            MainWindow_Settings_Language_Label.Content = printStringDictionary["Application_MainWindow_Settings_Language_Label"];
+            MainWindow_Settings_LogFormat_Label.Content = printStringDictionary["Application_MainWindow_Settings_LogFormat_Label"];
+            MainWindow_Settings_Theme_Label.Content = printStringDictionary["Application_MainWindow_Settings_Theme_Label"];
+            MainWindow_Settings_Buttons_Save_Button.Content = printStringDictionary["Application_MainWindow_Settings_Buttons_Save_Button"];
+            MainWindow_Settings_Buttons_Reset_Button.Content = printStringDictionary["Application_MainWindow_Settings_Buttons_Reset_Button"];
+        }
+
+        private void SetComboBoxes(Dictionary<string, string> config)
+        {
+            // Create a new list of log formats
+            List<string> logFormats = new List<string>();
+            logFormats.Add(printStringDictionary["Application_MainWindow_Settings_LogFormat_Json"]);
+            logFormats.Add(printStringDictionary["Application_MainWindow_Settings_LogFormat_Xml"]);
+
+            // Create a new list of languages
+            List<string> languages = new List<string>();
+            languages.Add(printStringDictionary["Application_MainWindow_Settings_Language_English"]);
+            languages.Add(printStringDictionary["Application_MainWindow_Settings_Language_French"]);
+
+            // Create a new list of themes
+            List<string> themes = new List<string>();
+            themes.Add(printStringDictionary["Application_MainWindow_Settings_Theme_Light"]);
+            themes.Add(printStringDictionary["Application_MainWindow_Settings_Theme_Dark"]);
+
+            // Clear the comboboxes
+            MainWindow_Settings_LogFormat_ComboBox.Items.Clear();
+            MainWindow_Settings_Language_ComboBox.Items.Clear();
+            MainWindow_Settings_Theme_ComboBox.Items.Clear();
+
+            // Create a combobox item for each log format
+            foreach (string logFormat in logFormats)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = logFormat;
+
+                // Add the item to the combobox
+                MainWindow_Settings_LogFormat_ComboBox.Items.Add(item);
+
+                // Set the selected item
+                if ((logFormat == ".json") && (config["logformat"] == "json"))
+                {
+                    MainWindow_Settings_LogFormat_ComboBox.SelectedItem = item;
+                }
+                else if ((logFormat == ".xml") && (config["logformat"] == "xml"))
+                {
+                    MainWindow_Settings_LogFormat_ComboBox.SelectedItem = item;
+                }
+            }
+
+            // Create a combobox item for each language
+            foreach (string language in languages)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = language;
+
+                // Add the item to the combobox
+                MainWindow_Settings_Language_ComboBox.Items.Add(item);
+
+                // Set the selected item
+                if ((language == "English") && (config["language"] == "en"))
+                {
+                    MainWindow_Settings_Language_ComboBox.SelectedItem = item;
+                }
+                else if ((language == "French") && (config["language"] == "fr"))
+                {
+                    MainWindow_Settings_Language_ComboBox.SelectedItem = item;
+                }
+            }
+
+            // Create a combobox item for each theme
+            foreach (string theme in themes)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = theme;
+
+                // Add the item to the combobox
+                MainWindow_Settings_Theme_ComboBox.Items.Add(item);
+
+                // Set the selected item
+                if ((theme == "Light") && (config["theme"] == "light"))
+                {
+                    MainWindow_Settings_Theme_ComboBox.SelectedItem = item;
+                }
+                else if ((theme == "Dark") && (config["theme"] == "dark"))
+                {
+                    MainWindow_Settings_Theme_ComboBox.SelectedItem = item;
+                }
+            }
+
+        }
+
+        private void SetThemeColors()
+        {
+            if (config["theme"] == "light")
+            {
+                // Set light theme colors
+                Resources["BackgroundColor"] = Resources["LightBackgroundColor"];
+                Resources["NavigationBarColor"] = Resources["LightNavigationBarColor"];
+                Resources["SaveBackgroundColor"] = Resources["LightSaveBackgroundColor"];
+                Resources["ButtonBackgroundColor"] = Resources["LightButtonBackgroundColor"];
+            }
+            else if (config["theme"] == "dark")
+            {
+                // Set dark theme colors
+                Resources["BackgroundColor"] = Resources["DarkBackgroundColor"];
+                Resources["NavigationBarColor"] = Resources["DarkNavigationBarColor"];
+                Resources["SaveBackgroundColor"] = Resources["DarkSaveBackgroundColor"];
+                Resources["ButtonBackgroundColor"] = Resources["DarkButtonBackgroundColor"];
+            }
         }
     }
 }

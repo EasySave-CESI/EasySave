@@ -126,7 +126,20 @@ namespace EasySaveWPF.MVVM.ViewModels
                     // If the state is not ready, display an error message
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
+            {
+                // If an error occurs, display an error message
+            }
+        }
+
+        public void DeleteSaveProfile(List<SaveProfile> saveProfiles, SaveProfile saveProfile, Dictionary<string, string> paths)
+        {
+            try
+            {
+                saveProfiles.Remove(saveProfile);
+                SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
+            }
+            catch (Exception)
             {
                 // If an error occurs, display an error message
             }
