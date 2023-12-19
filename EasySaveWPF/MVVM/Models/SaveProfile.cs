@@ -121,7 +121,7 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        public static async Task ExecuteSaveProfile(List<SaveProfile> profiles,DailyLogsViewModel dailyLogsViewModel ,SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
+        public static async Task ExecuteSaveProfile(List<SaveProfile> profiles, DailyLogsViewModel dailyLogsViewModel, SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
         {
             try
             {
@@ -153,33 +153,11 @@ namespace EasySaveWPF.MVVM.Models
                         {
                             if (!File.Exists(targetFilePath) || File.GetLastWriteTime(file) > File.GetLastWriteTime(targetFilePath))
                             {
-                                /*
-                                if (saveProfile.Encryption)
-                                {
-                                    string encryptedText = CallCryptoSoft(File.ReadAllText(file), saveProfile.EncryptionKey);
-                                    File.WriteAllText(targetFilePath, encryptedText);
-                                }
-                                else
-                                {
-                                    File.Copy(file, targetFilePath, true);
-                                }
-                                */
                                 File.Copy(file, targetFilePath, true);
                             }
                         }
                         else
                         {
-                            /*
-                            if (saveProfile.Encryption)
-                            {
-                                string encryptedText = CallCryptoSoft(File.ReadAllText(file), saveProfile.EncryptionKey);
-                                File.WriteAllText(targetFilePath, encryptedText);
-                            }
-                            else
-                            {
-                                File.Copy(file, targetFilePath, true);
-                            }
-                            */
                             File.Copy(file, targetFilePath, true);
                         }
                         TimeSpan elapsedTime = DateTime.Now - startTime;
@@ -187,9 +165,8 @@ namespace EasySaveWPF.MVVM.Models
 
                         saveProfile.NbFilesLeftToDo--;
                         saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
-                        SaveProfiles(paths["StateFilePath"], profiles);
+                        SaveProfiles(paths["StateFilePath"], profiles); 
                     }
-
                 });
             }
             catch (Exception)

@@ -114,8 +114,8 @@ namespace EasySaveWPF.MVVM.ViewModels
                         await SaveProfile.ExecuteSaveProfile(saveProfiles, dailyLogsViewModel, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave, paths, config);
                     }
 
-                        saveProfiles[profileIndex].State = "READY";
-                        SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
+                    saveProfiles[profileIndex].State = "READY";
+                    SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
 
                     MessageBox.Show($"{saveProfiles[profileIndex].Name} has just finished");
                 }

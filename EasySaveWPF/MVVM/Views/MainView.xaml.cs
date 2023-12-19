@@ -39,7 +39,9 @@ namespace EasySaveWPF
         private List<SaveProfile> profilesToExecute = new List<SaveProfile>();
         private ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile>();
 
-        private bool isSelectionDotPressed = false;
+        private DispatcherTimer dispatcherTimer;
+
+        private bool isSavingBigFiles = false;
         private string ActualPage;
         
 
@@ -60,22 +62,17 @@ namespace EasySaveWPF
 
             // Create a new dictionary to store the config
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-            _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]); ;
-
-            // Create a new language configuration
+            _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
             Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-
-            // Create a new list to store the save profiles
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-
-            // Set the language
             Setlanguage();
-
-            // Set the theme
             SetThemeColors();
-
-            // Set the page
             HandlePageSelection("Home");
+
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
+            dispatcherTimer.Tick += DispatcherTimer_Tick;
+            dispatcherTimer.Start();
         }
 
         private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -86,18 +83,9 @@ namespace EasySaveWPF
             if (selectedListBoxItem != null)
             {
                 string selectedPage = selectedListBoxItem.Content.ToString();
-                if (selectedPage == "Accueil")
-                {
-                    selectedPage = "Home";
-                }
-                else if (selectedPage == "Journaux")
-                {
-                    selectedPage = "Logs";
-                }
-                else if (selectedPage == "Paramètres")
-                {
-                    selectedPage = "Settings";
-                }
+                if (selectedPage == "Accueil") { selectedPage = "Home"; }
+                else if (selectedPage == "Journaux") { selectedPage = "Logs"; }
+                else if (selectedPage == "Paramètres") { selectedPage = "Settings"; }
                 HandlePageSelection(selectedPage);
             }
         }
@@ -139,44 +127,20 @@ namespace EasySaveWPF
             string selectedLogFormat = MainWindow_Settings_LogFormat_ComboBox.Text;
             string selectedTheme = MainWindow_Settings_Theme_ComboBox.Text;
 
-            string newLanguage = "";
-            string newLogFormat = "";
-            string newTheme = "";
+            string newLanguage = "", newLogFormat = "", newTheme = "";
 
             // Then check if the values are correct
-            if (selectedLanguage == "" || selectedLogFormat == "" || selectedTheme == "")
-            {
-                MessageBox.Show("Please select a value for each field");
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(selectedLanguage) || string.IsNullOrWhiteSpace(selectedLogFormat) || string.IsNullOrWhiteSpace(selectedTheme)) { MessageBox.Show("Please select a value for each field"); return; }
 
             // Change the values to match the config file
-            if (selectedLanguage == "English" || selectedLanguage == "Anglais")
-            {
-                newLanguage = "en";
-            }
-            else if (selectedLanguage == "French" || selectedLanguage == "Français")
-            {
-                newLanguage = "fr";
-            }
+            if (selectedLanguage == "English" || selectedLanguage == "Anglais") { newLanguage = "en"; }
+            else if (selectedLanguage == "French" || selectedLanguage == "Français") { newLanguage = "fr"; }
 
-            if (selectedLogFormat == ".json")
-            {
-                newLogFormat = "json";
-            }
-            else if (selectedLogFormat == ".xml")
-            {
-                newLogFormat = "xml";
-            }
+            if (selectedLogFormat == ".json") { newLogFormat = "json"; }
+            else if (selectedLogFormat == ".xml") { newLogFormat = "xml"; }
 
-            if (selectedTheme == "Light" || selectedTheme == "Clair")
-            {
-                newTheme = "light";
-            }
-            else if (selectedTheme == "Dark" || selectedTheme == "Sombre")
-            {
-                newTheme = "dark";
-            }
+            if (selectedTheme == "Light" || selectedTheme == "Clair") { newTheme = "light"; }
+            else if (selectedTheme == "Dark" || selectedTheme == "Sombre") { newTheme = "dark"; }
 
             // Then save the values in the config file
             _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme);
@@ -237,10 +201,7 @@ namespace EasySaveWPF
         {
             profiles.Clear();
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-            foreach (SaveProfile profile in saveProfiles)
-            {
-                profiles.Add(profile);
-            }
+            foreach (SaveProfile profile in saveProfiles) { profiles.Add(profile); }
             MainWindow_Home_ExistingSaves_Grid.ItemsSource = profiles;
         }
 
@@ -248,18 +209,8 @@ namespace EasySaveWPF
         {
             Ellipse selectionDot = (Ellipse)sender;
 
-            if (isSelectionDotPressed)
-            {
-                selectionDot.Fill = Brushes.White;
-                profilesToExecute.Remove((SaveProfile)selectionDot.DataContext);
-            }
-            else
-            {
-                selectionDot.Fill = Brushes.Black;
-                profilesToExecute.Add((SaveProfile)selectionDot.DataContext);
-            }
-
-            isSelectionDotPressed = !isSelectionDotPressed;
+            if (selectionDot.Fill == Brushes.White) { selectionDot.Fill = Brushes.Black; profilesToExecute.Add((SaveProfile)selectionDot.DataContext); }
+            else { selectionDot.Fill = Brushes.White; profilesToExecute.Remove((SaveProfile)selectionDot.DataContext); }
         }
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)
@@ -271,7 +222,8 @@ namespace EasySaveWPF
 
             await Task.Run(() =>
             {
-                _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, profiles.IndexOf(profileToStart));
+                int index = profiles.IndexOf(profileToStart);
+                _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, index);
             });
 
             DisplayProfiles();
@@ -297,11 +249,7 @@ namespace EasySaveWPF
             Button deleteButton = (Button)sender;
             SaveProfile profileToDelete = (SaveProfile)deleteButton.DataContext;
             MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {profileToDelete.Name} ?", "Delete profile", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
-            {
-                _saveProfileViewModel.DeleteSaveProfile(saveProfiles, profileToDelete, paths);
-                DisplayProfiles();
-            }
+            if (result == MessageBoxResult.Yes) { _saveProfileViewModel.DeleteSaveProfile(saveProfiles, profileToDelete, paths); DisplayProfiles(); }
         }
 
         private void MainWindow_Home_Header_CreateSave_Button_Click(object sender, RoutedEventArgs e)
@@ -321,24 +269,22 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
-        /*private async void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
-        {
-            await Task.WhenAll(profilesToExecute.Select(profile =>
-            _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, profiles.IndexOf(profile))));
-
-            DisplayProfiles();
-        }*/
-
         private async void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
         {
             foreach (SaveProfile profile in profiles)
             {
                 await Task.Run(() =>
                 {
-                    _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, profiles.IndexOf(profile));
+                    int index = profiles.IndexOf(profile);
+                    _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, index);
                 });
             }
 
+            DisplayProfiles();
+        }
+
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        {
             DisplayProfiles();
         }
 

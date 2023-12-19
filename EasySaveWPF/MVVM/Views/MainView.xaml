@@ -106,6 +106,7 @@
                         x:Name="MainWindow_Home_SaveProfileProgressBar_ProgressBar"
                         Grid.Column="1"
                         Grid.Row="1"
+                        Value="{Binding Progression}"
                         Grid.ColumnSpan="4"
                         Height="18"
                         Margin="5"
@@ -552,7 +553,7 @@
                     x:Name="Extension_TextBox"
                     Grid.Column="0"
                     Grid.Row="1"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="3"
                     TextWrapping="Wrap"  
                     VerticalAlignment="Top" 
                     Width="120"/>
@@ -561,7 +562,7 @@
                     x:Name="Extension_ListView" 
                     Grid.Column="0"
                     Grid.Row="0"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="3"
                     >
                     <ListView.View>
                         <GridView>
@@ -575,6 +576,7 @@
                 x:Name="MainWindow_Settings_Buttons_Grid"
                 Grid.Column="0"
                 Grid.Row="3"
+                Grid.ColumnSpan="3"
                 >
             
                 <Grid.ColumnDefinitions>
