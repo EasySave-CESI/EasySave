@@ -104,6 +104,7 @@
                     <!-- Save Progress Bar -->
                     <ProgressBar
                         x:Name="MainWindow_Home_SaveProfileProgressBar_ProgressBar"
+                        Value="{Binding Progression}"
                         Grid.Column="1"
                         Grid.Row="1"
                         Grid.ColumnSpan="4"
@@ -293,11 +294,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Grid
-            x:Name="MainWindow_Home_Header_Grid"
-            Grid.Column="2"
-            Grid.Row="0"
-            >
+            <Grid x:Name="MainWindow_Home_Header_Grid" Grid.Column="2" Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="*"/>
@@ -552,7 +549,7 @@
                     x:Name="Extension_TextBox"
                     Grid.Column="0"
                     Grid.Row="1"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="3"
                     TextWrapping="Wrap"  
                     VerticalAlignment="Top" 
                     Width="120"/>
@@ -561,7 +558,7 @@
                     x:Name="Extension_ListView" 
                     Grid.Column="0"
                     Grid.Row="0"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="3"
                     >
                     <ListView.View>
                         <GridView>
@@ -575,10 +572,10 @@
                 x:Name="MainWindow_Settings_Buttons_Grid"
                 Grid.Column="0"
                 Grid.Row="3"
+                Grid.ColumnSpan="3"
                 >
-            
+
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
