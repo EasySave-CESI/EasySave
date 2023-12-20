@@ -564,6 +564,7 @@
                     HorizontalAlignment="Center"
                     Width="50"
                     FontSize="20" Height="30"
+                    Click="AddExtension_Click"
                 >
                 </Button>
                 <Button
@@ -575,6 +576,7 @@
                     VerticalAlignment="Center"
                     Width="50"
                     FontSize="20" Height="30"
+                    Click="DeleteExtension_Button_Click"
                     >
                 </Button>
                 <Button

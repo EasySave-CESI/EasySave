@@ -451,5 +451,23 @@ namespace EasySaveWPF
         {
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }
+
+        private void AddExtension_Click(object sender, RoutedEventArgs e)
+        {
+            if (Extension_TextBox.Text == "")
+            {
+                MessageBox.Show("Please enter an extension");
+                return;
+            }
+            Extension_ListView.Items.Add(Extension_TextBox.Text);
+            Extension_ListView.Items.Refresh();
+            Extension_TextBox.Clear();
+
+        }
+        private void DeleteExtension_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Extension_ListView.Items.Remove(Extension_ListView.SelectedItem);
+            Extension_ListView.Items.Refresh();
+        }
     }
 }
