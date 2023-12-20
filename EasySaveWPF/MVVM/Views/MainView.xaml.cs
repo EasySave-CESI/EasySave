@@ -21,9 +21,6 @@ using System.Text.RegularExpressions;
 
 namespace EasySaveWPF
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly PathViewModel _pathViewModel;
@@ -295,7 +292,6 @@ namespace EasySaveWPF
             SetThemeColors();
         }
 
-
         private void Setlanguage()
         {
             printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
@@ -390,6 +386,7 @@ namespace EasySaveWPF
                 if ((language == "English") && (config["language"] == "en"))
                 {
                     MainWindow_Settings_Language_ComboBox.SelectedItem = item;
+
                 }
                 else if ((language == "French") && (config["language"] == "fr"))
                 {
