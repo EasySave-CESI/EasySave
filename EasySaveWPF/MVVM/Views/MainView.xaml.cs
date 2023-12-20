@@ -454,66 +454,66 @@ namespace EasySaveWPF
 
         private void AddExtension_Click(object sender, RoutedEventArgs e)
         {
-            if (Extension_TextBox.Text == "")
+            if (MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text == "")
             {
                 MessageBox.Show("Please enter an extension");
                 return;
             }
 
-            if ((!Extension_TextBox.Text.StartsWith(".")) && (!Extension_TextBox.Text.Contains(".")))
+            if ((!MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text.StartsWith(".")) && (!MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text.Contains(".")))
             {
-                Extension_TextBox.Text = "." + Extension_TextBox.Text;
+                MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text = "." + MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text;
             }
-            else if (Extension_TextBox.Text.Contains(".") && (!Extension_TextBox.Text.StartsWith(".")))
+            else if (MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text.Contains(".") && (!MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text.StartsWith(".")))
             {
                 MessageBox.Show("Please enter a valid extension");
                 return;
             }
-            Extension_ListView.Items.Add(Extension_TextBox.Text);
-            Extension_ListView.Items.Refresh();
-            Extension_TextBox.Clear();
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Add(MainWindow_Settings_Extensions_ExtensionsList_TextBox.Text);
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Refresh();
+            MainWindow_Settings_Extensions_ExtensionsList_TextBox.Clear();
 
         }
         private void DeleteExtension_Button_Click(object sender, RoutedEventArgs e)
         {
-            Extension_ListView.Items.Remove(Extension_ListView.SelectedItem);
-            Extension_ListView.Items.Refresh();
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Remove(MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedItem);
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Refresh();
         }
         private void DownExtension_Button_Click(object sender, RoutedEventArgs e)
         { 
-            if (Extension_ListView.SelectedIndex == -1)
+            if (MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex == -1)
             {
                 MessageBox.Show("Please select an extension");
                 return;
             }
-            if (Extension_ListView.SelectedIndex == Extension_ListView.Items.Count - 1)
+            if (MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex == MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Count - 1)
             {
                 return;
             }
-            int index = Extension_ListView.SelectedIndex;
-            string temp = Extension_ListView.Items[index].ToString();
-            Extension_ListView.Items[index] = Extension_ListView.Items[index + 1];
-            Extension_ListView.Items[index + 1] = temp;
-            Extension_ListView.Items.Refresh();
-            Extension_ListView.SelectedIndex = index + 1;
+            int index = MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex;
+            string temp = MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index].ToString();
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index] = MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index + 1];
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index + 1] = temp;
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Refresh();
+            MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex = index + 1;
         }
         private void UpExtension_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Extension_ListView.SelectedIndex == -1)
+            if (MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex == -1)
             {
                 MessageBox.Show("Please select an extension");
                 return;
             }
-            if (Extension_ListView.SelectedIndex == 0)
+            if (MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex == 0)
             {
                 return;
             }
-            int index = Extension_ListView.SelectedIndex;
-            string temp = Extension_ListView.Items[index].ToString();
-            Extension_ListView.Items[index] = Extension_ListView.Items[index - 1];
-            Extension_ListView.Items[index - 1] = temp;
-            Extension_ListView.Items.Refresh();
-            Extension_ListView.SelectedIndex = index - 1;
+            int index = MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex;
+            string temp = MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index].ToString();
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index] = MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index - 1];
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index - 1] = temp;
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Refresh();
+            MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex = index - 1;
         }
     }
 }
