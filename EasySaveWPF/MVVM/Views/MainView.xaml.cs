@@ -469,5 +469,41 @@ namespace EasySaveWPF
             Extension_ListView.Items.Remove(Extension_ListView.SelectedItem);
             Extension_ListView.Items.Refresh();
         }
+        private void DownExtension_Button_Click(object sender, RoutedEventArgs e)
+        { 
+            if (Extension_ListView.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select an extension");
+                return;
+            }
+            if (Extension_ListView.SelectedIndex == Extension_ListView.Items.Count - 1)
+            {
+                return;
+            }
+            int index = Extension_ListView.SelectedIndex;
+            string temp = Extension_ListView.Items[index].ToString();
+            Extension_ListView.Items[index] = Extension_ListView.Items[index + 1];
+            Extension_ListView.Items[index + 1] = temp;
+            Extension_ListView.Items.Refresh();
+            Extension_ListView.SelectedIndex = index + 1;
+        }
+        private void UpExtension_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (Extension_ListView.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select an extension");
+                return;
+            }
+            if (Extension_ListView.SelectedIndex == 0)
+            {
+                return;
+            }
+            int index = Extension_ListView.SelectedIndex;
+            string temp = Extension_ListView.Items[index].ToString();
+            Extension_ListView.Items[index] = Extension_ListView.Items[index - 1];
+            Extension_ListView.Items[index - 1] = temp;
+            Extension_ListView.Items.Refresh();
+            Extension_ListView.SelectedIndex = index - 1;
+        }
     }
 }

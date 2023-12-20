@@ -588,6 +588,7 @@
                     VerticalAlignment="Center"
                     Width="50"
                     FontSize="20" Height="30"
+                    Click="UpExtension_Button_Click"
                     >
                 </Button>
                 <Button
@@ -599,6 +600,7 @@
                     VerticalAlignment="Center"
                     Width="60"
                     FontSize="20" Height="30"
+                    Click="DownExtension_Button_Click"
                     >
                 </Button>
 
