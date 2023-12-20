@@ -459,6 +459,16 @@ namespace EasySaveWPF
                 MessageBox.Show("Please enter an extension");
                 return;
             }
+
+            if ((!Extension_TextBox.Text.StartsWith(".")) && (!Extension_TextBox.Text.Contains(".")))
+            {
+                Extension_TextBox.Text = "." + Extension_TextBox.Text;
+            }
+            else if (Extension_TextBox.Text.Contains(".") && (!Extension_TextBox.Text.StartsWith(".")))
+            {
+                MessageBox.Show("Please enter a valid extension");
+                return;
+            }
             Extension_ListView.Items.Add(Extension_TextBox.Text);
             Extension_ListView.Items.Refresh();
             Extension_TextBox.Clear();
