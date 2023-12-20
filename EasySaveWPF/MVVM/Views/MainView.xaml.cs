@@ -65,8 +65,7 @@ namespace EasySaveWPF
             _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
             Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
             saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-            Setlanguage();
-            SetThemeColors();
+            SetAll(config);
             HandlePageSelection("Home");
 
             dispatcherTimer = new DispatcherTimer();
@@ -112,7 +111,7 @@ namespace EasySaveWPF
                         MainWindow_Home_Grid.Visibility = Visibility.Hidden;
                         MainWindow_Settings_Grid.Visibility = Visibility.Visible;
                         ActualPage = "Settings";
-                        SetComboBoxes(config);
+                        SetAll(config);
                     }
                     break;
                 default:
@@ -126,11 +125,12 @@ namespace EasySaveWPF
             string selectedLanguage = MainWindow_Settings_Language_ComboBox.Text;
             string selectedLogFormat = MainWindow_Settings_LogFormat_ComboBox.Text;
             string selectedTheme = MainWindow_Settings_Theme_ComboBox.Text;
+            string selectedTransfertLimit = MainWindow_Settings_TransfertLimit_TextBox.Text;
 
-            string newLanguage = "", newLogFormat = "", newTheme = "";
+            string newLanguage = "", newLogFormat = "", newTheme = "", newTransfertLimit = "";
 
             // Then check if the values are correct
-            if (string.IsNullOrWhiteSpace(selectedLanguage) || string.IsNullOrWhiteSpace(selectedLogFormat) || string.IsNullOrWhiteSpace(selectedTheme)) { MessageBox.Show("Please select a value for each field"); return; }
+            if (string.IsNullOrWhiteSpace(selectedLanguage) || string.IsNullOrWhiteSpace(selectedLogFormat) || string.IsNullOrWhiteSpace(selectedTheme) || string.IsNullOrWhiteSpace(selectedTransfertLimit)) { MessageBox.Show("Please select a value for each field"); return; }
 
             // Change the values to match the config file
             if (selectedLanguage == "English" || selectedLanguage == "Anglais") { newLanguage = "en"; }
@@ -143,21 +143,12 @@ namespace EasySaveWPF
             else if (selectedTheme == "Dark" || selectedTheme == "Sombre") { newTheme = "dark"; }
 
             // Then save the values in the config file
-            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme);
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme, selectedTransfertLimit);
 
             // Then reload the config file
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
 
-
-
-            // Then reload the language
-            Setlanguage();
-
-            // Then reload the comboboxes
-            SetComboBoxes(config);
-
-            // Then reload the theme
-            SetThemeColors();
+            SetAll(config);
 
             // Then display a message to the user
             MessageBox.Show("Configuration saved");
@@ -169,9 +160,10 @@ namespace EasySaveWPF
             string language = "en";
             string logFormat = "json";
             string theme = "light";
+            string transfertLimit = "1000000";
 
             // Then save the values in the config file
-            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme);
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme, transfertLimit);
 
             // Then reload the config file
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
@@ -295,6 +287,14 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
+        private void SetAll(Dictionary<string, string> config)
+        {
+            Setlanguage();
+            SetComboBoxes(config);
+            SetSettingsDefaultValues();
+            SetThemeColors();
+        }
+
 
         private void Setlanguage()
         {
@@ -337,6 +337,11 @@ namespace EasySaveWPF
 
         private void SetComboBoxes(Dictionary<string, string> config)
         {
+            // Clear the comboboxes
+            MainWindow_Settings_LogFormat_ComboBox.Items.Clear();
+            MainWindow_Settings_Language_ComboBox.Items.Clear();
+            MainWindow_Settings_Theme_ComboBox.Items.Clear();
+
             // Create a new list of log formats
             List<string> logFormats = new List<string>();
             logFormats.Add(printStringDictionary["Application_MainWindow_Settings_LogFormat_Json"]);
@@ -351,11 +356,6 @@ namespace EasySaveWPF
             List<string> themes = new List<string>();
             themes.Add(printStringDictionary["Application_MainWindow_Settings_Theme_Light"]);
             themes.Add(printStringDictionary["Application_MainWindow_Settings_Theme_Dark"]);
-
-            // Clear the comboboxes
-            MainWindow_Settings_LogFormat_ComboBox.Items.Clear();
-            MainWindow_Settings_Language_ComboBox.Items.Clear();
-            MainWindow_Settings_Theme_ComboBox.Items.Clear();
 
             // Create a combobox item for each log format
             foreach (string logFormat in logFormats)
@@ -417,6 +417,11 @@ namespace EasySaveWPF
                 }
             }
 
+        }
+
+        private void SetSettingsDefaultValues()
+        {
+            MainWindow_Settings_TransfertLimit_TextBox.Text = config["maxfilesize"];
         }
 
         private void SetThemeColors()

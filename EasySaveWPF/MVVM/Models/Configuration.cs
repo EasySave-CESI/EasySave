@@ -11,6 +11,7 @@ namespace EasySaveWPF.MVVM.Models
         public string Language { get; set; }
         public string LogFormat { get; set; }
         public string Theme { get; set; }
+        public string MaxFileSize { get; set; }
 
         public Configuration(string path)
         {
@@ -18,17 +19,19 @@ namespace EasySaveWPF.MVVM.Models
 
             Dictionary<string, string> parameters = LoadConfig(path);
 
-            if (parameters != null && parameters.ContainsKey("language") && parameters.ContainsKey("logformat") && parameters.ContainsKey("theme"))
+            if (parameters != null && parameters.ContainsKey("language") && parameters.ContainsKey("logformat") && parameters.ContainsKey("theme") && parameters.ContainsKey("maxfilesize"))
             {
                 Language = parameters["language"];
                 LogFormat = parameters["logformat"];
                 Theme = parameters["theme"];
+                MaxFileSize = parameters["maxfilesize"];
             }
             else
             {
                 Language = "en";
                 LogFormat = "json";
                 Theme = "light";
+                MaxFileSize = "1000000";
             }
         }
 
@@ -59,7 +62,7 @@ namespace EasySaveWPF.MVVM.Models
                     string key = node.Attributes["key"].Value;
                     string value = node.Attributes["value"].Value;
 
-                    if (key == "language" || key == "logformat" || key == "theme")
+                    if (key == "language" || key == "logformat" || key == "theme" || key == "maxfilesize")
                     {
                         parameters.Add(key, value);
                     }
@@ -96,6 +99,7 @@ namespace EasySaveWPF.MVVM.Models
                 AddAppSettingNode(doc, configurationNode, "language", "en");
                 AddAppSettingNode(doc, configurationNode, "logformat", "json");
                 AddAppSettingNode(doc, configurationNode, "theme", "light");
+                AddAppSettingNode(doc, configurationNode, "maxfilesize", "0");
 
                 doc.Save(configFilePath);
             }
@@ -120,7 +124,7 @@ namespace EasySaveWPF.MVVM.Models
             appSettingsNode.AppendChild(addNode);
         }
 
-        public static void WriteConfig(string filePath, string newlanguage, string newlogFormat, string newtheme)
+        public static void WriteConfig(string filePath, string newlanguage, string newlogFormat, string newtheme, string newmaxFileSize)
         {
             try
             {
@@ -147,6 +151,10 @@ namespace EasySaveWPF.MVVM.Models
                         else if (key == "theme")
                         {
                             node.Attributes["value"].Value = newtheme;
+                        }
+                        else if (key == "maxfilesize")
+                        {
+                            node.Attributes["value"].Value = newmaxFileSize;
                         }
                     }
                 }
