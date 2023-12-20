@@ -21,12 +21,6 @@ namespace EasySaveWPF.MVVM.ViewModels
             {
                 Console.WriteLine("The save profiles file doesn't exist. Creating a new one...");
                 SaveProfile.CreateSaveProfilesFile(directoryPath);
-                SaveProfile.CreateEmptySaveProfiles(directoryPath);
-            }
-            else if (new FileInfo(directoryPath).Length == 0) // If the save profiles file is empty, create a new one
-            {
-                Console.WriteLine("The save profiles file is empty. Creation of the empty profiles...");
-                SaveProfile.CreateEmptySaveProfiles(directoryPath);
             }
         }
         public void DisplaySaveProfiles(ConsoleView consoleView, List<SaveProfile> saveProfiles)
@@ -95,7 +89,6 @@ namespace EasySaveWPF.MVVM.ViewModels
             {
                 consoleView.Error(ex.Message);
             }
-
         }
 
         public async Task ExecuteSaveProfile(DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config, int index)

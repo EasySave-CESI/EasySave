@@ -74,23 +74,6 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        public static void CreateEmptySaveProfiles(string filePath)
-        {
-            try
-            {
-                List<SaveProfile> profiles = new List<SaveProfile>();
-                for (int i = 0; i < 5; i++)
-                {
-                    profiles.Add(new SaveProfile("Save" + (i + 1), "", "", "", 0, 0, 0, 0, ""));
-                }
-                SaveProfiles(filePath, profiles);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
         public static string SaveProfiles(string filePath, List<SaveProfile> profiles)
         {
             try

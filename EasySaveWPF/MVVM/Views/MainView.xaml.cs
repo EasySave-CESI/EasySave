@@ -236,9 +236,14 @@ namespace EasySaveWPF
         {
             Button modifyButton = (Button)sender;
             SaveProfile profileToModify = (SaveProfile)modifyButton.DataContext;
-            MessageBox.Show($"Modifying {profileToModify.Name}");
+            ManageSaveProfileView _modifySaveProfileView = new ManageSaveProfileView(paths, config, saveProfiles, "Edit", profileToModify);
+            _modifySaveProfileView.Show();
+            _modifySaveProfileView.Closing += ModifySaveProfileView_Closing;
         }
-
+        private void ModifySaveProfileView_Closing(object? sender, CancelEventArgs e)
+        {
+            DisplayProfiles();
+        }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -250,7 +255,8 @@ namespace EasySaveWPF
 
         private void MainWindow_Home_Header_CreateSave_Button_Click(object sender, RoutedEventArgs e)
         {
-            CreateSaveProfileView _createSaveProfileView = new CreateSaveProfileView(paths, config, saveProfiles);
+            SaveProfile profile = new SaveProfile();
+            ManageSaveProfileView _createSaveProfileView = new ManageSaveProfileView(paths, config, saveProfiles, "Add", profile);
             _createSaveProfileView.Show();
             MainWindow_Home_Header_CreateSave_Button.IsEnabled = false;
             MainWindow_Home_Header_CreateSave_Button.Background = Brushes.Black;
