@@ -14,24 +14,20 @@ namespace EasySaveWPF.MVVM.Models
         private static List<SaveProfile> saveProfiles = new List<SaveProfile>();
         private static Socket clientSocket;
 
-        static void Main()
+        public ServerModel()
         {
             Socket serverSocket = SeConnecter();
             clientSocket = AccepterConnexion(serverSocket);
-
-            // Run a background task to continuously send SaveProfiles
             StartSendingSaveProfiles();
-
             Deconnecter(serverSocket);
         }
 
         private static Socket SeConnecter()
         {
-            Console.OutputEncoding = Encoding.UTF8;
             IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 46154);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(ipep);
-            socket.Listen(3);
+            socket.Listen(10);
             return socket;
         }
 
@@ -47,7 +43,7 @@ namespace EasySaveWPF.MVVM.Models
             Task.Run(() => SendSaveProfiles(saveProfiles));
         }
 
-        private static void SendSaveProfiles(List<SaveProfile> newsaveProfiles)
+        public static void SendSaveProfiles(List<SaveProfile> newsaveProfiles)
         {
             try
             {

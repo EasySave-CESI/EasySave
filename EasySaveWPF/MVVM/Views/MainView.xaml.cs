@@ -298,7 +298,8 @@ namespace EasySaveWPF
             else
             {
                 saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-                _serverModel.SendSaveProfiles(saveProfiles);
+                ServerModel.SendSaveProfiles(saveProfiles);
+
             }
             DisplayProfiles();
         }
