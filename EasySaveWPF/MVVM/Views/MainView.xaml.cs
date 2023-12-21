@@ -69,6 +69,24 @@ namespace EasySaveWPF
             dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
             dispatcherTimer.Tick += DispatcherTimer_Tick;
             dispatcherTimer.Start();
+
+            if (config["extensionpriority"] != "")
+            {
+            string[] extensions = config["extensionpriority"].Split(';');
+                foreach (string extension in extensions)
+                {
+                    MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Add(extension);
+                }
+            }
+            
+            for (int i = 0; i < MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Count; i++)
+            {
+                if (MainWindow_Settings_Extensions_ExtensionList_ListView.Items[i].ToString() == "")
+                {
+                    MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Remove(MainWindow_Settings_Extensions_ExtensionList_ListView.Items[i]);
+                }
+            }
+
         }
 
         private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -167,8 +185,9 @@ namespace EasySaveWPF
             string logFormat = "json";
             string theme = "light";
             string transfertLimit = "1000000";
-            string extensionpriority = "txt,docx,doc,xlsx,xls,jpg,png,mp3,mp7";
+            string extensionpriority = "";
 
+            
             // Then save the values in the config file
             _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme, transfertLimit, extensionpriority);
 
@@ -183,6 +202,9 @@ namespace EasySaveWPF
 
             // Then reload the theme
             SetThemeColors();
+
+            //Refresh the Extensionlistview
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Clear();
 
             // Then display a message to the user
             MessageBox.Show("Configuration reset");

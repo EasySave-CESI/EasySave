@@ -617,12 +617,12 @@
                     Grid.Column="0"
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
-                    Grid.RowSpan="2"
+                    Grid.RowSpan="2" FontSize="15"
                     >
                     <ListView.View>
                         <GridView>
 
-                            <GridViewColumn Header="Extension" Width="125" />
+                            <GridViewColumn Header="Extension" Width="150" />
                         </GridView>
                     </ListView.View>
                 </ListView>
