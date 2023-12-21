@@ -46,7 +46,7 @@ namespace EasySaveWPF
         // Constructor with arguments
         public MainWindow()
         {
-            Mode = "Server";
+            Mode = "Client";
 
             // Initialize the window
             InitializeComponent();
