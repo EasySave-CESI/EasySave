@@ -1,30 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using EasySaveWPF.MVVM.ViewModels;
 using Newtonsoft.Json;
-
 
 namespace EasySaveWPF.MVVM.Models
 {
-    internal class ClientModel // This class will be used to communicate with the server via sockets
+    internal class ClientModel
     {
-        List<SaveProfile> saveProfiles = new List<SaveProfile>();
+        public List<SaveProfile> saveProfiles = new List<SaveProfile>();
+        public List<SaveProfile> newsaveProfiles = new List<SaveProfile>();
+        private readonly Socket clientSocket;
 
         public ClientModel()
         {
-            Socket clientSocket = SeConnecter();
-            EcouterReseau(clientSocket);
-            Deconnecter(clientSocket);
+            clientSocket = SeConnecter();
+
+            // Start a background task to listen for SaveProfiles continuously
+            Task.Run(() => ReceiveSaveProfiles());
         }
 
-        private static Socket SeConnecter()
+        private Socket SeConnecter()
         {
             IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("192.168.1.67"), 46153);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -42,38 +41,54 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        private static void EcouterReseau(Socket client)
+        private void ReceiveSaveProfiles()
         {
             try
             {
-                byte[] data = new byte[1024];
-                int size = client.Receive(data);
-                string json = Encoding.UTF8.GetString(data, 0, size);
+                while (true) // Keep listening continuously
+                {
+                    byte[] data = new byte[1024];
+                    int size = clientSocket.Receive(data);
+                    string json = Encoding.UTF8.GetString(data, 0, size);
 
-                SaveProfile saveProfile = JsonConvert.DeserializeObject<SaveProfile>(json);
+                    SaveProfile saveProfile = JsonConvert.DeserializeObject<SaveProfile>(json);
 
-                MessageBox.Show("Nom : " + saveProfile.Name + "\nSource : " + saveProfile.SourceFilePath + "\nTarget : " + saveProfile.TargetFilePath + "\nType : " + saveProfile.TypeOfSave + "\nState : " + saveProfile.State + "\nTotalFilesToCopy : " + saveProfile.TotalFilesToCopy + "\nTotalFilesSize : " + saveProfile.TotalFilesSize + "\nNbFilesLeftToDo : " + saveProfile.NbFilesLeftToDo + "\nProgression : " + saveProfile.Progression);
+                    // if the SaveProfile name is "RESETLISTTRANSFER", we clear the list
+                    if (saveProfile.Name == "RESETLISTTRANSFER")
+                    {
+                        saveProfiles = newsaveProfiles;
+                    }
+                    else
+                    {
+                        // Add the received SaveProfile to the list
+                        saveProfiles.Add(saveProfile);
+                    }
 
+                    Task.Delay(5000).Wait();
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // 
+                // Handle exceptions or connection closed
+                MessageBox.Show("Erreur lors de la réception des profils : " + ex.Message);
             }
         }
 
-
-        private static void Deconnecter(Socket socket)
+        private void Deconnecter()
         {
             try
             {
-                socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // 
+                MessageBox.Show("Erreur lors de la déconnexion : " + ex.Message);
             }
         }
+
+        // You can expose the saveProfiles list if needed
+        public List<SaveProfile> SaveProfiles => saveProfiles;
 
         private static void Program(string url)
         {

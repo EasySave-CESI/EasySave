@@ -28,6 +28,8 @@ namespace EasySaveWPF
         private readonly LanguageConfigurationViewModel _languageConfigurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
         private readonly DailyLogsViewModel _dailyLogsViewModel;
+        private readonly ServerModel _serverModel;
+        private readonly ClientModel _clientModel;
 
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
@@ -55,11 +57,34 @@ namespace EasySaveWPF
             {
                 case "Server":
                     // Initialize the server
-                    ServerModel server = new ServerModel();
+                    _serverModel = new ServerModel();
                     break;
                 case "Client":
                     // Initialize the client
-                    ClientModel client = new ClientModel();
+                    _clientModel = new ClientModel();
+
+                    // Initialize the view models
+                    _pathViewModel = new PathViewModel();
+                    _configurationViewModel = new ConfigurationViewModel();
+                    _languageConfigurationViewModel = new LanguageConfigurationViewModel();
+
+                    // Create a new dictionary to store the paths
+                    paths = _pathViewModel.LoadPaths();
+
+                    // Create a new dictionary to store the config
+                    config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+                    _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
+                    Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
+                    // Create a new list to store the save profiles
+                    saveProfiles = _clientModel.saveProfiles;
+                    SetAll(config);
+                    HandlePageSelection("Home");
+
+                    dispatcherTimer = new DispatcherTimer();
+                    dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
+                    dispatcherTimer.Tick += DispatcherTimer_Tick;
+                    dispatcherTimer.Start();
                     break;
             }
         }
@@ -182,10 +207,12 @@ namespace EasySaveWPF
         private void DisplayProfiles()
         {
             profiles.Clear();
-            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+            if (Mode == "Client") { saveProfiles = _clientModel.saveProfiles; }
+            else { saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]); }
             foreach (SaveProfile profile in saveProfiles) { profiles.Add(profile); }
             MainWindow_Home_ExistingSaves_Grid.ItemsSource = profiles;
         }
+
 
         private void SelectionDot_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -235,6 +262,11 @@ namespace EasySaveWPF
         }
         private void ModifySaveProfileView_Closing(object? sender, CancelEventArgs e)
         {
+
+            if (Mode == "Client")
+            {
+                saveProfiles = _clientModel.saveProfiles;
+            }
             DisplayProfiles();
         }
 
