@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,13 +10,18 @@ namespace EasySaveWPF.MVVM.Models
 {
     internal class ServerModel
     {
-        static IPEndPoint clientep;
+        private static IPEndPoint clientep;
+        private static List<SaveProfile> saveProfiles = new List<SaveProfile>();
+        private static Socket clientSocket;
 
         static void Main()
         {
             Socket serverSocket = SeConnecter();
-            Socket clientSocket = AccepterConnexion(serverSocket);
-            EcouterReseau(clientSocket);
+            clientSocket = AccepterConnexion(serverSocket);
+
+            // Run a background task to continuously send SaveProfiles
+            StartSendingSaveProfiles();
+
             Deconnecter(serverSocket);
         }
 
@@ -27,7 +31,7 @@ namespace EasySaveWPF.MVVM.Models
             IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 46154);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(ipep);
-            socket.Listen(10);
+            socket.Listen(3);
             return socket;
         }
 
@@ -38,32 +42,48 @@ namespace EasySaveWPF.MVVM.Models
             return client;
         }
 
-        private static void EcouterReseau(Socket client)
+        private static void StartSendingSaveProfiles()
+        {
+            Task.Run(() => SendSaveProfiles(saveProfiles));
+        }
+
+        private static void SendSaveProfiles(List<SaveProfile> newsaveProfiles)
         {
             try
             {
-                // Create a SaveProfile object
-                SaveProfile saveProfile = new SaveProfile("ExampleName", "ExampleSourcePath", "ExampleTargetPath", "ExampleState", 10, 1024, 5, 50, "ExampleType");
+                saveProfiles = newsaveProfiles;
+                while (true)
+                {
+                    foreach (SaveProfile saveProfile in saveProfiles)
+                    {
+                        // Serialize the SaveProfile object to JSON
+                        string json = JsonConvert.SerializeObject(saveProfile);
+                        byte[] data = Encoding.UTF8.GetBytes(json);
 
-                // Serialize the SaveProfile object to JSON
-                string json = JsonConvert.SerializeObject(saveProfile);
-                byte[] data = Encoding.UTF8.GetBytes(json);
+                        // Send the serialized data
+                        clientSocket.Send(data);
+                    }
 
-                // Send the serialized data
-                client.Send(data);
+                    // Add a delay between sending SaveProfiles
+                    System.Threading.Thread.Sleep(5000);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //
             }
         }
 
-
-
         private static void Deconnecter(Socket socket)
         {
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
+        }
+
+        public static void AddSaveProfile(SaveProfile saveProfile)
+        {
+            // Add a SaveProfile to the list
+            saveProfiles.Add(saveProfile);
         }
     }
 }
