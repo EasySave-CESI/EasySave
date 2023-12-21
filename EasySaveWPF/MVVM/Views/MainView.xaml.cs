@@ -40,35 +40,28 @@ namespace EasySaveWPF
 
         private bool isSavingBigFiles = false;
         private string ActualPage;
-        
 
+        private string Mode;
+        
+        // Constructor with arguments
         public MainWindow()
         {
+            Mode = "Server";
+
             // Initialize the window
             InitializeComponent();
 
-            // Initialize the view models
-            _pathViewModel = new PathViewModel();
-            _configurationViewModel = new ConfigurationViewModel();
-            _languageConfigurationViewModel = new LanguageConfigurationViewModel();
-            _saveProfileViewModel = new SaveProfileViewModel();
-            
-
-            // Create a new dictionary to store the paths
-            paths = _pathViewModel.LoadPaths();
-
-            // Create a new dictionary to store the config
-            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-            _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
-            Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-            SetAll(config);
-            HandlePageSelection("Home");
-
-            dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
-            dispatcherTimer.Tick += DispatcherTimer_Tick;
-            dispatcherTimer.Start();
+            switch (Mode)
+            {
+                case "Server":
+                    // Initialize the server
+                    ServerModel server = new ServerModel();
+                    break;
+                case "Client":
+                    // Initialize the client
+                    ClientModel client = new ClientModel();
+                    break;
+            }
         }
 
         private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
