@@ -43,7 +43,7 @@ namespace EasySaveWPF
 
         private bool isSavingBigFiles = false;
         private string ActualPage;
-        
+
 
         public MainWindow()
         {
@@ -55,7 +55,7 @@ namespace EasySaveWPF
             _configurationViewModel = new ConfigurationViewModel();
             _languageConfigurationViewModel = new LanguageConfigurationViewModel();
             _saveProfileViewModel = new SaveProfileViewModel();
-            
+
 
             // Create a new dictionary to store the paths
             paths = _pathViewModel.LoadPaths();
@@ -276,25 +276,35 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
-        private async void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
+        private void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
         {
+            List<Thread> threads = new List<Thread>();
+
             foreach (SaveProfile profile in profiles)
             {
-                await Task.Run(() =>
+                Thread thread = new Thread(() =>
                 {
                     int index = profiles.IndexOf(profile);
                     _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, index);
                 });
+
+                threads.Add(thread);
+                thread.Start();
+            }
+
+            foreach (Thread thread in threads)
+            {
+                thread.Join();
             }
 
             DisplayProfiles();
         }
 
+
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             DisplayProfiles();
         }
-
 
         private void Setlanguage()
         {

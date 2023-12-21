@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Windows;
 
 namespace EasySaveWPF.MVVM.Models
 {
@@ -121,12 +123,15 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        public static async Task ExecuteSaveProfile(List<SaveProfile> profiles, DailyLogsViewModel dailyLogsViewModel, SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
+        public static void ExecuteSaveProfile(List<SaveProfile> profiles, DailyLogsViewModel dailyLogsViewModel, SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
         {
-            try
+            Thread thread = new Thread(() =>
             {
-                await Task.Run(() =>
+                try
                 {
+                    saveProfile.State = "IN PROGRESS";
+                    SaveProfiles(paths["StateFilePath"], profiles);
+
                     if (Directory.Exists(saveProfile.TargetFilePath))
                     {
                         Directory.Delete(saveProfile.TargetFilePath, true);
@@ -165,15 +170,22 @@ namespace EasySaveWPF.MVVM.Models
 
                         saveProfile.NbFilesLeftToDo--;
                         saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
-                        SaveProfiles(paths["StateFilePath"], profiles); 
+                        SaveProfiles(paths["StateFilePath"], profiles);
                     }
-                });
-            }
-            catch (Exception)
-            {
-                saveProfile.State = "ERROR";
-                SaveProfiles(paths["StateFilePath"], profiles);
-            }
+                }
+                catch (Exception)
+                {
+                    saveProfile.State = "ERROR";
+                    SaveProfiles(paths["StateFilePath"], profiles);
+                }
+                finally
+                {
+                    saveProfile.State = "READY";
+                    SaveProfiles(paths["StateFilePath"], profiles);
+                    MessageBox.Show($"{saveProfile.Name} has just finished");
+                }
+            });
+            thread.Start();
         }
 
         public static List<long> sourceDirectoryInfos(string sourceDirectory)
