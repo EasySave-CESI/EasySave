@@ -621,14 +621,7 @@
                     >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="75" Header="Encrypt">
-                                
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
+
                             <GridViewColumn Header="Extension" Width="125" />
                         </GridView>
                     </ListView.View>

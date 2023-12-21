@@ -123,6 +123,15 @@ namespace EasySaveWPF
             string selectedLogFormat = MainWindow_Settings_LogFormat_ComboBox.Text;
             string selectedTheme = MainWindow_Settings_Theme_ComboBox.Text;
             string selectedTransfertLimit = MainWindow_Settings_TransfertLimit_TextBox.Text;
+            //Recup the extensions of the listview
+            string selectedExtensionsPriority = "";
+            foreach (string extension in MainWindow_Settings_Extensions_ExtensionList_ListView.Items)
+            {
+                selectedExtensionsPriority += extension + ";";
+                MessageBox.Show(selectedExtensionsPriority);
+            }
+
+
 
             string newLanguage = "", newLogFormat = "", newTheme = "", newTransfertLimit = "";
 
@@ -140,7 +149,7 @@ namespace EasySaveWPF
             else if (selectedTheme == "Dark" || selectedTheme == "Sombre") { newTheme = "dark"; }
 
             // Then save the values in the config file
-            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme, selectedTransfertLimit);
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme, selectedTransfertLimit,selectedExtensionsPriority);
 
             // Then reload the config file
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
@@ -158,9 +167,10 @@ namespace EasySaveWPF
             string logFormat = "json";
             string theme = "light";
             string transfertLimit = "1000000";
+            string extensionpriority = "txt,docx,doc,xlsx,xls,jpg,png,mp3,mp7";
 
             // Then save the values in the config file
-            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme, transfertLimit);
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme, transfertLimit, extensionpriority);
 
             // Then reload the config file
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
