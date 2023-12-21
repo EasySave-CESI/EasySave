@@ -146,7 +146,6 @@ namespace EasySaveWPF
             foreach (string extension in MainWindow_Settings_Extensions_ExtensionList_ListView.Items)
             {
                 selectedExtensionsPriority += extension + ";";
-                MessageBox.Show(selectedExtensionsPriority);
             }
 
 
