@@ -131,7 +131,7 @@ namespace EasySaveWPF.MVVM.Views
         private void AddSaveProfile(string type)
         {
             SaveProfile profile = SaveProfile.CreateSaveProfile(ManageSaveProfileView_MainGrid1_Name_TextBox.Text, ManageSaveProfileView_MainGrid1_Source_TextBox.Text, ManageSaveProfileView_MainGrid1_Target_TextBox.Text, type);
-            saveProfiles.Add(profiletoedit);
+            saveProfiles.Add(profile);
             SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
         }
 

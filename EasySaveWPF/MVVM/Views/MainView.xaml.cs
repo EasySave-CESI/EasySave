@@ -69,6 +69,24 @@ namespace EasySaveWPF
             dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
             dispatcherTimer.Tick += DispatcherTimer_Tick;
             dispatcherTimer.Start();
+
+            if (config["extensionpriority"] != "")
+            {
+            string[] extensions = config["extensionpriority"].Split(';');
+                foreach (string extension in extensions)
+                {
+                    MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Add(extension);
+                }
+            }
+            
+            for (int i = 0; i < MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Count; i++)
+            {
+                if (MainWindow_Settings_Extensions_ExtensionList_ListView.Items[i].ToString() == "")
+                {
+                    MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Remove(MainWindow_Settings_Extensions_ExtensionList_ListView.Items[i]);
+                }
+            }
+
         }
 
         private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -123,6 +141,14 @@ namespace EasySaveWPF
             string selectedLogFormat = MainWindow_Settings_LogFormat_ComboBox.Text;
             string selectedTheme = MainWindow_Settings_Theme_ComboBox.Text;
             string selectedTransfertLimit = MainWindow_Settings_TransfertLimit_TextBox.Text;
+            //Recup the extensions of the listview
+            string selectedExtensionsPriority = "";
+            foreach (string extension in MainWindow_Settings_Extensions_ExtensionList_ListView.Items)
+            {
+                selectedExtensionsPriority += extension + ";";
+            }
+
+
 
             string newLanguage = "", newLogFormat = "", newTheme = "", newTransfertLimit = "";
 
@@ -140,7 +166,7 @@ namespace EasySaveWPF
             else if (selectedTheme == "Dark" || selectedTheme == "Sombre") { newTheme = "dark"; }
 
             // Then save the values in the config file
-            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme, selectedTransfertLimit);
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], newLanguage, newLogFormat, newTheme, selectedTransfertLimit,selectedExtensionsPriority);
 
             // Then reload the config file
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
@@ -158,9 +184,11 @@ namespace EasySaveWPF
             string logFormat = "json";
             string theme = "light";
             string transfertLimit = "1000000";
+            string extensionpriority = "";
 
+            
             // Then save the values in the config file
-            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme, transfertLimit);
+            _configurationViewModel.SaveConfig(paths["ConfigFilePath"], language, logFormat, theme, transfertLimit, extensionpriority);
 
             // Then reload the config file
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
@@ -173,6 +201,9 @@ namespace EasySaveWPF
 
             // Then reload the theme
             SetThemeColors();
+
+            //Refresh the Extensionlistview
+            MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Clear();
 
             // Then display a message to the user
             MessageBox.Show("Configuration reset");
@@ -223,6 +254,28 @@ namespace EasySaveWPF
             }
 
             DisplayProfiles();
+        }
+
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            /*foreach (SaveProfile profile in profilesToExecute)
+            {
+                if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
+                {
+                    SaveProfile.PauseResumeEvents[profile.Name].Reset();
+                }
+            }*/
+        }
+
+        private void ResumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            /*foreach (SaveProfile profile in profilesToExecute)
+            {
+                if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
+                {
+                    SaveProfile.PauseResumeEvents[profile.Name].Set();
+                }
+            }*/
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -496,6 +549,7 @@ namespace EasySaveWPF
             MainWindow_Settings_Extensions_ExtensionList_ListView.Items[index + 1] = temp;
             MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Refresh();
             MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex = index + 1;
+
         }
         private void UpExtension_Button_Click(object sender, RoutedEventArgs e)
         {

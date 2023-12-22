@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySaveWPF"
         mc:Ignorable="d"
-        Title="MainWindow"
-        MaxHeight="800" MinHeight="800" MaxWidth="1400" MinWidth="1400">
+        Title="EasySave"
+        MaxHeight="800" MinHeight="800" MaxWidth="1400" MinWidth="1400" Icon="/MVVM/Views/EasysaveICON.png"
+        >
 
     <Window.Resources>
         <!-- Colors -->
@@ -46,6 +47,7 @@
                 <Grid Style="{DynamicResource MainWindow_Home_SaveGridStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="4*"/>
@@ -142,19 +144,36 @@
                         </Button.Background>
                     </Button>
 
-                    <!-- Save Stop -->
+                    <!-- Save Pause -->
                     <Button
-                        x:Name="MainWindow_Home_SaveProfileStop_Button"
+                        x:Name="MainWindow_Home_SaveProfilePause_Button"
                         Height="30"
                         Width="30"
                         Grid.Column="2"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Click="StopButton_Click" 
+                        Click="PauseButton_Click"
+ 
                         >
                         <Button.Background>
                             <ImageBrush ImageSource="/MVVM/Views/Stop_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                    
+                    <!-- Save Resume -->
+                    <Button
+                        x:Name="MainWindow_Home_SaveProfileResume_Button"
+                        Height="30"
+                        Width="30"
+                        Grid.Column="3"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Click="ResumeButton_Click"
+                        >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Delete_button.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
 
@@ -163,7 +182,7 @@
                         x:Name="MainWindow_Home_SaveProfileModify_Button"
                         Height="30"
                         Width="30"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -179,7 +198,7 @@
                         x:Name="MainWindow_Home_SaveProfileDelete_Button"
                         Height="30"
                         Width="30"
-                        Grid.Column="4"
+                        Grid.Column="5"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -534,6 +553,51 @@
                     />
             </Grid>
 
+            <Grid
+                x:Name="MainWindow_Settings_BusinessSoftware_Grid"
+                Grid.Column="1"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                >
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    x:Name="MainWindow_Settings_BusinessSoftware_Label"
+                    Content="Business software :"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="30"
+                    FontWeight="Bold">
+                </Label>
+
+                <TextBox 
+                    x:Name="MainWindow_Settings_BusinessSoftware_TextBox"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    TextWrapping="Wrap"
+                    Height="25"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Width="100" Margin="-60,0,0,-5"
+                    />
+                
+
+
+
+            </Grid>
+
+
 
             <Grid
                 x:Name="MainWindow_Settings_Extensions_Grid"
@@ -559,8 +623,8 @@
                 <Button
                     x:Name="MainWindow_Settings_Extensions_Add_Button"
                     Content="Add"
-                    Grid.Column="0"
-                    Grid.Row="2"
+                    Grid.Column="2"
+                    Grid.Row="1"
                     HorizontalAlignment="Center"
                     Width="50"
                     FontSize="20" Height="30"
@@ -570,10 +634,8 @@
                 <Button
                     x:Name="MainWindow_Settings_Extensions_Delete_Button"
                     Content="Del"
-                    Grid.Column="1"
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
+                    Grid.Column="3"
+                    Grid.Row="1"
                     Width="50"
                     FontSize="20" Height="30"
                     Click="DeleteExtension_Button_Click"
@@ -606,22 +668,26 @@
 
                 <TextBox 
                     x:Name="MainWindow_Settings_Extensions_ExtensionsList_TextBox"
-                    Grid.Column="0"
+                    Grid.Column="2"
                     Grid.Row="1"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="2"
                     TextWrapping="Wrap"  
                     VerticalAlignment="Top" 
-                    Width="120"/>
+                    Margin="0,-10,0,0"
+                    Width="120"
+                    Height="20"/>
 
                 <ListView 
                     x:Name="MainWindow_Settings_Extensions_ExtensionList_ListView" 
                     Grid.Column="0"
-                    Grid.Row="0"
-                    Grid.ColumnSpan="3"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Grid.RowSpan="2" FontSize="15"
+                    Width="200"
                     >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Extension" Width="auto" />
+                            <GridViewColumn Header="Extension priority" Width="190" />
                         </GridView>
                     </ListView.View>
                 </ListView>

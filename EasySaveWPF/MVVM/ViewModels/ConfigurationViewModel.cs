@@ -15,9 +15,9 @@ namespace EasySaveWPF.MVVM.ViewModels
             return Configuration.LoadConfig(filePath);
         }
 
-        public void SaveConfig(string filePath, string language, string logFormat, string theme, string maxFileSize)
+        public void SaveConfig(string filePath, string language, string logFormat, string theme, string maxFileSize,string extensionpriority)
         {
-            Configuration.WriteConfig(filePath, language, logFormat, theme, maxFileSize);
+            Configuration.WriteConfig(filePath, language, logFormat, theme, maxFileSize, extensionpriority);
         }
     }
 }
