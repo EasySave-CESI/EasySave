@@ -34,7 +34,7 @@ namespace EasySaveWPF
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
         private Dictionary<string, string> printStringDictionary;
-        private List<SaveProfile> saveProfiles;
+        private List<SaveProfile> saveProfiles = new List<SaveProfile>();
         private List<SaveProfile> profilesToExecute = new List<SaveProfile>();
         private ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile>();
 
@@ -347,6 +347,8 @@ namespace EasySaveWPF
 
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
+            if (Mode == "Client") { saveProfiles = _clientModel.saveProfiles; }
+            else if (Mode == "Server") { saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]); _serverModel.saveProfiles = saveProfiles; }
             DisplayProfiles();
         }
 

@@ -12,7 +12,6 @@ namespace EasySaveWPF.MVVM.Models
     internal class ClientModel
     {
         public List<SaveProfile> saveProfiles = new List<SaveProfile>();
-        public List<SaveProfile> newsaveProfiles = new List<SaveProfile>();
         private readonly Socket clientSocket;
 
         public ClientModel()
@@ -29,7 +28,6 @@ namespace EasySaveWPF.MVVM.Models
             try
             {
                 socket.Connect(ipep);
-                MessageBox.Show("Connecté au serveur");
                 return socket;
             }
             catch (Exception ex)
@@ -70,10 +68,17 @@ namespace EasySaveWPF.MVVM.Models
                         // Désérialisez le JSON pour obtenir l'objet SaveProfile
                         SaveProfile receivedProfile = JsonConvert.DeserializeObject<SaveProfile>(json);
 
-                        // Utilisez l'objet SaveProfile comme nécessaire
-                        MessageBox.Show($"Received SaveProfile: {receivedProfile.Name}");
+                        // Si un profil avec le même nom existe déjà, remplacez-le
+                        if (saveProfiles.Exists(profile => profile.Name == receivedProfile.Name))
+                        {
+                            saveProfiles[saveProfiles.FindIndex(profile => profile.Name == receivedProfile.Name)] = receivedProfile;
+                        }
+                        else
+                        {
+                            saveProfiles.Add(receivedProfile);
+                        }
 
-                        Task.Delay(2000).Wait();
+                        Task.Delay(200).Wait();
                     }
                 }
                 catch (Exception ex)

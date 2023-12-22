@@ -11,7 +11,7 @@ namespace EasySaveWPF.MVVM.Models
     internal class ServerModel
     {
         private static IPEndPoint clientep;
-        private static List<SaveProfile> saveProfiles = new List<SaveProfile>();
+        public List<SaveProfile> saveProfiles = new List<SaveProfile>();
         private static Socket clientSocket;
 
         public ServerModel()
@@ -49,10 +49,11 @@ namespace EasySaveWPF.MVVM.Models
             {
                 while (true)
                 {
-                    SaveProfile sampleProfile = new SaveProfile("Profile1", "C:\\Users\\Public\\Documents\\EasySave\\Source", "C:\\Users\\Public\\Documents\\EasySave\\Target", "READY", 0, 0, 0, 0, "full");
-
-                    SendProfile(sampleProfile);
-                    await Task.Delay(2000);
+                    foreach (SaveProfile profile in saveProfiles)
+                    {
+                        SendProfile(profile);
+                        await Task.Delay(200);
+                    }
                 }
             });
         }
