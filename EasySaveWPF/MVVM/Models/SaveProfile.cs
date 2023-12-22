@@ -2,6 +2,9 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Windows;
+using System.ComponentModel;
 
 namespace EasySaveWPF.MVVM.Models
 {
@@ -16,6 +19,32 @@ namespace EasySaveWPF.MVVM.Models
         public long TotalFilesSize { get; set; }
         public int NbFilesLeftToDo { get; set; }
         public int Progression { get; set; }
+        private static readonly object StateFileLock = new object();
+
+
+        public static Dictionary<string, ManualResetEvent> PauseResumeEvents = new Dictionary<string, ManualResetEvent>();
+
+        public static void PauseSaveProfile(string saveProfileName)
+        {
+            lock (StateFileLock)
+            {
+                if (PauseResumeEvents.TryGetValue(saveProfileName, out var pauseResumeEvent))
+                {
+                    pauseResumeEvent.Reset();
+                }
+            }
+        }
+
+        public static void ResumeSaveProfile(string saveProfileName)
+        {
+            lock (StateFileLock)
+            {
+                if (PauseResumeEvents.TryGetValue(saveProfileName, out var pauseResumeEvent))
+                {
+                    pauseResumeEvent.Set();
+                }
+            }
+        }
 
         public SaveProfile(string name, string sourceFilePath, string targetFilePath, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo, int progression, string typeOfSave)
         {
@@ -76,15 +105,18 @@ namespace EasySaveWPF.MVVM.Models
 
         public static string SaveProfiles(string filePath, List<SaveProfile> profiles)
         {
-            try
+            lock (StateFileLock)
             {
-                string json = JsonConvert.SerializeObject(profiles, Formatting.Indented);
-                File.WriteAllText(filePath, json);
-                return "OK";
-            }
-            catch (Exception)
-            {
-                return "ERROR";
+                try
+                {
+                    string json = JsonConvert.SerializeObject(profiles, Formatting.Indented);
+                    File.WriteAllText(filePath, json);
+                    return "OK";
+                }
+                catch (Exception)
+                {
+                    return "ERROR";
+                }
             }
         }
 
@@ -104,59 +136,68 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        public static async Task ExecuteSaveProfile(List<SaveProfile> profiles, DailyLogsViewModel dailyLogsViewModel, SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
+        public static void ExecuteSaveProfile(List<SaveProfile> profiles, DailyLogsViewModel dailyLogsViewModel, SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
         {
-            try
+            ManualResetEvent pauseResumeEvent = new ManualResetEvent(true);
+            PauseResumeEvents[saveProfile.Name] = pauseResumeEvent;
+
+            Thread thread = new Thread(() =>
             {
-                await Task.Run(() =>
+                lock (StateFileLock)
                 {
-                    if (Directory.Exists(saveProfile.TargetFilePath))
+                    try
                     {
-                        Directory.Delete(saveProfile.TargetFilePath, true);
-                    }
-
-                    Directory.CreateDirectory(saveProfile.TargetFilePath);
-
-                    string[] files = Directory.GetFiles(saveProfile.SourceFilePath, "*", SearchOption.AllDirectories);
-
-                    foreach (string file in files)
-                    {
-                        DateTime startTime = DateTime.Now;
-                        string relativePath = file.Substring(saveProfile.SourceFilePath.Length + 1);
-                        string targetFilePath = Path.Combine(saveProfile.TargetFilePath, relativePath);
-
-                        string targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
-
-                        if (!Directory.Exists(targetDirectoryPath))
+                        saveProfile.State = "IN PROGRESS";
+                        SaveProfiles(paths["StateFilePath"], profiles);
+                        if (Directory.Exists(saveProfile.TargetFilePath))
                         {
-                            Directory.CreateDirectory(targetDirectoryPath);
+                            Directory.Delete(saveProfile.TargetFilePath, true);
                         }
-
-                        if (mode == "diff")
+                        Directory.CreateDirectory(saveProfile.TargetFilePath);
+                        string[] files = Directory.GetFiles(saveProfile.SourceFilePath, "*", SearchOption.AllDirectories);
+                        foreach (string file in files)
                         {
-                            if (!File.Exists(targetFilePath) || File.GetLastWriteTime(file) > File.GetLastWriteTime(targetFilePath))
+                            pauseResumeEvent.WaitOne();
+                            DateTime startTime = DateTime.Now;
+                            string relativePath = file.Substring(saveProfile.SourceFilePath.Length + 1);
+                            string targetFilePath = Path.Combine(saveProfile.TargetFilePath, relativePath);
+                            string targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
+                            if (!Directory.Exists(targetDirectoryPath))
+                            {
+                                Directory.CreateDirectory(targetDirectoryPath);
+                            }
+                            if (mode == "diff")
+                            {
+                                if (!File.Exists(targetFilePath) || File.GetLastWriteTime(file) > File.GetLastWriteTime(targetFilePath))
+                                {
+                                    File.Copy(file, targetFilePath, true);
+                                }
+                            }
+                            else
                             {
                                 File.Copy(file, targetFilePath, true);
                             }
+                            TimeSpan elapsedTime = DateTime.Now - startTime;
+                            dailyLogsViewModel.CreateLog(paths["EasySaveFileLogsDirectoryPath"], config["logformat"], saveProfile.Name, file, targetFilePath, file.Length, elapsedTime.TotalSeconds);
+                            saveProfile.NbFilesLeftToDo--;
+                            saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
+                            SaveProfiles(paths["StateFilePath"], profiles);
                         }
-                        else
-                        {
-                            File.Copy(file, targetFilePath, true);
-                        }
-                        TimeSpan elapsedTime = DateTime.Now - startTime;
-                        dailyLogsViewModel.CreateLog(paths["EasySaveFileLogsDirectoryPath"], config["logformat"], saveProfile.Name, file, targetFilePath, file.Length, elapsedTime.TotalSeconds);
-
-                        saveProfile.NbFilesLeftToDo--;
-                        saveProfile.Progression = (int)(((double)saveProfile.TotalFilesToCopy - saveProfile.NbFilesLeftToDo) / saveProfile.TotalFilesToCopy * 100);
-                        SaveProfiles(paths["StateFilePath"], profiles); 
                     }
-                });
-            }
-            catch (Exception)
-            {
-                saveProfile.State = "ERROR";
-                SaveProfiles(paths["StateFilePath"], profiles);
-            }
+                    catch (Exception)
+                    {
+                        saveProfile.State = "ERROR";
+                        SaveProfiles(paths["StateFilePath"], profiles);
+                    }
+                    finally
+                    {
+                        saveProfile.State = "READY";
+                        SaveProfiles(paths["StateFilePath"], profiles);
+                        MessageBox.Show($"{saveProfile.Name} has just finished");
+                    }
+                }
+            });
+            thread.Start();
         }
 
         public static List<long> sourceDirectoryInfos(string sourceDirectory)

@@ -2,6 +2,7 @@ using EasySaveWPF.MVVM.Models;
 using EasySaveWPF.MVVM.Views;
 using System.IO;
 using System.Windows;
+using System.Threading;
 
 namespace EasySaveWPF.MVVM.ViewModels
 {
@@ -91,7 +92,7 @@ namespace EasySaveWPF.MVVM.ViewModels
             }
         }
 
-        public async Task ExecuteSaveProfile(DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config, int index)
+        public void ExecuteSaveProfile(DailyLogsViewModel dailyLogsViewModel, List<SaveProfile> saveProfiles, Dictionary<string, string> paths, Dictionary<string, string> config, int index)
         {
             try
             {
@@ -99,28 +100,43 @@ namespace EasySaveWPF.MVVM.ViewModels
 
                 if (saveProfiles[profileIndex].State == "READY")
                 {
-                        saveProfiles[profileIndex].State = "IN PROGRESS";
-                        SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
+                    saveProfiles[profileIndex].State = "IN PROGRESS";
+                    SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
 
                     if (saveProfiles[profileIndex].TypeOfSave == "full" || saveProfiles[profileIndex].TypeOfSave == "diff")
                     {
-                        await SaveProfile.ExecuteSaveProfile(saveProfiles, dailyLogsViewModel, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave, paths, config);
+                        SaveProfile.ExecuteSaveProfile(saveProfiles, dailyLogsViewModel, saveProfiles[profileIndex], saveProfiles[profileIndex].TypeOfSave, paths, config);
                     }
 
                     saveProfiles[profileIndex].State = "READY";
                     SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
-
-                    MessageBox.Show($"{saveProfiles[profileIndex].Name} has just finished");
                 }
                 else
                 {
-                    MessageBox.Show($"{saveProfiles[profileIndex].Name} isn't ready");
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"An error occurred: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        public void PauseSaveProfile(SaveProfile saveProfile)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SaveProfile.PauseSaveProfile(saveProfile.Name);
+                MessageBox.Show($"Pausing {saveProfile.Name}");
+            });
+        }
+
+        public void ResumeSaveProfile(SaveProfile saveProfile)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SaveProfile.ResumeSaveProfile(saveProfile.Name);
+                MessageBox.Show($"Resuming {saveProfile.Name}");
+            });
         }
 
 

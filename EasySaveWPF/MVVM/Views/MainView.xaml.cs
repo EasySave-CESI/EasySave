@@ -225,6 +225,8 @@ namespace EasySaveWPF
             MainWindow_Home_ExistingSaves_Grid.ItemsSource = profiles;
         }
 
+
+
         private void SelectionDot_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Ellipse selectionDot = (Ellipse)sender;
@@ -258,32 +260,31 @@ namespace EasySaveWPF
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
-            /*foreach (SaveProfile profile in profilesToExecute)
+            foreach (SaveProfile profile in profilesToExecute)
             {
                 if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
                 {
                     SaveProfile.PauseResumeEvents[profile.Name].Reset();
                 }
-            }*/
+            }
         }
-
         private void ResumeButton_Click(object sender, RoutedEventArgs e)
         {
-            /*foreach (SaveProfile profile in profilesToExecute)
+            foreach (SaveProfile profile in profilesToExecute)
             {
                 if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
                 {
                     SaveProfile.PauseResumeEvents[profile.Name].Set();
                 }
-            }*/
+            }
         }
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
+        /*private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             Button stopButton = (Button)sender;
             SaveProfile profileToStop = (SaveProfile)stopButton.DataContext;
             MessageBox.Show($"Stopping {profileToStop.Name}");
-        }
+        }*/
 
         private void ModifyButton_Click(object sender, RoutedEventArgs e)
         {
@@ -324,15 +325,25 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
-        private async void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
+        private void MainWindow_Home_Header_ExecuteAll_Button_Click(object sender, RoutedEventArgs e)
         {
+            List<Thread> threads = new List<Thread>();
+
             foreach (SaveProfile profile in profiles)
             {
-                await Task.Run(() =>
+                Thread thread = new Thread(() =>
                 {
                     int index = profiles.IndexOf(profile);
                     _saveProfileViewModel.ExecuteSaveProfile(_dailyLogsViewModel, saveProfiles, paths, config, index);
                 });
+
+                threads.Add(thread);
+                thread.Start();
+            }
+
+            foreach (Thread thread in threads)
+            {
+                thread.Join();
             }
 
             DisplayProfiles();
