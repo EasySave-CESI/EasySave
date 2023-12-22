@@ -144,14 +144,14 @@
 
                     <!-- Save Stop -->
                     <Button
-                        x:Name="MainWindow_Home_SaveProfilePause_Button"
+                        x:Name="MainWindow_Home_SaveProfileStop_Button"
                         Height="30"
                         Width="30"
                         Grid.Column="2"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Click="PauseButton_Click" 
+                        Click="StopButton_Click" 
                         >
                         <Button.Background>
                             <ImageBrush ImageSource="/MVVM/Views/Stop_button.png" Stretch="Uniform"/>
@@ -160,14 +160,14 @@
 
                     <!-- Save Modify -->
                     <Button
-                        x:Name="MainWindow_Home_SaveProfileResume_Button"
+                        x:Name="MainWindow_Home_SaveProfileModify_Button"
                         Height="30"
                         Width="30"
                         Grid.Column="3"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Click="ResumeButton_Click"
+                        Click="ModifyButton_Click"
                     >
                         <Button.Background>
                             <ImageBrush ImageSource="/MVVM/Views/Modify_button.png" Stretch="Uniform"/>

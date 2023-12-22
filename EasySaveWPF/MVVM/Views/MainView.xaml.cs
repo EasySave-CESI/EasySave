@@ -236,7 +236,7 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
-        private void PauseButton_Click(object sender, RoutedEventArgs e)
+        /*private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
             foreach (SaveProfile profile in profilesToExecute)
             {
@@ -256,6 +256,20 @@ namespace EasySaveWPF
                     SaveProfile.PauseResumeEvents[profile.Name].Set();
                 }
             }
+        }*/
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button stopButton = (Button)sender;
+            SaveProfile profileToStop = (SaveProfile)stopButton.DataContext;
+            MessageBox.Show($"Stopping {profileToStop.Name}");
+        }
+
+        private void ModifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button modifyButton = (Button)sender;
+            SaveProfile profileToModify = (SaveProfile)modifyButton.DataContext;
+            MessageBox.Show($"Modifying {profileToModify.Name}");
         }
 
 
