@@ -69,90 +69,47 @@ namespace EasySaveWPF
             // Initialize the window
             InitializeComponent();
 
-            switch (Mode)
+            if (Mode == "Server")
             {
-                case "Server":
-                    // Initialize the server
-                    _serverModel = new ServerModel();
-                    _serverModel.StartSendingProfiles();
-
-                    // Initialize the view models
-                    _pathViewModel = new PathViewModel();
-                    _configurationViewModel = new ConfigurationViewModel();
-                    _languageConfigurationViewModel = new LanguageConfigurationViewModel();
-                    _saveProfileViewModel = new SaveProfileViewModel();
-
-
-                    // Create a new dictionary to store the paths
-                    paths = _pathViewModel.LoadPaths();
-
-                    // Create a new dictionary to store the config
-                    config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-                    _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
-                    Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-                    saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-                    SetAll(config);
-                    HandlePageSelection("Home");
-
-                    dispatcherTimer = new DispatcherTimer();
-                    dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
-                    dispatcherTimer.Tick += DispatcherTimer_Tick;
-                    dispatcherTimer.Start();
-                    break;
-                case "Client":
-                    // Initialize the client
-                    _clientModel = new ClientModel(serverIp);
-                    _clientModel.ReceiveProfiles();
-
-                    // Initialize the view models
-                    _pathViewModel = new PathViewModel();
-                    _configurationViewModel = new ConfigurationViewModel();
-                    _languageConfigurationViewModel = new LanguageConfigurationViewModel();
-
-                    // Create a new dictionary to store the paths
-                    paths = _pathViewModel.LoadPaths();
-
-                    // Create a new dictionary to store the config
-                    config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-                    _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
-                    printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-
-                    // Create a new list to store the save profiles
-                    saveProfiles = _clientModel.saveProfiles;
-                    SetAll(config);
-                    HandlePageSelection("Home");
-
-                    dispatcherTimer = new DispatcherTimer();
-                    dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
-                    dispatcherTimer.Tick += DispatcherTimer_Tick;
-                    dispatcherTimer.Start();
-                    break;
-                case "Classic":
-                    // Initialize the view models
-                    _pathViewModel = new PathViewModel();
-                    _configurationViewModel = new ConfigurationViewModel();
-                    _languageConfigurationViewModel = new LanguageConfigurationViewModel();
-                    _saveProfileViewModel = new SaveProfileViewModel();
-
-                    // Create a new dictionary to store the paths
-                    paths = _pathViewModel.LoadPaths();
-
-                    // Create a new dictionary to store the config
-                    config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
-                    _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
-                    printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-
-                    // Create a new list to store the save profiles
-                    saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
-                    SetAll(config);
-                    HandlePageSelection("Home");
-
-                    dispatcherTimer = new DispatcherTimer();
-                    dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
-                    dispatcherTimer.Tick += DispatcherTimer_Tick;
-                    dispatcherTimer.Start();
-                    break;
+                // Initialize the server
+                _serverModel = new ServerModel();
+                _serverModel.StartSendingProfiles();
             }
+            else if (Mode == "Client")
+            {
+                // Initialize the client
+                _clientModel = new ClientModel(serverIp);
+                _clientModel.ReceiveProfiles();
+            }
+
+            // Initialize the view models
+            _pathViewModel = new PathViewModel();
+            _configurationViewModel = new ConfigurationViewModel();
+            _languageConfigurationViewModel = new LanguageConfigurationViewModel();
+
+            // Create a new dictionary to store the paths
+            paths = _pathViewModel.LoadPaths();
+
+            // Create a new dictionary to store the config
+            config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+            _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
+            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
+            if (Mode == "Server" || Mode == "Classic") 
+            { 
+                _saveProfileViewModel = new SaveProfileViewModel();
+                saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+            }
+            else if (Mode == "Client") { saveProfiles = _clientModel.saveProfiles; }
+
+            // Create a new list to store the save profiles
+            SetAll(config);
+            HandlePageSelection("Home");
+
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
+            dispatcherTimer.Tick += DispatcherTimer_Tick;
+            dispatcherTimer.Start();
         }
 
         private void MainWindow_NavigationBar_PagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
