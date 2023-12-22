@@ -53,21 +53,21 @@ internal class ClientModel
     {
         Task.Run(() =>
         {
-            try
+            while (true)
             {
-                while (true)
+                byte[] data = new byte[1024];
+                int size = clientSocket.Receive(data);
+                string json = Encoding.UTF8.GetString(data, 0, size);
+
+                if (json == "\n")
                 {
-                    byte[] data = new byte[1024];
-                    int size = clientSocket.Receive(data);
-                    string json = Encoding.UTF8.GetString(data, 0, size);
+                    // Si une délimitation est reçue, ignorez-la et passez au profil suivant
+                    continue;
+                }
 
-                    if (json == "\n")
-                    {
-                        // Si une délimitation est reçue, ignorez-la et passez au profil suivant
-                        continue;
-                    }
-
-                    // Désérialisez le JSON pour obtenir l'objet SaveProfile
+                // Désérialisez le JSON pour obtenir l'objet SaveProfile
+                try
+                {
                     SaveProfile receivedProfile = JsonConvert.DeserializeObject<SaveProfile>(json);
 
                     // Si un profil avec le même nom existe déjà, remplacez-le
@@ -82,10 +82,10 @@ internal class ClientModel
 
                     Task.Delay(200).Wait();
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erreur lors de la réception des profils : " + ex.Message);
+                catch (Exception)
+                {
+                    continue;
+                }
             }
         });
     }

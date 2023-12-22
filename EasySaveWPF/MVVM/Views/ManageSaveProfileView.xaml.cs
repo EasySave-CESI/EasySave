@@ -118,6 +118,7 @@ namespace EasySaveWPF.MVVM.Views
                 switch (option)
                 {
                     case "Add":
+                        MessageBox.Show("Adding Save Profile Name: " + ManageSaveProfileView_MainGrid1_Name_TextBox.Text, "Source Path: " + ManageSaveProfileView_MainGrid1_Source_TextBox.Text + "\nTarget Path: " + ManageSaveProfileView_MainGrid1_Target_TextBox.Text + "\nType: " + type, MessageBoxButton.OK, MessageBoxImage.Information);
                         AddSaveProfile(type);
                         break;
                     case "Edit":
