@@ -256,6 +256,28 @@ namespace EasySaveWPF
             DisplayProfiles();
         }
 
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            /*foreach (SaveProfile profile in profilesToExecute)
+            {
+                if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
+                {
+                    SaveProfile.PauseResumeEvents[profile.Name].Reset();
+                }
+            }*/
+        }
+
+        private void ResumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            /*foreach (SaveProfile profile in profilesToExecute)
+            {
+                if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
+                {
+                    SaveProfile.PauseResumeEvents[profile.Name].Set();
+                }
+            }*/
+        }
+
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             Button stopButton = (Button)sender;
