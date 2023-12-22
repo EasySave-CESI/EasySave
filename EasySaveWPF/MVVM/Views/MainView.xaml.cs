@@ -44,6 +44,7 @@ namespace EasySaveWPF
         private string ActualPage;
 
         private string Mode;
+        private string serverIp;
         
         // Constructor with arguments
         public MainWindow()
@@ -56,7 +57,11 @@ namespace EasySaveWPF
                 // Ask the user if he wants to start the application in server or client mode
                 result = MessageBox.Show("Do you want to start the application in server mode ? (yes for server, no for client)", "Server mode", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes) { Mode = "Server"; }
-                else { Mode = "Client"; }
+                else {
+                    Mode = "Client";
+                    // Ask the user for the server IP
+                    serverIp = Microsoft.VisualBasic.Interaction.InputBox("Please enter the server IP", "Server IP", "");
+                }
             }
             else { Mode = "Classic"; }
             
@@ -96,7 +101,7 @@ namespace EasySaveWPF
                     break;
                 case "Client":
                     // Initialize the client
-                    _clientModel = new ClientModel();
+                    _clientModel = new ClientModel(serverIp);
                     _clientModel.ReceiveProfiles();
 
                     // Initialize the view models

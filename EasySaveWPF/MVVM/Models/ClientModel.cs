@@ -9,16 +9,18 @@ internal class ClientModel
 {
     public List<SaveProfile> saveProfiles = new List<SaveProfile>();
     private readonly Socket clientSocket;
+    public string ServerIP { get; set; }
 
-    public ClientModel()
+    public ClientModel(string serverIp)
     {
+        ServerIP = serverIp;
         clientSocket = SeConnecter();
         ReceiveProfiles();
     }
 
     private Socket SeConnecter()
     {
-        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("192.168.1.67"), 46154);
+        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(ServerIP), 46154);
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         try
