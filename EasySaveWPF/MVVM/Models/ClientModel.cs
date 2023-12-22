@@ -18,9 +18,6 @@ namespace EasySaveWPF.MVVM.Models
         public ClientModel()
         {
             clientSocket = SeConnecter();
-
-            // Start a background task to listen for SaveProfiles continuously
-            Task.Run(() => ReceiveSaveProfiles());
         }
 
 
@@ -42,39 +39,6 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        private async void ReceiveSaveProfiles()
-        {
-            try
-            {
-                while (true) // Keep listening continuously
-                {
-                    byte[] data = new byte[1024];
-                    int size = clientSocket.Receive(data);
-                    string json = Encoding.UTF8.GetString(data, 0, size);
-
-                    SaveProfile saveProfile = JsonConvert.DeserializeObject<SaveProfile>(json);
-
-                    // if the SaveProfile name is "RESETLISTTRANSFER", we clear the list
-                    if (saveProfile.Name == "RESETLISTTRANSFER")
-                    {
-                        saveProfiles = newsaveProfiles;
-                    }
-                    else
-                    {
-                        // Add the received SaveProfile to the list
-                        saveProfiles.Add(saveProfile);
-                    }
-
-                    await Task.Delay(5000);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions or connection closed
-                MessageBox.Show("Erreur lors de la réception des profils : " + ex.Message);
-            }
-        }
-
         private void Deconnecter()
         {
             try
@@ -89,15 +53,6 @@ namespace EasySaveWPF.MVVM.Models
             {
                 MessageBox.Show("Erreur lors de la déconnexion : " + ex.Message);
             }
-        }
-
-
-        // You can expose the saveProfiles list if needed
-        public List<SaveProfile> SaveProfiles => saveProfiles;
-
-        private static void Program(string url)
-        {
-            MessageBox.Show("Programme lancé");
         }
     }
 }
