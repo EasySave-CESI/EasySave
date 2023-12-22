@@ -42,5 +42,33 @@ namespace EasySaveWPF.MVVM.Models
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
         }
+
+        public void StartSendingMessages()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    SendMessage("Hello from server!"); // Envoyer le message souhaité
+                    await Task.Delay(2000); // Attendre 2 secondes
+                }
+            });
+        }
+
+        private static void SendMessage(string message)
+        {
+            try
+            {
+                // Convertir le message en tableau d'octets
+                byte[] data = Encoding.UTF8.GetBytes(message);
+
+                // Envoyer les données au client
+                clientSocket.Send(data);
+            }
+            catch (Exception ex)
+            {
+                // Gérer les exceptions liées à l'envoi du message
+            }
+        }
     }
 }

@@ -54,5 +54,31 @@ namespace EasySaveWPF.MVVM.Models
                 MessageBox.Show("Erreur lors de la déconnexion : " + ex.Message);
             }
         }
+
+        public void ReceiveMessages()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    while (true)
+                    {
+                        byte[] data = new byte[1024];
+                        int size = clientSocket.Receive(data);
+                        string message = Encoding.UTF8.GetString(data, 0, size);
+
+                        // Afficher le message dans une MessageBox
+                        MessageBox.Show(message);
+
+                        // Attendre 2 secondes
+                        Task.Delay(2000).Wait();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erreur lors de la réception des messages : " + ex.Message);
+                }
+            });
+        }
     }
 }
