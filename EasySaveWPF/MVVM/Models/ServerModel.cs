@@ -44,11 +44,16 @@ namespace EasySaveWPF.MVVM.Models
             {
                 while (true)
                 {
-                    SendSaveProfiles(saveProfiles);
+                    if (clientSocket != null && clientSocket.Connected)
+                    {
+                        SendSaveProfiles(saveProfiles);
+                    }
+
                     System.Threading.Thread.Sleep(500);
                 }
             });
         }
+
 
 
         public static void SendSaveProfiles(List<SaveProfile> newsaveProfiles)

@@ -23,6 +23,7 @@ namespace EasySaveWPF.MVVM.Models
             Task.Run(() => ReceiveSaveProfiles());
         }
 
+
         private Socket SeConnecter()
         {
             IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("192.168.1.67"), 46154);
@@ -41,7 +42,7 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        private void ReceiveSaveProfiles()
+        private async void ReceiveSaveProfiles()
         {
             try
             {
@@ -64,7 +65,7 @@ namespace EasySaveWPF.MVVM.Models
                         saveProfiles.Add(saveProfile);
                     }
 
-                    Task.Delay(5000).Wait();
+                    await Task.Delay(5000);
                 }
             }
             catch (Exception ex)
@@ -78,14 +79,18 @@ namespace EasySaveWPF.MVVM.Models
         {
             try
             {
-                clientSocket.Shutdown(SocketShutdown.Both);
-                clientSocket.Close();
+                if (clientSocket != null && clientSocket.Connected)
+                {
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erreur lors de la déconnexion : " + ex.Message);
             }
         }
+
 
         // You can expose the saveProfiles list if needed
         public List<SaveProfile> SaveProfiles => saveProfiles;
