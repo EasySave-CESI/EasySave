@@ -19,7 +19,6 @@ namespace EasySaveWPF.MVVM.Models
             Socket serverSocket = SeConnecter();
             clientSocket = AccepterConnexion(serverSocket);
             StartSendingSaveProfiles();
-            Deconnecter(serverSocket);
         }
 
         private static Socket SeConnecter()
