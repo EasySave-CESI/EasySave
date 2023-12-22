@@ -129,6 +129,24 @@ namespace EasySaveWPF.MVVM.ViewModels
             }
         }
 
+        public void PauseSaveProfile(SaveProfile saveProfile)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SaveProfile.PauseSaveProfile(saveProfile.Name);
+                MessageBox.Show($"Pausing {saveProfile.Name}");
+            });
+        }
+
+        public void ResumeSaveProfile(SaveProfile saveProfile)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SaveProfile.ResumeSaveProfile(saveProfile.Name);
+                MessageBox.Show($"Resuming {saveProfile.Name}");
+            });
+        }
+
         public void DeleteSaveProfile(List<SaveProfile> saveProfiles, SaveProfile saveProfile, Dictionary<string, string> paths)
         {
             try
