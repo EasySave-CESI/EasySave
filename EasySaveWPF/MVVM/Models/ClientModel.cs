@@ -61,6 +61,12 @@ internal class ClientModel
                     int size = clientSocket.Receive(data);
                     string json = Encoding.UTF8.GetString(data, 0, size);
 
+                    if (json == "\n")
+                    {
+                        // Si une délimitation est reçue, ignorez-la et passez au profil suivant
+                        continue;
+                    }
+
                     // Désérialisez le JSON pour obtenir l'objet SaveProfile
                     SaveProfile receivedProfile = JsonConvert.DeserializeObject<SaveProfile>(json);
 
