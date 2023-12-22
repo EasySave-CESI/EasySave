@@ -25,7 +25,7 @@ namespace EasySaveWPF.MVVM.Models
 
         private Socket SeConnecter()
         {
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("192.168.1.67"), 46153);
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("192.168.1.67"), 46154);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             try

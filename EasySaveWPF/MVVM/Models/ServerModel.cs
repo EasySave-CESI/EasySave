@@ -40,8 +40,16 @@ namespace EasySaveWPF.MVVM.Models
 
         private static void StartSendingSaveProfiles()
         {
-            Task.Run(() => SendSaveProfiles(saveProfiles));
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    SendSaveProfiles(saveProfiles);
+                    System.Threading.Thread.Sleep(500);
+                }
+            });
         }
+
 
         public static void SendSaveProfiles(List<SaveProfile> newsaveProfiles)
         {
