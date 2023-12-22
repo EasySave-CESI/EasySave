@@ -43,31 +43,34 @@ namespace EasySaveWPF.MVVM.Models
             socket.Close();
         }
 
-        public void StartSendingMessages()
+        public void StartSendingProfiles()
         {
             Task.Run(async () =>
             {
                 while (true)
                 {
-                    SendMessage("Hello from server!"); // Envoyer le message souhaité
-                    await Task.Delay(2000); // Attendre 2 secondes
+                    SaveProfile sampleProfile = new SaveProfile("Profile1", "C:\\Users\\Public\\Documents\\EasySave\\Source", "C:\\Users\\Public\\Documents\\EasySave\\Target", "READY", 0, 0, 0, 0, "full");
+
+                    SendProfile(sampleProfile);
+                    await Task.Delay(2000);
                 }
             });
         }
 
-        private static void SendMessage(string message)
+        private static void SendProfile(SaveProfile profile)
         {
             try
             {
-                // Convertir le message en tableau d'octets
-                byte[] data = Encoding.UTF8.GetBytes(message);
+                // Sérialisez l'objet SaveProfile en JSON
+                string json = JsonConvert.SerializeObject(profile);
+                byte[] data = Encoding.UTF8.GetBytes(json);
 
-                // Envoyer les données au client
+                // Envoyez les données au client
                 clientSocket.Send(data);
             }
             catch (Exception ex)
             {
-                // Gérer les exceptions liées à l'envoi du message
+                // Gérez les exceptions liées à l'envoi du profil
             }
         }
     }

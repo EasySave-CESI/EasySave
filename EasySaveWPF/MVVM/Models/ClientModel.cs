@@ -55,7 +55,7 @@ namespace EasySaveWPF.MVVM.Models
             }
         }
 
-        public void ReceiveMessages()
+        public void ReceiveProfiles()
         {
             Task.Run(() =>
             {
@@ -65,18 +65,20 @@ namespace EasySaveWPF.MVVM.Models
                     {
                         byte[] data = new byte[1024];
                         int size = clientSocket.Receive(data);
-                        string message = Encoding.UTF8.GetString(data, 0, size);
+                        string json = Encoding.UTF8.GetString(data, 0, size);
 
-                        // Afficher le message dans une MessageBox
-                        MessageBox.Show(message);
+                        // Désérialisez le JSON pour obtenir l'objet SaveProfile
+                        SaveProfile receivedProfile = JsonConvert.DeserializeObject<SaveProfile>(json);
 
-                        // Attendre 2 secondes
+                        // Utilisez l'objet SaveProfile comme nécessaire
+                        MessageBox.Show($"Received SaveProfile: {receivedProfile.Name}");
+
                         Task.Delay(2000).Wait();
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Erreur lors de la réception des messages : " + ex.Message);
+                    MessageBox.Show("Erreur lors de la réception des profils : " + ex.Message);
                 }
             });
         }

@@ -62,7 +62,7 @@ namespace EasySaveWPF
                 case "Server":
                     // Initialize the server
                     _serverModel = new ServerModel();
-                    server.StartSendingMessages();
+                    _serverModel.StartSendingProfiles();
 
                     // Initialize the view models
                     _pathViewModel = new PathViewModel();
@@ -90,7 +90,7 @@ namespace EasySaveWPF
                 case "Client":
                     // Initialize the client
                     _clientModel = new ClientModel();
-                    client.ReceiveMessages();
+                    _clientModel.ReceiveProfiles();
 
                     // Initialize the view models
                     _pathViewModel = new PathViewModel();
