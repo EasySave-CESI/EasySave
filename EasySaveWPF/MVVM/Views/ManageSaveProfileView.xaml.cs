@@ -61,45 +61,44 @@ namespace EasySaveWPF.MVVM.Views
 
         private void ManageSaveProfileView_MainGrid2_Save_Button_Click(object sender, RoutedEventArgs e)
         {
+            string name = ManageSaveProfileView_MainGrid1_Name_TextBox.Text;
+            string source = ManageSaveProfileView_MainGrid1_Source_TextBox.Text;
+            string target = ManageSaveProfileView_MainGrid1_Target_TextBox.Text;
+
             // Check if the save profile name is not empty
-            if (ManageSaveProfileView_MainGrid1_Name_TextBox.Text == "")
+            if (name == "")
             {
                 MessageBox.Show("The save profile name cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             // Check if the save profile name is not already used and the option is Add
-            else if (saveProfiles.Any(profile => profile.Name == ManageSaveProfileView_MainGrid1_Name_TextBox.Text) && option == "Add")
+            else if (saveProfiles.Any(profile => profile.Name == name) && option == "Add")
             {
                 MessageBox.Show("The save profile name is already used.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             // Check if the source path is not empty
-            else if (ManageSaveProfileView_MainGrid1_Source_TextBox.Text == "")
+            else if (source == "")
             {
                 MessageBox.Show("The source path cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             // Check if the target path is not empty
-            else if (ManageSaveProfileView_MainGrid1_Target_TextBox.Text == "")
+            else if (target == "")
             {
                 MessageBox.Show("The target path cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             // Check if the source path exists
-            else if (!System.IO.Directory.Exists(ManageSaveProfileView_MainGrid1_Source_TextBox.Text))
+            else if (!System.IO.Directory.Exists(source))
             {
                 MessageBox.Show("The source path does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             // Check if the source path is not the same as the target path
-            else if (ManageSaveProfileView_MainGrid1_Source_TextBox.Text == ManageSaveProfileView_MainGrid1_Target_TextBox.Text)
+            else if (source == target)
             {
                 MessageBox.Show("The source path cannot be the same as the target path.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            else if (ManageSaveProfileView_MainGrid1_Type_ComboBox.Text == "")
-            {
-                MessageBox.Show("The type cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
@@ -118,7 +117,7 @@ namespace EasySaveWPF.MVVM.Views
                 switch (option)
                 {
                     case "Add":
-                        AddSaveProfile(type);
+                        AddSaveProfile(name, source, target, type);
                         break;
                     case "Edit":
                         EditSaveProfile(type);
@@ -128,9 +127,9 @@ namespace EasySaveWPF.MVVM.Views
             }
         }
 
-        private void AddSaveProfile(string type)
+        private void AddSaveProfile(string name, string source, string target, string type)
         {
-            SaveProfile profile = SaveProfile.CreateSaveProfile(ManageSaveProfileView_MainGrid1_Name_TextBox.Text, ManageSaveProfileView_MainGrid1_Source_TextBox.Text, ManageSaveProfileView_MainGrid1_Target_TextBox.Text, type);
+            SaveProfile profile = SaveProfile.CreateSaveProfile(name, source, target, type);
             saveProfiles.Add(profile);
             SaveProfile.SaveProfiles(paths["StateFilePath"], saveProfiles);
         }

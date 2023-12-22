@@ -120,7 +120,7 @@ namespace EasySaveWPF.MVVM.ViewModels
                 MessageBox.Show($"An error occurred: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
+        /*
         public void PauseSaveProfile(SaveProfile saveProfile)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -138,7 +138,7 @@ namespace EasySaveWPF.MVVM.ViewModels
                 MessageBox.Show($"Resuming {saveProfile.Name}");
             });
         }
-
+        */
 
         public void DeleteSaveProfile(List<SaveProfile> saveProfiles, SaveProfile saveProfile, Dictionary<string, string> paths)
         {

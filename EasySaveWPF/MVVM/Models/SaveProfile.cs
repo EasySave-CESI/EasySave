@@ -19,7 +19,7 @@ namespace EasySaveWPF.MVVM.Models
         public long TotalFilesSize { get; set; }
         public int NbFilesLeftToDo { get; set; }
         public int Progression { get; set; }
-        private static readonly object StateFileLock = new object();
+        /*private static readonly object StateFileLock = new object();
 
 
         public static Dictionary<string, ManualResetEvent> PauseResumeEvents = new Dictionary<string, ManualResetEvent>();
@@ -44,7 +44,7 @@ namespace EasySaveWPF.MVVM.Models
                     pauseResumeEvent.Set();
                 }
             }
-        }
+        }*/
 
         public SaveProfile(string name, string sourceFilePath, string targetFilePath, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo, int progression, string typeOfSave)
         {
@@ -105,8 +105,8 @@ namespace EasySaveWPF.MVVM.Models
 
         public static string SaveProfiles(string filePath, List<SaveProfile> profiles)
         {
-            lock (StateFileLock)
-            {
+            //lock (StateFileLock)
+            //{
                 try
                 {
                     string json = JsonConvert.SerializeObject(profiles, Formatting.Indented);
@@ -117,7 +117,7 @@ namespace EasySaveWPF.MVVM.Models
                 {
                     return "ERROR";
                 }
-            }
+            //}
         }
 
 
@@ -138,13 +138,13 @@ namespace EasySaveWPF.MVVM.Models
 
         public static void ExecuteSaveProfile(List<SaveProfile> profiles, DailyLogsViewModel dailyLogsViewModel, SaveProfile saveProfile, string mode, Dictionary<string, string> paths, Dictionary<string, string> config)
         {
-            ManualResetEvent pauseResumeEvent = new ManualResetEvent(true);
-            PauseResumeEvents[saveProfile.Name] = pauseResumeEvent;
+            //ManualResetEvent pauseResumeEvent = new ManualResetEvent(true);
+            //PauseResumeEvents[saveProfile.Name] = pauseResumeEvent;
 
             Thread thread = new Thread(() =>
             {
-                lock (StateFileLock)
-                {
+                //lock (StateFileLock)
+                //{
                     try
                     {
                         saveProfile.State = "IN PROGRESS";
@@ -157,7 +157,7 @@ namespace EasySaveWPF.MVVM.Models
                         string[] files = Directory.GetFiles(saveProfile.SourceFilePath, "*", SearchOption.AllDirectories);
                         foreach (string file in files)
                         {
-                            pauseResumeEvent.WaitOne();
+                            //pauseResumeEvent.WaitOne();
                             DateTime startTime = DateTime.Now;
                             string relativePath = file.Substring(saveProfile.SourceFilePath.Length + 1);
                             string targetFilePath = Path.Combine(saveProfile.TargetFilePath, relativePath);
@@ -195,7 +195,7 @@ namespace EasySaveWPF.MVVM.Models
                         SaveProfiles(paths["StateFilePath"], profiles);
                         MessageBox.Show($"{saveProfile.Name} has just finished");
                     }
-                }
+                //}
             });
             thread.Start();
         }

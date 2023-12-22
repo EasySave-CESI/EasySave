@@ -28,11 +28,13 @@ namespace EasySaveWPF
         private readonly LanguageConfigurationViewModel _languageConfigurationViewModel;
         private readonly SaveProfileViewModel _saveProfileViewModel;
         private readonly DailyLogsViewModel _dailyLogsViewModel;
+        private readonly ServerModel _serverModel;
+        private readonly ClientModel _clientModel;
 
         private Dictionary<string, string> paths;
         private Dictionary<string, string> config;
         private Dictionary<string, string> printStringDictionary;
-        private List<SaveProfile> saveProfiles;
+        private List<SaveProfile> saveProfiles = new List<SaveProfile>();
         private List<SaveProfile> profilesToExecute = new List<SaveProfile>();
         private ObservableCollection<SaveProfile> profiles = new ObservableCollection<SaveProfile>();
 
@@ -40,19 +42,50 @@ namespace EasySaveWPF
 
         private bool isSavingBigFiles = false;
         private string ActualPage;
-        
+
+        private string Mode;
+        private string serverIp;
 
         public MainWindow()
         {
+            // Ask the user if he wants to enable the remote control
+            MessageBoxResult result = MessageBox.Show("Do you want to enable the remote control ?", "Remote control", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // Ask the user if he wants to start the application in server or client mode
+                result = MessageBox.Show("Do you want to start the application in server mode ? (yes for server, no for client)", "Server mode", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes) { Mode = "Server"; }
+                else
+                {
+                    Mode = "Client";
+                    // Ask the user for the server IP
+                    serverIp = Microsoft.VisualBasic.Interaction.InputBox("Please enter the server IP", "Server IP", "");
+                }
+            }
+            else { Mode = "Classic"; }
+
+
             // Initialize the window
             InitializeComponent();
+
+            if (Mode == "Server")
+            {
+                // Initialize the server
+                _serverModel = new ServerModel();
+                _serverModel.StartSendingProfiles();
+            }
+            else if (Mode == "Client")
+            {
+                // Initialize the client
+                _clientModel = new ClientModel(serverIp);
+                _clientModel.ReceiveProfiles();
+            }
 
             // Initialize the view models
             _pathViewModel = new PathViewModel();
             _configurationViewModel = new ConfigurationViewModel();
             _languageConfigurationViewModel = new LanguageConfigurationViewModel();
-            _saveProfileViewModel = new SaveProfileViewModel();
-            
 
             // Create a new dictionary to store the paths
             paths = _pathViewModel.LoadPaths();
@@ -60,8 +93,16 @@ namespace EasySaveWPF
             // Create a new dictionary to store the config
             config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
             _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
-            Dictionary<string, string> printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
-            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+            printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
+            if (Mode == "Server" || Mode == "Classic")
+            {
+                _saveProfileViewModel = new SaveProfileViewModel();
+                saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+            }
+            else if (Mode == "Client") { saveProfiles = _clientModel.saveProfiles; }
+
+            // Create a new list to store the save profiles
             SetAll(config);
             HandlePageSelection("Home");
 
@@ -220,7 +261,9 @@ namespace EasySaveWPF
         private void DisplayProfiles()
         {
             profiles.Clear();
-            saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+            if (Mode == "Client") { saveProfiles = _clientModel.saveProfiles; }
+            else { saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]); }
+            if (saveProfiles == null) { return; }
             foreach (SaveProfile profile in saveProfiles) { profiles.Add(profile); }
             MainWindow_Home_ExistingSaves_Grid.ItemsSource = profiles;
         }
@@ -260,6 +303,7 @@ namespace EasySaveWPF
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
             foreach (SaveProfile profile in profilesToExecute)
             {
                 if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
@@ -267,9 +311,11 @@ namespace EasySaveWPF
                     SaveProfile.PauseResumeEvents[profile.Name].Reset();
                 }
             }
+            */
         }
         private void ResumeButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
             foreach (SaveProfile profile in profilesToExecute)
             {
                 if (SaveProfile.PauseResumeEvents.ContainsKey(profile.Name))
@@ -277,6 +323,7 @@ namespace EasySaveWPF
                     SaveProfile.PauseResumeEvents[profile.Name].Set();
                 }
             }
+            */
         }
 
         /*private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -296,6 +343,16 @@ namespace EasySaveWPF
         }
         private void ModifySaveProfileView_Closing(object? sender, CancelEventArgs e)
         {
+
+            if (Mode == "Client")
+            {
+                saveProfiles = _clientModel.saveProfiles;
+            }
+            else
+            {
+                saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
+
+            }
             DisplayProfiles();
         }
 
@@ -351,6 +408,9 @@ namespace EasySaveWPF
 
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
+            if (Mode == "Client") { saveProfiles = _clientModel.saveProfiles; }
+            else if (Mode == "Server") { saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]); _serverModel.saveProfiles = saveProfiles; }
+            else { saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]); }
             DisplayProfiles();
         }
 
