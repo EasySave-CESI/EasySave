@@ -48,11 +48,18 @@ namespace EasySaveWPF
         // Constructor with arguments
         public MainWindow()
         {
-            // Ask the user if he wants to start the application in server or client mode
-            MessageBoxResult result = MessageBox.Show("Do you want to start the application in server mode ? (yes for server, no for client)", "Server mode", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            // Ask the user if he wants to enable the remote control
+            MessageBoxResult result = MessageBox.Show("Do you want to enable the remote control ?", "Remote control", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            if (result == MessageBoxResult.Yes) { Mode = "Server"; }
-            else { Mode = "Client"; }
+            if (result == MessageBoxResult.Yes) 
+            {
+                // Ask the user if he wants to start the application in server or client mode
+                result = MessageBox.Show("Do you want to start the application in server mode ? (yes for server, no for client)", "Server mode", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes) { Mode = "Server"; }
+                else { Mode = "Client"; }
+            }
+            else { Mode = "Classic"; }
+            
 
             // Initialize the window
             InitializeComponent();
@@ -107,6 +114,31 @@ namespace EasySaveWPF
 
                     // Create a new list to store the save profiles
                     saveProfiles = _clientModel.saveProfiles;
+                    SetAll(config);
+                    HandlePageSelection("Home");
+
+                    dispatcherTimer = new DispatcherTimer();
+                    dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
+                    dispatcherTimer.Tick += DispatcherTimer_Tick;
+                    dispatcherTimer.Start();
+                    break;
+                case "Classic":
+                    // Initialize the view models
+                    _pathViewModel = new PathViewModel();
+                    _configurationViewModel = new ConfigurationViewModel();
+                    _languageConfigurationViewModel = new LanguageConfigurationViewModel();
+                    _saveProfileViewModel = new SaveProfileViewModel();
+
+                    // Create a new dictionary to store the paths
+                    paths = _pathViewModel.LoadPaths();
+
+                    // Create a new dictionary to store the config
+                    config = _configurationViewModel.LoadConfig(paths["ConfigFilePath"]);
+                    _dailyLogsViewModel = new DailyLogsViewModel(paths["EasySaveFileLogsDirectoryPath"], config["logformat"]);
+                    printStringDictionary = _languageConfigurationViewModel.LoadPrintStrings(config["language"]);
+
+                    // Create a new list to store the save profiles
+                    saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]);
                     SetAll(config);
                     HandlePageSelection("Home");
 
@@ -349,6 +381,7 @@ namespace EasySaveWPF
         {
             if (Mode == "Client") { saveProfiles = _clientModel.saveProfiles; }
             else if (Mode == "Server") { saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]); _serverModel.saveProfiles = saveProfiles; }
+            else { saveProfiles = _saveProfileViewModel.LoadSaveProfiles(paths["StateFilePath"]); }
             DisplayProfiles();
         }
 
