@@ -550,9 +550,6 @@ namespace EasySaveWPF
             MainWindow_Settings_Extensions_ExtensionList_ListView.Items.Refresh();
             MainWindow_Settings_Extensions_ExtensionList_ListView.SelectedIndex = index + 1;
 
-
-
-
         }
         private void UpExtension_Button_Click(object sender, RoutedEventArgs e)
         {
