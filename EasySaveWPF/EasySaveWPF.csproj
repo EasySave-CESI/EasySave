@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <None Remove="MVVM\Views\Delete_button.png" />
+    <None Remove="MVVM\Views\EasysaveICON.png" />
     <None Remove="MVVM\Views\Modify_button.png" />
     <None Remove="MVVM\Views\Start_button.png" />
     <None Remove="MVVM\Views\Stop_button.png" />
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <Resource Include="MVVM\Views\Delete_button.png" />
+    <Resource Include="MVVM\Views\EasysaveICON.png" />
     <Resource Include="MVVM\Views\Modify_button.png" />
     <Resource Include="MVVM\Views\Start_button.png" />
     <Resource Include="MVVM\Views\Stop_button.png" />

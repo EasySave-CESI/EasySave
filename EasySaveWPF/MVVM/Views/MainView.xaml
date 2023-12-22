@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySaveWPF"
         mc:Ignorable="d"
-        Title="MainWindow"
-        MaxHeight="800" MinHeight="800" MaxWidth="1400" MinWidth="1400">
+        Title="EasySave"
+        MaxHeight="800" MinHeight="800" MaxWidth="1400" MinWidth="1400" Icon="/MVVM/Views/EasysaveICON.png"
+        >
 
     <Window.Resources>
         <!-- Colors -->
@@ -46,6 +47,7 @@
                 <Grid Style="{DynamicResource MainWindow_Home_SaveGridStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="4*"/>
@@ -142,19 +144,36 @@
                         </Button.Background>
                     </Button>
 
-                    <!-- Save Stop -->
+                    <!-- Save Pause -->
                     <Button
-                        x:Name="MainWindow_Home_SaveProfileStop_Button"
+                        x:Name="MainWindow_Home_SaveProfilePause_Button"
                         Height="30"
                         Width="30"
                         Grid.Column="2"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Click="StopButton_Click" 
+                        Click="PauseButton_Click"
+ 
                         >
                         <Button.Background>
                             <ImageBrush ImageSource="/MVVM/Views/Stop_button.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                    
+                    <!-- Save Resume -->
+                    <Button
+                        x:Name="MainWindow_Home_SaveProfileResume_Button"
+                        Height="30"
+                        Width="30"
+                        Grid.Column="3"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Click="ResumeButton_Click"
+                        >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/MVVM/Views/Delete_button.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
 
@@ -163,7 +182,7 @@
                         x:Name="MainWindow_Home_SaveProfileModify_Button"
                         Height="30"
                         Width="30"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -179,7 +198,7 @@
                         x:Name="MainWindow_Home_SaveProfileDelete_Button"
                         Height="30"
                         Width="30"
-                        Grid.Column="4"
+                        Grid.Column="5"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
